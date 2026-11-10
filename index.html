@@ -1673,7 +1673,7 @@ if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه 
 (()=>{
  const fa=n=>String(n).replace(/-/g,'−').replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[+d]);
  const levels=['easy','medium','hard','olympiad'];
- const make=(ch,level,q,a,e)=>({c:ch,chapter:ch,level,q,a,e,h:'پاسخ را به صورت عدد وارد کن.',t:fa(a)});
+ const make=(ch,level,q,a,e)=>({c:ch,chapter:ch,level,q,a,e,h:'پاسخ را به صورت عدد، اعشار یا کسر مثل ۳/۴ وارد کن.',t:fa(a)});
  const gcd=(a,b)=>b?gcd(b,a%b):a;
  const gen=(ch,level,k)=>{
   const z=k+1;let q='',a=0,e='';
@@ -1706,7 +1706,7 @@ if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه 
     if(level==='easy'){const x=z%13-6,dx=z%9-4;q='نقطه‌ای با مختصات ('+fa(x)+'، '+fa(z)+')، '+fa(dx)+' واحد افقی جابه‌جا می‌شود. مختصات x جدید چیست؟';a=x+dx;e=fa(x)+' + '+fa(dx)+' = '+fa(a)+'.';}
     else if(level==='medium'){const x=z%11-5,u=z%7-3;q='مؤلفهٔ افقی حاصل جمع دو بردار ('+fa(x)+'،۲) و ('+fa(u)+'،۵) چیست؟';a=x+u;e='مؤلفه‌های افقی را جمع می‌کنیم: '+fa(x)+' + '+fa(u)+' = '+fa(a)+'.';}
     else if(level==='hard'){const x=z+2;q='طول برداری با مؤلفه‌های '+fa(3*x)+' و '+fa(4*x)+' چند واحد است؟';a=5*x;e='طول = √(('+fa(3*x)+')²+('+fa(4*x)+')²) = '+fa(a)+'.';}
-    else{const x=z-13,dx=z+2;q='نقطه‌ای از مبدأ، ابتدا '+fa(dx)+' واحد به راست و سپس '+fa(x)+' واحد افقی جابه‌جا می‌شود. مختصات نهایی x چیست؟';a=dx+x;e=fa(dx)+' + ('+fa(x)+') = '+fa(a)+'.';}
+    else{const x=z-13,dx=z+2;q='نقطه‌ای از مبدأ، ابتدا '+fa(dx)+' واحد به راست و سپس جابه‌جایی افقیِ '+fa(x)+' واحدی (با درنظرگرفتن علامت) انجام می‌شود. مختصات نهایی x چیست؟';a=dx+x;e=fa(dx)+' + ('+fa(x)+') = '+fa(a)+'.';}
     break;
    case 5:
     if(level==='easy'){const x=30+z%50,y=60+z%40;q='در مثلثی دو زاویه '+fa(x)+' و '+fa(y)+' درجه‌اند. زاویهٔ سوم چند درجه است؟';a=180-x-y;e='۱۸۰−'+fa(x)+'−'+fa(y)+' = '+fa(a)+' درجه.';}
