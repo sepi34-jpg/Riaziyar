@@ -244,7 +244,7 @@ button,select,input{touch-action:manipulation;}
 @media(max-width:600px){#geo-wonders .ry-ggb-tabs{gap:7px}#geo-wonders .ry-ggb-tabs .btn{flex-basis:205px;min-height:78px;padding:9px}#geo-wonders .ry-ggb-scroll-controls .mute{display:none}#geo-wonders .ry-ggb-scroll-controls{justify-content:space-between}#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}#geo-wonders:fullscreen{padding:8px}#geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 360px);min-height:300px}}
 
 /* کیبورد مجازی سراسری */
-#ry-virtual-keyboard{position:fixed;z-index:100000;left:10px;right:10px;bottom:10px;max-width:900px;margin:auto;padding:12px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:18px;box-shadow:0 12px 45px #0004;display:none;direction:rtl}
+#ry-virtual-keyboard{position:fixed;z-index:100000;left:10px;right:10px;bottom:10px;max-width:900px;max-height:min(82vh,760px);overflow-y:auto;margin:auto;padding:12px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:18px;box-shadow:0 12px 45px #0004;display:none;direction:rtl}#ry-virtual-keyboard .ry-vk-math-label{font-size:.78rem;font-weight:800;color:var(--mute);padding:3px 5px 0;margin-top:3px}
 #ry-virtual-keyboard.open{display:block}
 #ry-virtual-keyboard .ry-vk-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 #ry-virtual-keyboard .ry-vk-rows{display:grid;gap:6px}
@@ -2248,13 +2248,24 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const punctuation=document.createElement('div');punctuation.className='ry-vk-row';
   ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>punctuation.appendChild(makeKey(k,k)));
   rows.appendChild(punctuation);
-  // ردیف عملگرهای ریاضی برای ورودی‌های متنی و عبارت‌های ریاضی
-  const math=document.createElement('div');math.className='ry-vk-row ry-vk-math';
-  [['+','+'],['−','-'],['×','*'],['÷','/'],['=','='],['^','^'],['√','√('],['π','π'],['%','%'],['(', '('],[')',')'],['!','!']].forEach(([label,value])=>math.appendChild(makeKey(label,value,'ry-vk-math-key')));
-  rows.appendChild(math);
-  const functions=document.createElement('div');functions.className='ry-vk-row ry-vk-math';
-  [['sin','sin('],['cos','cos('],['tan','tan('],['log','log('],['ln','ln('],['x²','^2'],['x³','^3'],['√x','√('],['|x|','abs(']].forEach(([label,value])=>functions.appendChild(makeKey(label,value,'ry-vk-math-key')));
-  rows.appendChild(functions);
+  // مجموعهٔ گستردهٔ نمادها و عملگرهای ریاضی
+  const mathGroups=[
+   ['عملیات پایه و مقایسه',[['+','+'],['−','-'],['×','*'],['÷','/'],['·','*'],[': ',':'],['=','='],['≠','!='],['≈','≈'],['<','<'],['>','>'],['≤','<='],['≥','>='],['±','±'],['٪','%'],['%','%']]],
+   ['کسر، پرانتز و بخش‌پذیری',[['(','('],[')',')'],['[','['],[']',']'],['{','{'],['}','}'],['/','/'],['٫','.'],['…','…'],['mod','mod('],['gcd','gcd('],['lcm','lcm(']]],
+   ['توان، ریشه و قدرمطلق',[['^','^'],['x²','^2'],['x³','^3'],['xⁿ','^'],['√','√('],['∛','∛('],['ⁿ√','root('],['|x|','abs('],['!','!'],['!!','!!'],['⌊x⌋','floor('],['⌈x⌉','ceil(']]],
+   ['جبر و دنباله‌ها',[['x','x'],['y','y'],['a','a'],['b','b'],['c','c'],['Δ','Δ'],['Σ','Σ'],['∑','sum('],['∏','prod('],['∞','∞'],['∝','∝'],['∴','∴'],['∵','∵']]],
+   ['مثلثات و توابع',[['sin','sin('],['cos','cos('],['tan','tan('],['cot','cot('],['sec','sec('],['csc','csc('],['sin⁻¹','asin('],['cos⁻¹','acos('],['tan⁻¹','atan('],['sinh','sinh('],['cosh','cosh('],['tanh','tanh(']]],
+   ['لگاریتم و ثابت‌ها',[['log','log('],['ln','ln('],['log₂','log2('],['log₁₀','log10('],['e','e'],['π','π'],['τ','τ'],['φ','φ'],['i','i']]],
+   ['هندسه و مختصات',[['°','°'],['∠','∠'],['⊥','⊥'],['∥','∥'],['△','△'],['πr²','πr^2'],['²','^2'],['³','^3'],['→','→'],['↔','↔'],['⃗','⃗']]],
+   ['آمار، احتمال و مجموعه‌ها',[['P(A)','P(A)'],['P(A|B)','P(A|B)'],['μ','μ'],['σ','σ'],['x̄','x̄'],['∈','∈'],['∉','∉'],['⊂','⊂'],['⊆','⊆'],['∪','∪'],['∩','∩'],['∅','∅'],['∀','∀'],['∃','∃']]],
+   ['مباحث پیشرفته',[['∫','∫'],['∬','∬'],['∮','∮'],['d/dx','d/dx'],['∂','∂'],['∇','∇'],['lim','lim('],['→','→'],['∞','∞'],['det','det('],['vec','vec('],['mat','mat(']]]
+  ];
+  mathGroups.forEach(([heading,keys])=>{
+   const label=document.createElement('div');label.className='ry-vk-math-label';label.textContent=heading;rows.appendChild(label);
+   const group=document.createElement('div');group.className='ry-vk-row ry-vk-math';
+   keys.forEach(([key,value])=>group.appendChild(makeKey(key,value,'ry-vk-math-key')));
+   rows.appendChild(group);
+  });
   const bottom=document.createElement('div');bottom.className='ry-vk-row';
   bottom.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
   bottom.appendChild(makeKey('فاصله',' ','ry-vk-wide'));
