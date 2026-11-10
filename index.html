@@ -243,6 +243,11 @@ button,select,input{touch-action:manipulation;}
 #magic-shapes .ry-shape-net[hidden]{display:none}
 @media(max-width:700px){#magic-shapes .ry-shape-layout{grid-template-columns:1fr}#magic-shapes .ry-shape-stage{min-height:300px}#ry-shape-canvas{height:300px}}
 
+
+/* فلش‌های جابه‌جایی فقط داخل ابزارها نمایش داده شوند */
+body.landing #tabs-scroll-controls{display:none!important}
+#tabs-scroll-controls{justify-content:flex-start;gap:8px}
+#tabs-scroll-controls .btn{min-width:46px;min-height:40px}
 </style>
 </head>
 <body>
@@ -270,10 +275,9 @@ button,select,input{touch-action:manipulation;}
     <button data-t="geo-wonders">✨ عجایب هندسه</button>
     <button data-t="magic-shapes">🪄 اشکال جادویی</button>
   </nav>
-  <div id="tabs-scroll-controls" aria-label="پیمایش نوار ابزار">
-    <button class="btn" id="tabs-scroll-next" type="button" aria-label="رفتن به دکمه‌های بعدی" title="دکمه‌های بعدی">◀</button>
-    <span class="mute">برای دیدن بقیهٔ ابزارها از فلش‌ها یا نوار پایین استفاده کن</span>
-    <button class="btn" id="tabs-scroll-prev" type="button" aria-label="رفتن به دکمه‌های قبلی" title="دکمه‌های قبلی">▶</button>
+  <div id="tabs-scroll-controls" aria-label="رفتن به بخش قبلی یا بعدی">
+    <button class="btn" id="tabs-scroll-next" type="button" aria-label="بخش بعدی" title="رفتن به بخش بعدی">◀</button>
+    <button class="btn" id="tabs-scroll-prev" type="button" aria-label="بخش قبلی" title="رفتن به بخش قبلی">▶</button>
   </div>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
@@ -2006,13 +2010,31 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 
 <script>
 (()=>{
- const bar=document.getElementById('tabs');
  const next=document.getElementById('tabs-scroll-next');
  const prev=document.getElementById('tabs-scroll-prev');
- if(!bar||!next||!prev)return;
- const move=direction=>bar.scrollBy({left:direction*Math.max(220,bar.clientWidth*.72),behavior:'smooth'});
- next.addEventListener('click',()=>move(-1));
- prev.addEventListener('click',()=>move(1));
+ const tabs=Array.from(document.querySelectorAll('#tabs button[data-t]'));
+ const controls=document.getElementById('tabs-scroll-controls');
+ if(!next||!prev||!tabs.length||!controls)return;
+ const currentIndex=()=>{const active=document.querySelector('main>section:not([hidden])');return active?tabs.findIndex(b=>b.dataset.t===active.id):0};
+ const sync=()=>{
+  const i=currentIndex();
+  controls.style.display=(i<=0)?'none':'flex';
+  prev.disabled=i<=0;
+  next.disabled=i<0||i>=tabs.length-1;
+ };
+ const go=delta=>{
+  const i=currentIndex(),target=tabs[i+delta];
+  if(target)target.click();
+  requestAnimationFrame(sync);
+  setTimeout(sync,80);
+ };
+ next.addEventListener('click',()=>go(1));
+ prev.addEventListener('click',()=>go(-1));
+ tabs.forEach(b=>b.addEventListener('click',()=>setTimeout(sync,0)));
+ const observer=new MutationObserver(sync);
+ document.querySelectorAll('main>section').forEach(section=>observer.observe(section,{attributes:true,attributeFilter:['hidden']}));
+ window.addEventListener('pageshow',sync);
+ sync();
 })();
 </script>
 
