@@ -248,6 +248,26 @@ button,select,input{touch-action:manipulation;}
 body.landing #tabs-scroll-controls{display:none!important}
 #tabs-scroll-controls{justify-content:flex-start;gap:8px}
 #tabs-scroll-controls .btn{min-width:46px;min-height:40px}
+
+/* درخت تجزیه و ابزار ب.م.م و ک.م.م */
+#factor-tree .ft-input{width:min(100%,240px);direction:ltr;text-align:center;font-size:1.15rem}
+#factor-tree .ft-stage{min-height:190px;display:flex;align-items:flex-start;justify-content:center;overflow-x:auto;padding:18px 8px;background:var(--surface);border-radius:14px}
+#factor-tree .ft-tree{display:flex;flex-direction:column;align-items:center;min-width:max-content;gap:8px}
+#factor-tree .ft-node{display:flex;flex-direction:column;align-items:center;gap:8px;animation:ftPop .45s both;animation-delay:var(--delay,0ms)}
+#factor-tree .ft-value{display:inline-grid;place-items:center;min-width:42px;min-height:42px;padding:7px 12px;border:2px solid var(--accent);border-radius:12px;background:var(--card);font:800 1.15rem 'IBM Plex Mono',monospace;color:var(--ink);box-shadow:0 4px 12px #0001}
+#factor-tree .ft-value.prime{background:var(--accent);color:var(--on)}
+#factor-tree .ft-branches{display:flex;justify-content:center;gap:24px;position:relative;padding-top:16px}
+#factor-tree .ft-branches:before{content:'';position:absolute;top:0;left:25%;right:25%;height:1px;background:var(--accent)}
+#factor-tree .ft-child{position:relative;padding-top:10px}
+#factor-tree .ft-child:before{content:'';position:absolute;top:0;left:50%;height:10px;border-left:1px solid var(--accent)}
+#factor-tree .ft-note{font-size:.8rem;color:var(--mute)}
+#factor-tree .ft-result{font-weight:800;color:var(--ok);margin-top:10px}
+@keyframes ftPop{from{opacity:0;transform:translateY(-12px) scale(.8)}to{opacity:1;transform:translateY(0) scale(1)}}
+#gcf-lcm .gcf-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+#gcf-lcm input{width:100%;direction:ltr;text-align:center;font-size:1.1rem}
+#gcf-lcm .gcf-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
+#gcf-lcm .gcf-result{background:var(--surface);padding:14px;border-radius:12px;text-align:center}
+#gcf-lcm .gcf-result strong{display:block;font-size:1.6rem;color:var(--accent);font-family:'IBM Plex Mono',monospace}
 </style>
 </head>
 <body>
@@ -274,6 +294,8 @@ body.landing #tabs-scroll-controls{display:none!important}
     <button data-t="tizhooshani">تیزهوشانی</button>
     <button data-t="geo-wonders">✨ عجایب هندسه</button>
     <button data-t="magic-shapes">🪄 اشکال جادویی</button>
+    <button data-t="factor-tree">🌳 درخت تجزیهٔ عدد</button>
+    <button data-t="gcf-lcm">➗ ب.م.م و ک.م.م</button>
   </nav>
   <div id="tabs-scroll-controls" aria-label="رفتن به بخش قبلی یا بعدی">
     <button class="btn" id="tabs-scroll-next" type="button" aria-label="بخش بعدی" title="رفتن به بخش بعدی">◀</button>
@@ -361,6 +383,8 @@ body.landing #tabs-scroll-controls{display:none!important}
   <button type="button" class="welcome-option" data-ry-open="chapters"><span class="wo-icon" aria-hidden="true">📖</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش و مثال‌های ۹ فصل</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="community"><span class="wo-icon" aria-hidden="true">💬</span><span class="wo-text"><strong>دیدگاه‌ها</strong><small>گفت‌وگو و نظرهای کاربران</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="tizhooshani"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>تیزهوشانی نهم به دهم</strong><small>دفترچه‌ها، پاسخ‌نامه‌ها و تمرین‌های تألیفی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="factor-tree"><span class="wo-icon" aria-hidden="true">🌳</span><span class="wo-text"><strong>درخت تجزیهٔ عدد</strong><small>تجزیهٔ انیمیشنی به عامل‌های اول</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="gcf-lcm"><span class="wo-icon" aria-hidden="true">➗</span><span class="wo-text"><strong>ب.م.م و ک.م.م</strong><small>محاسبهٔ بزرگ‌ترین مقسوم‌علیه و کوچک‌ترین مضرب مشترک</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
@@ -665,6 +689,28 @@ body.landing #tabs-scroll-controls{display:none!important}
 </section>
 
 
+
+<section id="factor-tree" hidden>
+ <div class="card">
+  <h2>🌳 درخت تجزیهٔ عدد به عامل‌های اول</h2>
+  <p class="mute">یک عدد صحیح بزرگ‌تر از ۱ وارد کن و دکمهٔ نمایش را بزن. عدد مرحله‌به‌مرحله به عامل‌های کوچک‌تر تقسیم می‌شود تا فقط عددهای اول باقی بمانند.</p>
+  <div class="row"><input id="ft-number" class="ft-input" type="number" min="2" max="999999" value="22" step="1" aria-label="عدد برای تجزیه"><button id="ft-show" class="btn pri" type="button">▶ نمایش انیمیشنی</button></div>
+  <div id="ft-error" class="mute" role="alert"></div>
+  <div class="ft-stage" id="ft-stage" aria-live="polite"><div class="ft-tree"><div class="ft-value">۲۲</div><div class="ft-note">برای شروع روی نمایش انیمیشنی بزن</div></div></div>
+  <div id="ft-factorization" class="ft-result" aria-live="polite"></div>
+  <p class="mute">نکته: در مثال ۲۲، شاخه‌ها به ۱۱ و ۲ می‌رسند. چون هر دو عدد اول‌اند، دیگر به ۱ تبدیل نمی‌شوند؛ تجزیه وقتی تمام می‌شود که همهٔ برگ‌ها عدد اول باشند.</p>
+ </div>
+</section>
+<section id="gcf-lcm" hidden>
+ <div class="card">
+  <h2>➗ محاسبه‌گر ب.م.م و ک.م.م</h2>
+  <p class="mute">دو عدد صحیح مثبت وارد کن تا بزرگ‌ترین مقسوم‌علیه مشترک و کوچک‌ترین مضرب مشترک آن‌ها محاسبه شود.</p>
+  <div class="gcf-fields"><label>عدد اول<input id="gcf-a" type="number" min="1" max="1000000" value="12"></label><label>عدد دوم<input id="gcf-b" type="number" min="1" max="1000000" value="18"></label></div>
+  <div class="row" style="margin-top:12px"><button id="gcf-calc" class="btn pri" type="button">محاسبه کن</button><button id="gcf-reset" class="btn" type="button">بازنشانی</button></div>
+  <div id="gcf-error" class="mute" role="alert"></div>
+  <div id="gcf-output" aria-live="polite"><div class="gcf-results"><div class="gcf-result"><span>ب.م.م</span><strong>۶</strong></div><div class="gcf-result"><span>ک.م.م</span><strong>۳۶</strong></div></div></div>
+ </div>
+</section>
 
 <section id="geo-wonders" hidden>
  <div class="card">
@@ -2219,5 +2265,47 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 })();
 </script>
 
+
+<script>
+(()=>{
+ const input=document.getElementById('ft-number'),stage=document.getElementById('ft-stage'),out=document.getElementById('ft-factorization'),err=document.getElementById('ft-error'),show=document.getElementById('ft-show');
+ if(!input||!stage||!out||!err||!show)return;
+ const toFa=s=>String(s).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+ const primeFactors=n=>{const a=[];for(let p=2;p*p<=n;p++){while(n%p===0){a.push(p);n/=p}}if(n>1)a.push(n);return a};
+ const makeTree=(n,delay=0)=>{
+  const wrap=document.createElement('div');wrap.className='ft-node';wrap.style.setProperty('--delay',delay+'ms');
+  const value=document.createElement('div');value.className='ft-value';value.textContent=toFa(n);wrap.appendChild(value);
+  let divisor=0;for(let p=2;p*p<=n;p++){if(n%p===0){divisor=p;break}}
+  if(!divisor){value.classList.add('prime');const note=document.createElement('span');note.className='ft-note';note.textContent='عدد اول';wrap.appendChild(note);return wrap}
+  const other=n/divisor,children=[divisor,other].sort((a,b)=>b-a),branches=document.createElement('div');branches.className='ft-branches';
+  children.forEach((v,i)=>{const child=document.createElement('div');child.className='ft-child';child.appendChild(makeTree(v,delay+180+(i*100)));branches.appendChild(child)});
+  wrap.appendChild(branches);return wrap;
+ };
+ const render=()=>{
+  const n=Number(input.value);out.textContent='';err.textContent='';
+  if(!Number.isSafeInteger(n)||n<2||n>999999){err.textContent='لطفاً عدد صحیحی بین ۲ تا ۹۹۹٬۹۹۹ وارد کن.';return}
+  stage.replaceChildren(makeTree(n));
+  const factors=primeFactors(n),counts={};factors.forEach(p=>counts[p]=(counts[p]||0)+1);
+  const product=Object.entries(counts).map(([p,k])=>k===1?toFa(p):toFa(p)+'^'+toFa(k)).join(' × ');
+  out.textContent='تجزیهٔ نهایی: '+toFa(n)+' = '+product;
+ };
+ show.addEventListener('click',render);input.addEventListener('keydown',e=>{if(e.key==='Enter')render()});render();
+})();
+</script>
+<script>
+(()=>{
+ const a=document.getElementById('gcf-a'),b=document.getElementById('gcf-b'),output=document.getElementById('gcf-output'),error=document.getElementById('gcf-error');
+ const calc=()=>{
+  const x=Number(a.value),y=Number(b.value);error.textContent='';
+  if(!Number.isSafeInteger(x)||!Number.isSafeInteger(y)||x<1||y<1||x>1000000||y>1000000){error.textContent='هر دو عدد باید صحیح و بین ۱ تا ۱٬۰۰۰٬۰۰۰ باشند.';return}
+  let m=x,n=y;while(n){const r=m%n;m=n;n=r}const gcd=m,lcm=(x/gcd)*y;
+  const fa=v=>String(v).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+  output.innerHTML='<div class="gcf-results"><div class="gcf-result"><span>ب.م.م</span><strong>'+fa(gcd)+'</strong><small>'+fa(x)+' و '+fa(y)+'</small></div><div class="gcf-result"><span>ک.م.م</span><strong>'+fa(lcm)+'</strong><small>کوچک‌ترین مضرب مشترک</small></div></div><p class="mute">روش بررسی: ب.م.م با الگوریتم اقلیدس محاسبه شد؛ ک.م.م از حاصل‌ضرب دو عدد تقسیم بر ب.م.م به‌دست آمد.</p>';
+ };
+ document.getElementById('gcf-calc').addEventListener('click',calc);
+ document.getElementById('gcf-reset').addEventListener('click',()=>{a.value=12;b.value=18;calc()});
+ [a,b].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')calc()}));calc();
+})();
+</script>
 </body>
 </html>
