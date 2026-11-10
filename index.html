@@ -174,6 +174,15 @@ button,select,input{touch-action:manipulation;}
 .ry-number-picker{display:block;min-width:0!important;width:100%}
 
 .ry-password-wrap{position:relative;width:100%}.ry-password-wrap input{padding-right:48px!important;padding-left:10px!important}.ry-password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:1px solid var(--stone);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 9px;cursor:pointer;line-height:1}.ry-password-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* AI همه‌کاره */
+#ry-ai-chat .ry-ai-bubble{max-width:92%;padding:11px 13px;border-radius:14px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere}
+#ry-ai-chat .ry-ai-user{align-self:flex-start;background:var(--accent);color:var(--on);border-bottom-left-radius:4px}
+#ry-ai-chat .ry-ai-assistant{align-self:flex-end;background:var(--card);border:1px solid var(--stone);border-bottom-right-radius:4px}
+#ry-ai-chat .ry-ai-label{font-size:.72rem;opacity:.75;margin-bottom:3px}
+#ry-ai-input{background:var(--surface);border:1px solid var(--stone);border-radius:12px;padding:11px;color:var(--ink);font:inherit}
+#ry-ai-send:disabled{opacity:.55;cursor:wait}
+
 </style>
 </head>
 <body>
@@ -198,6 +207,7 @@ button,select,input{touch-action:manipulation;}
     <button data-t="searchbank">جست‌وجوی سؤال</button>
     <button data-t="chapters">درس‌نامهٔ ریاضی هشتم</button>
     <button data-t="tizhooshani">تیزهوشانی</button>
+    <button data-t="ai-allrounder">🤖 AI همه‌کاره</button>
   </nav>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
@@ -280,6 +290,7 @@ button,select,input{touch-action:manipulation;}
   <button type="button" class="welcome-option" data-ry-open="chapters"><span class="wo-icon" aria-hidden="true">📖</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش و مثال‌های ۹ فصل</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="community"><span class="wo-icon" aria-hidden="true">💬</span><span class="wo-text"><strong>دیدگاه‌ها</strong><small>گفت‌وگو و نظرهای کاربران</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="tizhooshani"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>تیزهوشانی نهم به دهم</strong><small>دفترچه‌ها، پاسخ‌نامه‌ها و تمرین‌های تألیفی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="ai-allrounder"><span class="wo-icon" aria-hidden="true">🤖</span><span class="wo-text"><strong>AI همه‌کاره</strong><small>دستیار هوشمند برای آموزش، حل سؤال و گفت‌وگو</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
@@ -580,6 +591,31 @@ button,select,input{touch-action:manipulation;}
   <h2>تمرین‌های تألیفی استعداد تحلیلی ✍️</h2>
   <p class="mute">این سؤال‌ها برای تمرین طراحی شده‌اند و سؤال رسمی آزمون‌های گذشته نیستند. پاسخ هر سؤال را با دکمهٔ «نمایش پاسخ» بررسی کن.</p>
   <div id="ry-tiz-questions" class="tool-grid"></div>
+ </div>
+</section>
+
+<section id="ai-allrounder" hidden>
+ <div class="card">
+  <div class="row" style="justify-content:space-between;align-items:center">
+   <h2>🤖 AI همه‌کاره</h2>
+   <button class="btn" type="button" id="ry-ai-clear">گفت‌وگوی جدید</button>
+  </div>
+  <p class="mute">دستیار هوشمند ریاضی‌یار برای حل مرحله‌به‌مرحلهٔ سؤال‌ها، آموزش درس‌ها، تمرین امتحانی و پرسش‌های عمومی.</p>
+  <div id="ry-ai-chat" role="log" aria-live="polite" aria-label="گفت‌وگو با دستیار" style="display:flex;flex-direction:column;gap:10px;max-height:55vh;min-height:240px;overflow:auto;padding:12px;background:var(--surface);border:1px solid var(--stone);border-radius:14px"></div>
+  <div class="row" style="margin:10px 0">
+   <button class="btn ry-ai-example" type="button" data-prompt="معادلهٔ x^2 - 5x + 6 = 0 را مرحله‌به‌مرحله حل کن.">حل معادله</button>
+   <button class="btn ry-ai-example" type="button" data-prompt="فصل معادله‌های ریاضی هشتم را ساده و با مثال آموزش بده.">آموزش درس</button>
+   <button class="btn ry-ai-example" type="button" data-prompt="از مبحث عددهای صحیح ۵ سؤال تمرینی با پاسخ تشریحی بساز.">نمونه‌سؤال</button>
+  </div>
+  <form id="ry-ai-form">
+   <label for="ry-ai-input">پیامت را بنویس</label>
+   <textarea id="ry-ai-input" rows="3" maxlength="3000" placeholder="هر سؤالی داری اینجا بنویس…" style="width:100%;margin:8px 0;resize:vertical" required></textarea>
+   <div class="row">
+    <button class="btn pri" id="ry-ai-send" type="submit">ارسال پیام</button>
+    <span class="mute" id="ry-ai-status" role="status">برای استفاده از دستیار باید وارد حساب ریاضی‌یار شوی.</span>
+   </div>
+  </form>
+  <p class="mute" style="margin-top:12px">پاسخ‌های هوش مصنوعی ممکن است اشتباه باشند؛ جواب‌های مهم درسی را با کتاب یا معلم هم بررسی کن. گفت‌وگو در این صفحه فقط تا زمان تازه‌سازی صفحه نگه داشته می‌شود.</p>
  </div>
 </section>
 </main>
@@ -1770,5 +1806,71 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  window.scrollTo(0,0);
 });
 </script>
+
+<script>
+(()=>{
+ const client=window.riaziYarSupabase;
+ const chat=document.getElementById('ry-ai-chat');
+ const form=document.getElementById('ry-ai-form');
+ if(!chat||!form)return;
+ const input=document.getElementById('ry-ai-input');
+ const send=document.getElementById('ry-ai-send');
+ const status=document.getElementById('ry-ai-status');
+ const clear=document.getElementById('ry-ai-clear');
+ let messages=[];
+ const addBubble=(role,text)=>{
+  const bubble=document.createElement('div');
+  bubble.className='ry-ai-bubble '+(role==='user'?'ry-ai-user':'ry-ai-assistant');
+  const label=document.createElement('div');
+  label.className='ry-ai-label';
+  label.textContent=role==='user'?'شما':'AI همه‌کاره';
+  const content=document.createElement('div');
+  content.textContent=text;
+  bubble.append(label,content);
+  chat.appendChild(bubble);
+  chat.scrollTop=chat.scrollHeight;
+  return bubble;
+ };
+ const greeting='سلام! من AI همه‌کارهٔ ریاضی‌یار هستم. می‌توانم در درس‌ها، حل سؤال‌ها، ساخت تمرین و پرسش‌های عمومی کمکت کنم. از کجا شروع کنیم؟';
+ const reset=()=>{messages=[];chat.replaceChildren();addBubble('assistant',greeting);status.textContent='برای استفاده از دستیار باید وارد حساب ریاضی‌یار شوی.';};
+ reset();
+ clear.addEventListener('click',reset);
+ document.querySelectorAll('.ry-ai-example').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.prompt||'';input.focus();}));
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const prompt=input.value.trim();
+  if(!prompt||send.disabled)return;
+  if(!client){status.textContent='اتصال حساب کاربری آماده نیست. صفحه را تازه‌سازی کن.';return;}
+  const {data:{session},error:sessionError}=await client.auth.getSession();
+  if(sessionError||!session){status.textContent='برای گفت‌وگو ابتدا وارد حساب ریاضی‌یار شو.';document.getElementById('ry-auth-open')?.click();return;}
+  messages.push({role:'user',content:prompt});
+  addBubble('user',prompt);
+  input.value='';
+  send.disabled=true;
+  send.textContent='در حال پاسخ…';
+  status.textContent='AI در حال فکر کردن است…';
+  const typing=addBubble('assistant','در حال آماده‌سازی پاسخ…');
+  try{
+   const {data,error}=await client.functions.invoke('ai-allrounder',{body:{messages:messages.slice(-12)}});
+   typing.remove();
+   if(error)throw error;
+   if(!data?.answer)throw new Error(data?.error||'پاسخ معتبری دریافت نشد.');
+   messages.push({role:'assistant',content:data.answer});
+   addBubble('assistant',data.answer);
+   status.textContent='پاسخ دریافت شد.';
+  }catch(err){
+   const message=err?.context?.json?.error||err?.message||'خطای نامشخص';
+   addBubble('assistant','نتوانستم پاسخ را دریافت کنم: '+message);
+   status.textContent='ارسال ناموفق بود.';
+  }finally{
+   send.disabled=false;
+   send.textContent='ارسال پیام';
+   input.focus();
+  }
+ });
+ input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit();}});
+})();
+</script>
+
 </body>
 </html>
