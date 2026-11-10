@@ -389,8 +389,8 @@ button,select,input{touch-action:manipulation;}
 <!-- ================= حل‌کننده معادله ================= -->
 <section id="solver" hidden>
   <div class="card">
-    <h2>حل‌کنندهٔ پیشرفتهٔ معادلات خطی</h2>
-    <p class="mute">معادله را با x وارد کن. متغیر می‌تواند در هر دو طرف باشد؛ پرانتز، کسر با /، عدد اعشاری و ضرب ضمنی مثل 3x هم پشتیبانی می‌شود. مراحل ساده‌سازی، جواب و بررسی نهایی نمایش داده می‌شوند.</p>
+    <h2>حل‌کنندهٔ معادلات خطی و درجهٔ دوم</h2>
+    <p class="mute">معادله را با x وارد کن. متغیر می‌تواند در هر دو طرف باشد؛ پرانتز، کسر با /، عدد اعشاری و ضرب ضمنی مثل 3x هم پشتیبانی می‌شود. توان صحیح تا درجهٔ دوم، پرانتز، کسر عددی و معادله‌های خطی و درجهٔ دوم را مرحله‌به‌مرحله حل می‌کند.</p>
     <div class="row">
       <input id="eqin" type="text" style="flex:1;min-width:220px;direction:ltr;text-align:left" placeholder="مثلاً 3(x - 2) + 4 = 2x + 9" aria-label="معادله">
       <button class="btn pri" id="eqsolve">حل معادله</button>
@@ -402,10 +402,10 @@ button,select,input{touch-action:manipulation;}
       <button class="btn eq-example" data-eq="5x - 7 = 2x + 8">x در دو طرف</button>
       <button class="btn eq-example" data-eq="0.5x + 2 = 6">اعشاری</button>
       <button class="btn eq-example" data-eq="4x + 3 = 4x + 3">بی‌نهایت جواب</button>
-      <button class="btn eq-example" data-eq="2x + 1 = 2x + 5">بدون جواب</button>
+      <button class="btn eq-example" data-eq="2x + 1 = 2x + 5">بدون جواب</button><button class="btn eq-example" data-eq="x^2 - 5x + 6 = 0">درجهٔ دوم</button><button class="btn eq-example" data-eq="(x + 2)^2 = 9">توان و پرانتز</button>
     </div>
     <div id="eqout" class="fb" hidden aria-live="polite"></div>
-    <div class="mute" style="margin-top:10px">این ابزار معادله‌های خطی را حل می‌کند. توان x، ضرب دو عبارت متغیردار و تقسیم بر عبارتی شامل x پشتیبانی نمی‌شود. از علامت * برای ضرب و / برای کسر استفاده کن؛ مخرج باید عدد ثابت و ناصفر باشد.</div>
+    <div class="mute" style="margin-top:10px">در این نسخه معادله‌های چندجمله‌ای تا درجهٔ دوم پشتیبانی می‌شوند. توان را با ^ بنویس؛ مثلاً x^2. تقسیم بر عبارت شامل x و توان‌های بالاتر از ۲ هنوز پشتیبانی نمی‌شوند.</div>
   </div>
 </section>
 
@@ -894,7 +894,7 @@ $('sprimes').onclick=()=>{sAuto(false);sGo(sv.pr.length,'primes')};
 $('scomp').onclick=()=>{sAuto(false);sGo(sv.pr.length,'comp')};
   sInit();
 
-/* ======================= حل‌کنندهٔ پیشرفتهٔ معادلات خطی ======================= */
+/* ======================= حل‌کنندهٔ معادلات تا درجهٔ دوم ======================= */
 function eqParse(source){
   let s=String(source||'').trim()
     .replace(/[۰-۹]/g,ch=>String(ch.charCodeAt(0)-1776))
@@ -906,92 +906,134 @@ function eqParse(source){
   if(!s) throw Error('اول یک معادله وارد کن.');
   if((s.match(/=/g)||[]).length!==1) throw Error('معادله باید دقیقاً یک علامت = داشته باشد.');
   const raw=s.match(/(?:\d+(?:\.\d*)?|\.\d+)|x|[+\-*/^()=]/g)||[];
-  if(raw.join('')!==s) throw Error('یک نویسه نامعتبر وجود دارد. از عدد، x، پرانتز و علامت‌های + − * / استفاده کن.');
+  if(raw.join('')!==s) throw Error('یک نویسه نامعتبر وجود دارد. از عدد، x، پرانتز و علامت‌های + − * / ^ استفاده کن.');
   const eq=raw.indexOf('=');
   if(eq===0||eq===raw.length-1) throw Error('دو طرف علامت = باید عبارت داشته باشند.');
-  const insert=[];
+  const tokens=[];
   for(let i=0;i<raw.length;i++){
-    const a=raw[i], b=raw[i+1];
-    insert.push(a);
-    const ends= a==='x'||a===')'||/^\d/.test(a)||a.startsWith('.');
-    const begins= b==='x'||b==='('||/^\d/.test(b)||b?.startsWith('.');
-    if(ends&&begins) insert.push('*');
+    const a=raw[i], b=raw[i+1]; tokens.push(a);
+    const ends=a==='x'||a===')'||/^\d/.test(a)||a.startsWith('.');
+    const begins=b==='x'||b==='('||/^\d/.test(b)||b?.startsWith('.');
+    if(ends&&begins) tokens.push('*');
   }
-  const tokens=insert;
   const eqAt=tokens.indexOf('=');
-  if(tokens.slice(0,eqAt).includes('=')||tokens.slice(eqAt+1).includes('=')) throw Error('علامت مساوی نامعتبر است.');
+  const eps=1e-10, trim=p=>p.map(v=>Math.abs(v)<eps?0:v);
+  const add=(a,b,k)=>trim([a[0]+k*b[0],a[1]+k*b[1],a[2]+k*b[2]]);
+  const mul=(a,b)=>{
+    const z=[0,0,0];
+    for(let i=0;i<=2;i++)for(let j=0;j<=2;j++){
+      if(Math.abs(a[i]*b[j])<eps)continue;
+      if(i+j>2)throw Error('این معادله درجهٔ بالاتر از ۲ دارد؛ در این نسخه حداکثر x² پشتیبانی می‌شود.');
+      z[i+j]+=a[i]*b[j];
+    }
+    return trim(z);
+  };
   function parseSide(arr){
     let i=0;
-    const eps=1e-12;
-    const trim=p=>[Math.abs(p[0])<eps?0:p[0],Math.abs(p[1])<eps?0:p[1]]; // [constant, x coefficient]
-    const add=(a,b,k=1)=>trim([a[0]+k*b[0],a[1]+k*b[1]]);
-    const mul=(a,b)=>{
-      if(Math.abs(a[1]*b[1])>eps) throw Error('این عبارت شامل x² می‌شود؛ این ابزار فقط معادله‌های خطی را حل می‌کند.');
-      return trim([a[0]*b[0],a[0]*b[1]+a[1]*b[0]]);
-    };
-    const div=(a,b)=>{
-      if(Math.abs(b[1])>eps) throw Error('تقسیم بر عبارتی که شامل x است پشتیبانی نمی‌شود.');
-      if(Math.abs(b[0])<eps) throw Error('تقسیم بر صفر مجاز نیست.');
-      return trim([a[0]/b[0],a[1]/b[0]]);
-    };
     function atom(){
       const t=arr[i++];
-      if(t===undefined) throw Error('عبارت ناقص است.');
-      if(t==='+') return atom();
-      if(t==='-'){const v=atom();return trim([-v[0],-v[1]]);}
+      if(t===undefined)throw Error('عبارت ناقص است.');
+      if(t==='+')return atom();
+      if(t==='-')return trim(atom().map(v=>-v));
       if(t==='('){const v=expr();if(arr[i]!==')')throw Error('پرانتز باز مانده است یا جفت آن وجود ندارد.');i++;return v;}
-      if(t==='x') return [0,1];
-      if(/^\d/.test(t)||t.startsWith('.')){const n=Number(t);if(!Number.isFinite(n))throw Error('عدد واردشده معتبر نیست.');return [n,0];}
+      if(t==='x')return [0,1,0];
+      if(/^\d/.test(t)||t.startsWith('.')){const n=Number(t);if(!Number.isFinite(n))throw Error('عدد معتبر نیست.');return [n,0,0];}
       if(t===')')throw Error('پرانتز بسته بدون پرانتز باز وجود دارد.');
       throw Error('در این قسمت عدد، x یا پرانتز لازم است.');
     }
-    function factor(){
-      const v=atom();
-      if(arr[i]==='^') throw Error('توان در این نسخه پشتیبانی نمی‌شود؛ فقط معادله‌های خطی مانند 2x + 3 = 9 را وارد کن.');
+    function power(){
+      let v=atom();
+      if(arr[i]==='^'){
+        i++;let sign=1;
+        if(arr[i]==='-'){sign=-1;i++;}
+        const n=Number(arr[i++])*sign;
+        if(!Number.isInteger(n)||n<0||n>2)throw Error('توان باید یکی از عددهای صحیح ۰، ۱ یا ۲ باشد.');
+        if(n===0)return [1,0,0];
+        if(n===1)return v;
+        return mul(v,v);
+      }
       return v;
     }
-    function term(){let v=factor();while(arr[i]==='*'||arr[i]==='/'){const op=arr[i++],w=factor();v=op==='*'?mul(v,w):div(v,w);}return v;}
-    function expr(){let v=term();while(arr[i]==='+'||arr[i]==='-'){const op=arr[i++],w=term();v=add(v,w,op==='+'?1:-1);}return v;}
+    function factor(){return power();}
+    function term(){
+      let v=factor();
+      while(arr[i]==='*'||arr[i]==='/'){
+        const op=arr[i++],w=factor();
+        if(op==='*')v=mul(v,w);
+        else{
+          if(Math.abs(w[1])>eps||Math.abs(w[2])>eps)throw Error('تقسیم بر عبارتی که شامل x است در این نسخه پشتیبانی نمی‌شود.');
+          if(Math.abs(w[0])<eps)throw Error('تقسیم بر صفر مجاز نیست.');
+          v=trim(v.map(n=>n/w[0]));
+        }
+      }
+      return v;
+    }
+    function expr(){
+      let v=term();
+      while(arr[i]==='+'||arr[i]==='-'){const op=arr[i++],w=term();v=add(v,w,op==='+'?1:-1);}
+      return v;
+    }
     const result=expr();
-    if(i!==arr.length) throw Error(arr[i]===')'?'پرانتز بستهٔ اضافی وجود دارد.':'بخشی از عبارت قابل پردازش نیست؛ علامت‌ها را بررسی کن.');
+    if(i!==arr.length)throw Error(arr[i]===')'?'پرانتز بستهٔ اضافی وجود دارد.':'بخشی از عبارت قابل پردازش نیست؛ علامت‌ها را بررسی کن.');
     return result;
   }
-  const left=parseSide(tokens.slice(0,eqAt)), right=parseSide(tokens.slice(eqAt+1));
-  return {left,right,a:left[1]-right[1],b:right[0]-left[0]};
+  const left=parseSide(tokens.slice(0,eqAt)),right=parseSide(tokens.slice(eqAt+1));
+  return {left,right,p:trim(left.map((v,i)=>v-right[i]))};
 }
-function eqNum(n){if(Math.abs(n)<1e-10)return '0';if(Math.abs(n-Math.round(n))<1e-10)return String(Math.round(n));return String(Number(n.toPrecision(10)));}
-function eqPoly(a,b){
-  const eps=1e-10;let s='';
-  if(Math.abs(a)>eps)s+=(a<0?'−':'')+(Math.abs(Math.abs(a)-1)<eps?'':eqNum(Math.abs(a)))+'x';
-  if(Math.abs(b)>eps){if(s)s+=b<0?' − ':' + ';else if(b<0)s+='−';s+=eqNum(Math.abs(b));}
-  return s||'0';
+function eqNum(n){
+  if(Math.abs(n)<1e-10)return '0';
+  if(Math.abs(n-Math.round(n))<1e-10)return String(Math.round(n));
+  return String(Number(n.toPrecision(10)));
+}
+function eqPoly(p){
+  let out='';
+  for(let i=2;i>=0;i--){
+    const v=p[i];if(Math.abs(v)<1e-10)continue;
+    const mag=Math.abs(v),term=(i===0?'':(Math.abs(mag-1)<1e-10?'':eqNum(mag))+'x')+(i===2?'²':'');
+    if(!out)out=(v<0?'−':'')+term;
+    else out+=(v<0?' − ':' + ')+term;
+  }
+  return out||'0';
 }
 function solveEquation(){
   const out=$('eqout');out.hidden=false;out.className='fb';
   try{
-    const r=eqParse($('eqin').value), eps=1e-10;
-    const steps=[];
-    steps.push(`بعد از باز کردن پرانتزها و ساده‌سازی: <bdi dir="ltr">${eqPoly(r.left[1],r.left[0])} = ${eqPoly(r.right[1],r.right[0])}</bdi>`);
-    const a=r.a, b=r.b;
+    const r=eqParse($('eqin').value),p=r.p,steps=[];
+    steps.push('پس از باز کردن پرانتزها و ساده‌سازی: <bdi dir="ltr">'+eqPoly(r.left)+' = '+eqPoly(r.right)+'</bdi>');
+    steps.push('با انتقال همهٔ جمله‌ها به یک طرف: <bdi dir="ltr">'+eqPoly(p)+' = 0</bdi>');
+    const c=p[0],b=p[1],a=p[2],eps=1e-10;
+    let roots=[];
     if(Math.abs(a)<eps){
       if(Math.abs(b)<eps){
-        steps.push('با کم کردن عبارت‌های دو طرف، به تساوی <bdi dir="ltr">0 = 0</bdi> می‌رسیم.');
-        steps.push('<b>نتیجه: بی‌نهایت جواب</b>؛ هر عددی را به‌جای x بگذاری، معادله درست می‌ماند.');
+        if(Math.abs(c)<eps)steps.push('<b>بی‌نهایت جواب:</b> دو طرف معادله برای هر x برابرند.');
+        else steps.push('<b>معادله جواب ندارد:</b> به تساوی نادرست <bdi dir="ltr">0 = '+eqNum(-c)+'</bdi> می‌رسیم.');
       }else{
-        steps.push(`با حذف جمله‌های x به تساوی نادرست <bdi dir="ltr">0 = ${eqNum(b)}</bdi> می‌رسیم.`);
-        steps.push('<b>نتیجه: معادله جواب ندارد.</b>');
+        const x=-c/b;roots=[x];
+        steps.push('معادله خطی است؛ عدد ثابت را منتقل و بر ضریب x تقسیم می‌کنیم: <bdi dir="ltr">x = '+eqNum(x)+'</bdi>.');
       }
     }else{
-      steps.push(`جمله‌های دارای x را در یک طرف و عددهای ثابت را در طرف دیگر جمع می‌کنیم: <bdi dir="ltr">${eqPoly(a,0)} = ${eqNum(b)}</bdi>.`);
-      const x=b/a;
-      steps.push(`هر دو طرف را بر ضریب x یعنی <bdi dir="ltr">${eqNum(a)}</bdi> تقسیم می‌کنیم.`);
-      steps.push(`<b>جواب نهایی: <bdi dir="ltr">x = ${eqNum(x)}</bdi></b>`);
-      const lv=r.left[0]+r.left[1]*x, rv=r.right[0]+r.right[1]*x;
-      const ok=Math.abs(lv-rv)<1e-7*Math.max(1,Math.abs(lv),Math.abs(rv));
-      steps.push(`بررسی با جای‌گذاری جواب: طرف چپ = <bdi dir="ltr">${eqNum(lv)}</bdi> و طرف راست = <bdi dir="ltr">${eqNum(rv)}</bdi>. ${ok?'دو طرف برابرند؛ جواب درست است ✓':'دو طرف برابر نشدند؛ لطفاً ورودی را بررسی کن.'}`);
+      const d=b*b-4*a*c;
+      steps.push('ضرایب معادله: <bdi dir="ltr">a='+eqNum(a)+', b='+eqNum(b)+', c='+eqNum(c)+'</bdi>.');
+      steps.push('ممیّز: <bdi dir="ltr">Δ = b² − 4ac = '+eqNum(d)+'</bdi>.');
+      if(d<-eps)steps.push('<b>در مجموعهٔ اعداد حقیقی جواب ندارد</b>؛ چون Δ منفی است.');
+      else if(Math.abs(d)<=eps){const x=-b/(2*a);roots=[x];steps.push('چون Δ صفر است، یک جواب تکراری داریم: <bdi dir="ltr">x = '+eqNum(x)+'</bdi>.');}
+      else{
+        const x1=(-b-Math.sqrt(d))/(2*a),x2=(-b+Math.sqrt(d))/(2*a);
+        roots=[x1,x2].sort((u,v)=>u-v);
+        steps.push('از فرمول درجهٔ دوم استفاده می‌کنیم: <bdi dir="ltr">x = (−b ± √Δ) / 2a</bdi>.');
+        steps.push('<b>دو جواب:</b> <bdi dir="ltr">x₁ = '+eqNum(roots[0])+'</bdi> و <bdi dir="ltr">x₂ = '+eqNum(roots[1])+'</bdi>.');
+      }
     }
-    out.innerHTML=steps.map((v,i)=>`<div style="margin:7px 0">${i+1}. ${v}</div>`).join('');
-  }catch(e){out.className='fb bad';out.textContent=(e.message||'حل معادله ممکن نشد.')+' نمونهٔ معتبر: 3(x - 2) + 4 = 2x + 9.';}
+    if(roots.length){
+      const checks=roots.map(x=>{
+        const lv=r.left[0]+r.left[1]*x+r.left[2]*x*x;
+        const rv=r.right[0]+r.right[1]*x+r.right[2]*x*x;
+        return 'برای <bdi dir="ltr">x='+eqNum(x)+'</bdi>: طرف چپ = <bdi dir="ltr">'+eqNum(lv)+'</bdi> و طرف راست = <bdi dir="ltr">'+eqNum(rv)+'</bdi>.';
+      });
+      steps.push('<b>بررسی جواب با جای‌گذاری:</b> '+checks.join(' '));
+    }
+    out.innerHTML=steps.map((v,i)=>'<div style="margin:7px 0">'+(i+1)+'. '+v+'</div>').join('');
+  }catch(e){out.className='fb bad';out.textContent=(e.message||'حل معادله ممکن نشد.')+' نمونه: x^2 - 5x + 6 = 0.';}
 }
 $('eqsolve').onclick=solveEquation;
 $('eqin').addEventListener('keydown',e=>{if(e.key==='Enter')solveEquation()});
