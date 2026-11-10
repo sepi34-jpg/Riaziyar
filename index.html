@@ -244,7 +244,10 @@ button,select,input{touch-action:manipulation;}
 @media(max-width:600px){#geo-wonders .ry-ggb-tabs{gap:7px}#geo-wonders .ry-ggb-tabs .btn{flex-basis:205px;min-height:78px;padding:9px}#geo-wonders .ry-ggb-scroll-controls .mute{display:none}#geo-wonders .ry-ggb-scroll-controls{justify-content:space-between}#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}#geo-wonders:fullscreen{padding:8px}#geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 360px);min-height:300px}}
 
 /* کیبورد مجازی سراسری */
-#ry-virtual-keyboard{position:fixed;z-index:100000;left:10px;right:10px;bottom:10px;max-width:900px;max-height:min(82vh,760px);overflow-y:auto;margin:auto;padding:12px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:18px;box-shadow:0 12px 45px #0004;display:none;direction:rtl}#ry-virtual-keyboard .ry-vk-math-label{font-size:.78rem;font-weight:800;color:var(--mute);padding:3px 5px 0;margin-top:3px}
+#ry-virtual-keyboard{position:fixed;z-index:100000;left:4px;right:4px;bottom:4px;max-width:900px;max-height:44vh;overflow-y:auto;margin:auto;padding:7px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:14px;box-shadow:0 12px 45px #0004;display:none;direction:rtl;overscroll-behavior:contain}
+@media(min-width:701px){#ry-virtual-keyboard{display:none!important}}
+@media(max-width:700px){#ry-virtual-keyboard .ry-vk-rows{gap:4px}#ry-virtual-keyboard .ry-vk-row{gap:3px}#ry-virtual-keyboard button{min-height:34px;font-size:.82rem;padding:4px 1px}#ry-virtual-keyboard .ry-vk-math-label{font-size:.7rem;padding-top:1px;margin-top:1px}}
+#ry-virtual-keyboard .ry-vk-math-label{font-size:.78rem;font-weight:800;color:var(--mute);padding:3px 5px 0;margin-top:3px}
 #ry-virtual-keyboard.open{display:block}
 #ry-virtual-keyboard .ry-vk-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 #ry-virtual-keyboard .ry-vk-rows{display:grid;gap:6px}
@@ -332,6 +335,7 @@ body.landing #tabs-scroll-controls{display:none!important}
     <button data-t="magic-shapes">🪄 اشکال جادویی</button>
     <button data-t="factor-tree">🌳 درخت تجزیهٔ عدد</button>
     <button data-t="gcf-lcm">➗ ب.م.م و ک.م.م</button>
+    <button data-t="notes">📝 یادداشت‌برداری</button>
   </nav>
   <div id="tabs-scroll-controls" aria-label="رفتن به بخش قبلی یا بعدی">
     <button class="btn" id="tabs-scroll-next" type="button" aria-label="بخش بعدی" title="رفتن به بخش بعدی">◀</button>
@@ -421,6 +425,7 @@ body.landing #tabs-scroll-controls{display:none!important}
   <button type="button" class="welcome-option" data-ry-open="tizhooshani"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>تیزهوشانی نهم به دهم</strong><small>دفترچه‌ها، پاسخ‌نامه‌ها و تمرین‌های تألیفی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="factor-tree"><span class="wo-icon" aria-hidden="true">🌳</span><span class="wo-text"><strong>درخت تجزیهٔ عدد</strong><small>تجزیهٔ انیمیشنی به عامل‌های اول</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="gcf-lcm"><span class="wo-icon" aria-hidden="true">➗</span><span class="wo-text"><strong>ب.م.م و ک.م.م</strong><small>محاسبهٔ بزرگ‌ترین مقسوم‌علیه و کوچک‌ترین مضرب مشترک</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="notes"><span class="wo-icon" aria-hidden="true">📝</span><span class="wo-text"><strong>یادداشت‌برداری</strong><small>نوشتن و نگهداری نکته‌ها و فرمول‌های ریاضی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
@@ -735,6 +740,17 @@ body.landing #tabs-scroll-controls{display:none!important}
   <div class="ft-stage" id="ft-stage" aria-live="polite"><div class="ft-tree"><div class="ft-value">۲۲</div><div class="ft-note">برای شروع روی نمایش انیمیشنی بزن</div></div></div>
   <div id="ft-factorization" class="ft-result" aria-live="polite"></div>
   <p class="mute">نکته: در مثال ۲۲، شاخه‌ها به ۱۱ و ۲ می‌رسند. چون هر دو عدد اول‌اند، دیگر به ۱ تبدیل نمی‌شوند؛ تجزیه وقتی تمام می‌شود که همهٔ برگ‌ها عدد اول باشند.</p>
+ </div>
+</section>
+<section id="notes" hidden>
+ <div class="card">
+  <h2>📝 یادداشت‌برداری</h2>
+  <p class="mute">نکته‌ها، فرمول‌ها و تمرین‌هایت را اینجا بنویس. یادداشت‌ها روی همین دستگاه به‌طور خودکار ذخیره می‌شوند.</p>
+  <textarea id="ry-notes-area" rows="12" placeholder="یادداشتت را اینجا بنویس..." aria-label="متن یادداشت‌ها" style="display:block;width:100%;min-height:260px;resize:vertical;padding:13px;border:1px solid var(--stone);border-radius:12px;background:var(--surface);color:var(--ink);font:1rem/2 Tahoma,sans-serif"></textarea>
+  <div class="row" style="justify-content:space-between;margin-top:10px">
+   <span id="ry-notes-status" class="mute" aria-live="polite">ذخیرهٔ خودکار روشن است.</span>
+   <button id="ry-notes-clear" class="btn" type="button">پاک کردن یادداشت</button>
+  </div>
  </div>
 </section>
 <section id="gcf-lcm" hidden>
@@ -2255,12 +2271,12 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const punctuation=document.createElement('div');punctuation.className='ry-vk-row';
   ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>punctuation.appendChild(makeKey(k,k)));
   rows.appendChild(punctuation);
-  // مجموعهٔ گستردهٔ نمادها و عملگرهای ریاضی
+  // عمل‌های ساده و پرکاربرد ریاضی هشتم
   const mathGroups=[
-   ['چهار عمل اصلی و مقایسه',[['+','+'],['−','-'],['×','*'],['÷','/'],['=','='],['≠','!='],['<','<'],['>','>'],['≤','<='],['≥','>='],['٪','%']]],
-   ['کسرها و بخش‌پذیری',[['(','('],[')',')'],['[','['],[']',']'],['/','/'],['٫','.'],[': ',':'],['ب.م.م','gcd('],['ک.م.م','lcm(']]],
-   ['توان و ریشهٔ دوم',[['^','^'],['x²','^2'],['√','√('],['|x|','abs(']]],
-   ['جبر و هندسهٔ هشتم',[['x','x'],['y','y'],['a','a'],['b','b'],['π','π'],['°','°'],['∠','∠'],['⟂','⟂'],['∥','∥'],['(x,y)','(x,y)']]]
+   ['عمل‌های اصلی',[['+','+'],['−','-'],['×','*'],['÷','/'],['=','='],['٪','%']]],
+   ['کسر و پرانتز',[['(','('],[')',')'],['/','/'],['٫','.'],[': ',':']]],
+   ['توان و ریشه',[['^','^'],['x²','^2'],['√','√(']]],
+   ['حروف و هندسه',[['x','x'],['y','y'],['a','a'],['b','b'],['π','π'],['°','°'],['∠','∠'],['⟂','⟂'],['∥','∥']]]
   ];
   const mathHelp={
    '+':'دو عدد را با هم جمع می‌کند و حاصل را به دست می‌دهد.',
@@ -2268,25 +2284,15 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    '×':'برای ضرب دو عدد و پیدا کردن حاصل‌ضرب به کار می‌رود.',
    '÷':'یک عدد را بر عدد دیگر تقسیم می‌کند.',
    '=':'نشان می‌دهد دو عبارت با هم برابر هستند.',
-   '≠':'نشان می‌دهد دو مقدار با هم برابر نیستند.',
-   '<':'یعنی مقدار سمت چپ کوچک‌تر از مقدار سمت راست است.',
-   '>':'یعنی مقدار سمت چپ بزرگ‌تر از مقدار سمت راست است.',
-   '≤':'یعنی مقدار کوچک‌تر است یا با مقدار دیگر برابر است.',
-   '≥':'یعنی مقدار بزرگ‌تر است یا با مقدار دیگر برابر است.',
    '٪':'برای نشان دادن درصد یا محاسبهٔ بخشی از صد به کار می‌رود.',
    '(':'شروع پرانتز است و عبارت‌های داخل آن با هم در نظر گرفته می‌شوند.',
    ')':'پایان پرانتز را مشخص می‌کند؛ اول عبارت داخل پرانتز حساب می‌شود.',
-   '[':'برای دسته‌بندی عبارت‌ها یا نوشتن بازه‌ها استفاده می‌شود.',
-   ']':'پرانتز مربعی را می‌بندد و محدودهٔ عبارت را کامل می‌کند.',
    '/':'خط کسر را نشان می‌دهد؛ عدد بالا بر عدد پایین تقسیم می‌شود.',
    '٫':'جداکنندهٔ بخش صحیح و اعشاری یک عدد است.',
    ': ':'برای نشان دادن نسبت دو مقدار استفاده می‌شود.',
-   'ب.م.م':'بزرگ‌ترین عددی را پیدا می‌کند که هر دو عدد بر آن بخش‌پذیرند.',
-   'ک.م.م':'کوچک‌ترین مضرب مشترکِ مثبتِ دو عدد را پیدا می‌کند.',
    '^':'عدد سمت چپ را به توان عدد نوشته‌شده در بالا می‌رساند.',
    'x²':'یعنی عدد یا متغیر x در خودش ضرب می‌شود.',
    '√':'ریشهٔ دوم را نشان می‌دهد؛ عددی که مربعش برابر مقدار زیر رادیکال است.',
-   '|x|':'قدر مطلق است؛ فاصلهٔ عدد از صفر را بدون علامت منفی نشان می‌دهد.',
    'x':'یک متغیر است و می‌تواند مقدارهای مختلفی داشته باشد.',
    'y':'متغیری دیگر برای نمایش عدد یا مختصات است.',
    'a':'حرفی برای نشان دادن یک عدد یا مقدار نامشخص در جبر است.',
@@ -2322,12 +2328,16 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   if(el.tagName!=='INPUT')return false;
   return !['button','submit','reset','checkbox','radio','file','range','color','image','hidden'].includes((el.type||'text').toLowerCase());
  };
+ const mobileKeyboard=()=>window.matchMedia('(max-width:700px)').matches;
  const show=el=>{
   if(!editable(el))return;
+  if(!mobileKeyboard()){hide();return}
   active=el;
   if(!savedInputModes.has(el))savedInputModes.set(el,el.getAttribute('inputmode'));
   el.setAttribute('inputmode','none');
   panel.classList.add('open');
+  // ورودی را بالاتر می‌آوریم تا کیبورد روی متن در حال نوشتن نیفتد.
+  requestAnimationFrame(()=>{if(active===el)el.scrollIntoView({block:'center',behavior:'smooth'})});
  };
  const hide=()=>{
   panel.classList.remove('open');
@@ -2342,6 +2352,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   if(editable(event.target))show(event.target);
   else if(!panel.contains(event.target))hide();
  });
+ window.addEventListener('resize',()=>{if(!mobileKeyboard())hide()});
  // با جلوگیری از جابه‌جایی فوکوس در pointerdown، کلیک روی کلیدها ورودی فعال را از دست نمی‌دهد.
  panel.addEventListener('pointerdown',event=>{
   if(event.target.closest('button'))event.preventDefault();
@@ -2421,6 +2432,25 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   emitInput(active,'deleteContentBackward',null);
  }
  render();
+})();
+</script>
+<script>
+(()=>{
+ const field=document.getElementById('ry-notes-area'),status=document.getElementById('ry-notes-status'),clear=document.getElementById('ry-notes-clear');
+ if(!field||!status||!clear)return;
+ const key='riaziyar_notes_v1';
+ try{field.value=localStorage.getItem(key)||''}catch(e){status.textContent='ذخیره‌سازی در این مرورگر در دسترس نیست.'}
+ field.addEventListener('input',()=>{
+  try{localStorage.setItem(key,field.value);status.textContent='ذخیره شد ✓'}
+  catch(e){status.textContent='ذخیره انجام نشد؛ فضای مرورگر را بررسی کن.'}
+ });
+ clear.addEventListener('click',()=>{
+  if(!field.value)return;
+  field.value='';
+  try{localStorage.removeItem(key);status.textContent='یادداشت پاک شد.'}
+  catch(e){status.textContent='پاک‌کردن یادداشت ذخیره‌شده ممکن نشد.'}
+  field.dispatchEvent(new Event('input',{bubbles:true}));
+ });
 })();
 </script>
 <script>
