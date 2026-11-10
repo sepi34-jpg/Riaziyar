@@ -188,6 +188,14 @@ button,select,input{touch-action:manipulation;}
 
 /* GeoGebra official embedded tools */
 #geo-wonders .ry-ggb-intro{line-height:1.9;margin-bottom:14px}
+/* پیمایش دوطرفه فقط برای پنل بیرونیِ بالای محیط سفید GeoGebra */
+#geo-wonders .ry-ggb-controls-viewport{width:100%;height:370px;max-height:52vh;min-height:260px;overflow:auto;overscroll-behavior:contain;border:1px solid var(--stone);border-radius:12px;padding:10px;background:var(--surface);scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);-webkit-overflow-scrolling:touch}
+#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar{width:12px;height:12px}
+#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
+#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+#geo-wonders .ry-ggb-controls-content{min-width:980px;min-height:430px}
+#geo-wonders .ry-ggb-controls-content .ry-ggb-tabs{max-width:100%}
+
 #geo-wonders .ry-ggb-tabs{display:flex;flex-wrap:nowrap;gap:10px;margin:14px 0;padding:0 0 12px;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;direction:rtl;scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;scroll-behavior:smooth}
 #geo-wonders .ry-ggb-tabs::-webkit-scrollbar{height:10px}
 #geo-wonders .ry-ggb-tabs::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
@@ -639,6 +647,8 @@ button,select,input{touch-action:manipulation;}
 <section id="geo-wonders" hidden>
  <div class="card">
   <h2>✨ عجایب هندسه</h2>
+  <div class="ry-ggb-controls-viewport" aria-label="بخش کنترل و انتخاب ابزارهای GeoGebra">
+   <div class="ry-ggb-controls-content">
   <p class="mute ry-ggb-intro">اینجا می‌توانی شکل بکشی، نمودار ببینی، اجسام سه‌بعدی بسازی و محاسبه کنی. اول یکی از کارت‌ها را انتخاب کن. برای کارکرد ابزارها اینترنت لازم است.</p>
   <div class="ry-ggb-tabs" id="ry-ggb-tabs" aria-label="انتخاب ابزار GeoGebra">
    <button class="btn" type="button" data-ggb-app="suite" aria-pressed="true"><span class="ry-ggb-btn-title">🌟 همه ابزارها</span><span class="ry-ggb-btn-desc">یک مجموعه برای رسم، هندسه و محاسبه</span></button>
@@ -660,6 +670,8 @@ button,select,input{touch-action:manipulation;}
    <button class="ry-ggb-fullscreen" id="ry-ggb-fullscreen" type="button" aria-pressed="false">⛶ تمام‌صفحه کردن صفحه</button>
   </div>
   <button class="ry-ggb-retry" id="ry-ggb-retry" type="button" hidden>↻ تلاش دوباره برای بارگذاری</button>
+   </div>
+  </div>
   <div class="ry-ggb-frame"><div id="ry-ggb-scale" class="ry-ggb-scale"></div></div>
   <p class="mute" style="margin-top:12px">این ابزارها از سرویس رسمی GeoGebra باز می‌شوند. برای ذخیره‌کردن بعضی کارها ممکن است حساب GeoGebra لازم باشد.</p>
  </div>
@@ -1914,11 +1926,14 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  // فلش‌ها با ابزار انتخاب‌شده حرکت می‌کنند؛ وابسته به scrollLeft و جهت RTL نیستند.
  const moveToolCard=direction=>{
   const cards=Array.from(tabs.querySelectorAll('[data-ggb-app]'));
-  if(!cards.length)return;
+  if(!cards.length||loading)return;
   const selected=cards.findIndex(b=>b.getAttribute('aria-pressed')==='true');
   const current=selected<0?0:selected;
   const targetIndex=Math.max(0,Math.min(cards.length-1,current+direction));
-  cards[targetIndex].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  if(targetIndex===current)return;
+  const target=cards[targetIndex];
+  target.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  selectApp(target.dataset.ggbApp);
  };
  prevBtn.addEventListener('click',()=>moveToolCard(-1));
  nextBtn.addEventListener('click',()=>moveToolCard(1));
