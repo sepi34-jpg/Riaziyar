@@ -2151,26 +2151,53 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 (()=>{
  const next=document.getElementById('tabs-scroll-next');
  const prev=document.getElementById('tabs-scroll-prev');
- const tabs=Array.from(document.querySelectorAll('#tabs button[data-t]'));
+ const nav=document.getElementById('tabs');
  const controls=document.getElementById('tabs-scroll-controls');
- if(!next||!prev||!tabs.length||!controls)return;
- const currentIndex=()=>{const active=document.querySelector('main>section:not([hidden])');return active?tabs.findIndex(b=>b.dataset.t===active.id):0};
+ if(!next||!prev||!nav||!controls)return;
+
+ // هر قابلیت فقط یک‌بار در منو بماند؛ ترتیب منو دقیقاً با ترتیب بخش‌های صفحه یکی باشد.
+ const seen=new Set();
+ Array.from(nav.querySelectorAll('button[data-t]')).forEach(button=>{
+  const id=button.dataset.t;
+  if(seen.has(id))button.remove();
+  else seen.add(id);
+ });
+ const sectionIds=Array.from(document.querySelectorAll('main>section[id]')).map(section=>section.id);
+ const navButtons=new Map(Array.from(nav.querySelectorAll('button[data-t]')).map(button=>[button.dataset.t,button]));
+ sectionIds.forEach(id=>{const button=navButtons.get(id);if(button)nav.appendChild(button)});
+
+ // میان‌برهای صفحهٔ شروع هم از تکرار احتمالی یک قابلیت جلوگیری می‌کنند.
+ const homeList=document.getElementById('welcome-list');
+ if(homeList){
+  const homeSeen=new Set();
+  Array.from(homeList.querySelectorAll('[data-ry-open]')).forEach(button=>{
+   const id=button.dataset.ryOpen;
+   if(homeSeen.has(id))button.remove();
+   else homeSeen.add(id);
+  });
+ }
+
+ const orderedIds=sectionIds.filter(id=>navButtons.has(id));
+ const currentIndex=()=>{
+  const active=document.querySelector('main>section:not([hidden])');
+  return active?orderedIds.indexOf(active.id):0;
+ };
  const sync=()=>{
   const i=currentIndex();
   document.body.classList.toggle('landing',i<=0);
-  controls.style.display=(i<=0)?'none':'flex';
+  controls.style.display=i<=0?'none':'flex';
   prev.disabled=i<=0;
-  next.disabled=i<0||i>=tabs.length-1;
+  next.disabled=i<0||i>=orderedIds.length-1;
  };
  const go=delta=>{
-  const i=currentIndex(),target=tabs[i+delta];
-  if(target)target.click();
+  const i=currentIndex(),id=orderedIds[i+delta],button=id&&navButtons.get(id);
+  if(button)button.click();
   requestAnimationFrame(sync);
   setTimeout(sync,80);
  };
  next.addEventListener('click',()=>go(1));
  prev.addEventListener('click',()=>go(-1));
- tabs.forEach(b=>b.addEventListener('click',()=>setTimeout(sync,0)));
+ navButtons.forEach(button=>button.addEventListener('click',()=>setTimeout(sync,0)));
  const observer=new MutationObserver(sync);
  document.querySelectorAll('main>section').forEach(section=>observer.observe(section,{attributes:true,attributeFilter:['hidden']}));
  window.addEventListener('pageshow',sync);
