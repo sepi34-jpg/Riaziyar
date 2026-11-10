@@ -2018,6 +2018,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const currentIndex=()=>{const active=document.querySelector('main>section:not([hidden])');return active?tabs.findIndex(b=>b.dataset.t===active.id):0};
  const sync=()=>{
   const i=currentIndex();
+  document.body.classList.toggle('landing',i<=0);
   controls.style.display=(i<=0)?'none':'flex';
   prev.disabled=i<=0;
   next.disabled=i<0||i>=tabs.length-1;
