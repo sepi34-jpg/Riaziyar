@@ -196,7 +196,54 @@ button,select,input{touch-action:manipulation;}
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
 
-<div id="ry-auth-modal" hidden style="position:fixed;inset:0;z-index:9999;background:#0008;align-items:center;justify-content:center;padding:18px"><div class="card" role="dialog" aria-modal="true" aria-labelledby="ry-auth-title" style="width:min(100%,420px);max-height:90vh;overflow:auto;background:var(--card);margin:0"><div class="row" style="justify-content:space-between"><h2 id="ry-auth-title">حساب ریاضی‌یار</h2><button class="btn" id="ry-auth-close" type="button" aria-label="بستن">✕</button></div><p class="mute">یکی از بخش‌های زیر را انتخاب کن.</p><div class="row" style="gap:8px;margin:12px 0"><button class="btn pri" id="ry-auth-tab-login" type="button" aria-pressed="true">ورود</button><button class="btn" id="ry-auth-tab-register" type="button" aria-pressed="false">ثبت‌نام</button></div><div id="ry-auth-register-name" hidden><label for="ry-auth-name">نام نمایشی</label><input id="ry-auth-name" type="text" autocomplete="nickname" placeholder="نام نمایشی" style="width:100%;margin:6px 0 12px"></div><label for="ry-auth-email">ایمیل</label><input id="ry-auth-email" type="email" autocomplete="email" placeholder="name@example.com" style="width:100%;margin:6px 0 12px;direction:ltr;text-align:left"><label for="ry-auth-password">رمز عبور</label><input id="ry-auth-password" type="password" autocomplete="current-password" placeholder="حداقل ۶ نویسه" style="width:100%;margin:6px 0 12px;direction:ltr;text-align:left"><div class="row"><button class="btn pri" id="ry-auth-signin" type="button">ورود</button><button class="btn" id="ry-auth-signup" type="button">ساخت حساب</button><button class="btn" id="ry-auth-signout" type="button" hidden>خروج</button></div><p id="ry-auth-status" class="mute" role="status" aria-live="polite" style="margin-top:12px"></p></div></div><main>
+<div id="ry-auth-modal" hidden style="position:fixed;inset:0;z-index:9999;background:#0008;align-items:center;justify-content:center;padding:18px"><div class="card" role="dialog" aria-modal="true" aria-labelledby="ry-auth-title" style="width:min(100%,420px);max-height:90vh;overflow:auto;background:var(--card);margin:0"><div class="row" style="justify-content:space-between"><h2 id="ry-auth-title">حساب ریاضی‌یار</h2><button class="btn" id="ry-auth-close" type="button" aria-label="بستن">✕</button></div><p class="mute">یکی از بخش‌های زیر را انتخاب کن.</p><div class="row" style="gap:8px;margin:12px 0"><button class="btn pri" id="ry-auth-tab-login" type="button" aria-pressed="true">ورود</button><button class="btn" id="ry-auth-tab-register" type="button" aria-pressed="false">ثبت‌نام</button></div><div id="ry-auth-register-name" hidden><label for="ry-auth-name">نام نمایشی</label><input id="ry-auth-name" type="text" autocomplete="nickname" placeholder="نام نمایشی" style="width:100%;margin:6px 0 12px"></div><label for="ry-auth-email">ایمیل</label><input id="ry-auth-email" type="email" autocomplete="email" placeholder="name@example.com" style="width:100%;margin:6px 0 12px;direction:ltr;text-align:left"><label for="ry-auth-password">رمز عبور</label><input id="ry-auth-password" type="password" autocomplete="current-password" placeholder="حداقل ۶ نویسه" style="width:100%;margin:6px 0 12px;direction:ltr;text-align:left"><div class="row"><button class="btn pri" id="ry-auth-signin" type="button">ورود</button><button class="btn" id="ry-auth-signup" type="button">ساخت حساب</button><button class="btn" id="ry-auth-signout" type="button" hidden>خروج</button></div><p id="ry-auth-status" class="mute" role="status" aria-live="polite" style="margin-top:12px"></p></div></div>
+<div id="ry-admin-root" hidden dir="rtl" style="min-height:100vh;background:#f4f6fb;color:#182033;padding:18px;font-family:inherit">
+<style>
+#ry-admin-root *{box-sizing:border-box}#ry-admin-root .ad-wrap{max-width:1180px;margin:auto}
+#ry-admin-root .ad-top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+#ry-admin-root .ad-brand{font-size:1.35rem;font-weight:900}#ry-admin-root .ad-muted{color:#657089;font-size:.92rem}
+#ry-admin-root .ad-card{background:#fff;border:1px solid #e4e8f0;border-radius:16px;padding:16px;box-shadow:0 4px 16px #1820330a}
+#ry-admin-root .ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+#ry-admin-root .ad-stat strong{display:block;font-size:1.8rem;margin-top:5px}
+#ry-admin-root .ad-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+#ry-admin-root button,#ry-admin-root input,#ry-admin-root select,#ry-admin-root textarea{font:inherit}
+#ry-admin-root .ad-btn{border:1px solid #d7ddeb;background:#fff;color:#182033;border-radius:10px;padding:9px 13px;cursor:pointer}
+#ry-admin-root .ad-btn.primary{background:#293b75;color:#fff;border-color:#293b75}
+#ry-admin-root .ad-btn.danger{color:#a42d3b;border-color:#efc7cd}
+#ry-admin-root .ad-btn.active{background:#e8edff;border-color:#9baeea;color:#263c83}
+#ry-admin-root .ad-field{display:grid;gap:6px;margin:9px 0}#ry-admin-root input,#ry-admin-root select,#ry-admin-root textarea{width:100%;border:1px solid #d7ddeb;border-radius:9px;padding:10px;background:#fff;color:#182033}
+#ry-admin-root textarea{min-height:90px;resize:vertical}
+#ry-admin-root .ad-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#ry-admin-root .ad-table{width:100%;border-collapse:collapse;font-size:.93rem}#ry-admin-root .ad-table th,#ry-admin-root .ad-table td{padding:10px;border-bottom:1px solid #edf0f5;text-align:right;vertical-align:top}
+#ry-admin-root .ad-table th{color:#657089;font-weight:700}
+#ry-admin-root .ad-list{display:grid;gap:10px}#ry-admin-root .ad-item{border:1px solid #e7ebf2;border-radius:12px;padding:12px;background:#fff}
+#ry-admin-root .ad-item p{margin:7px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+#ry-admin-root .ad-hidden{display:none!important}#ry-admin-root .ad-note{padding:12px;border-radius:10px;background:#f0f3fa;color:#34405a}
+@media(max-width:640px){#ry-admin-root{padding:10px!important}#ry-admin-root .ad-table{font-size:.82rem}#ry-admin-root .ad-table th,#ry-admin-root .ad-table td{padding:7px}}
+</style>
+<div class="ad-wrap">
+ <div class="ad-top"><div><div class="ad-brand">🛠️ مدیریت ریاضی‌یار</div><div class="ad-muted">پنل مدیریت امن · نسخهٔ اولیه</div></div><div class="ad-row"><span id="ry-ad-user" class="ad-muted"></span><button class="ad-btn" id="ry-ad-home">بازگشت به سایت</button><button class="ad-btn" id="ry-ad-logout" hidden>خروج</button></div></div>
+ <div id="ry-ad-message" class="ad-note">در حال بررسی دسترسی…</div>
+ <div id="ry-ad-login" class="ad-card ad-hidden" style="max-width:520px;margin:24px auto"><h2>ورود مدیر</h2><p class="ad-muted">برای ورود، ابتدا از حساب کاربری مدیر استفاده کن.</p><button class="ad-btn primary" id="ry-ad-open-login">باز کردن فرم ورود</button></div>
+ <div id="ry-ad-panel" class="ad-hidden">
+  <div class="ad-grid" id="ry-ad-stats"></div>
+  <nav class="ad-tabs" id="ry-ad-tabs">
+   <button class="ad-btn active" data-ad-tab="overview">نمای کلی</button><button class="ad-btn" data-ad-tab="users">کاربران</button><button class="ad-btn" data-ad-tab="questions">بانک سؤال</button><button class="ad-btn" data-ad-tab="exams">آزمون‌ها</button><button class="ad-btn" data-ad-tab="suggestions">پیشنهادها</button><button class="ad-btn" data-ad-tab="comments">دیدگاه‌ها</button><button class="ad-btn" data-ad-tab="reports">گزارش‌ها</button><button class="ad-btn" data-ad-tab="logs">گزارش فعالیت</button>
+  </nav>
+  <section class="ad-card" data-ad-view="overview"><h2>خلاصهٔ سامانه</h2><p class="ad-muted">آمار کلی کاربران و فعالیت‌ها در پایگاه داده.</p><div id="ry-ad-overview" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="users"><h2>کاربران</h2><p class="ad-muted">اطلاعات نمایشی و پیشرفت ثبت‌شده؛ اطلاعات ورود و رمزها در این بخش نمایش داده نمی‌شوند.</p><div id="ry-ad-users"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="questions"><h2>مدیریت بانک سؤال</h2>
+   <form id="ry-ad-question-form"><div class="ad-field"><label>متن سؤال</label><textarea name="question_text" required></textarea></div><div class="ad-row"><div class="ad-field" style="flex:1"><label>فصل</label><input name="chapter" required></div><div class="ad-field" style="flex:1"><label>مبحث</label><input name="topic"></div><div class="ad-field" style="flex:1"><label>سطح</label><select name="difficulty"><option value="easy">آسان</option><option value="medium" selected>متوسط</option><option value="hard">سخت</option></select></div></div><div class="ad-field"><label>گزینه‌ها (JSON؛ برای نمونه: ["گزینه ۱","گزینه ۲"])</label><textarea name="options">["گزینه ۱","گزینه ۲","گزینه ۳","گزینه ۴"]</textarea></div><div class="ad-field"><label>پاسخ درست (JSON؛ مثلاً 2 یا "گزینه ۱")</label><input name="correct_answer" value="0" required></div><div class="ad-field"><label>توضیح پاسخ</label><textarea name="explanation"></textarea></div><div class="ad-row"><label><input type="checkbox" name="is_published" style="width:auto"> انتشار سؤال</label><button class="ad-btn primary" type="submit">افزودن سؤال</button></div></form><hr><div id="ry-ad-questions" class="ad-list"></div>
+  </section>
+  <section class="ad-card ad-hidden" data-ad-view="exams"><h2>مدیریت آزمون‌ها</h2><form id="ry-ad-exam-form"><div class="ad-field"><label>عنوان آزمون</label><input name="title" required></div><div class="ad-field"><label>توضیحات</label><textarea name="description"></textarea></div><div class="ad-row"><div class="ad-field" style="flex:1"><label>مدت (دقیقه)</label><input name="duration_minutes" type="number" min="1" value="30"></div><label><input type="checkbox" name="is_published" style="width:auto"> انتشار</label><button class="ad-btn primary" type="submit">ساخت آزمون</button></div></form><hr><div id="ry-ad-exams" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="suggestions"><h2>پیشنهادها و خطاها</h2><div id="ry-ad-suggestions" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="comments"><h2>مدیریت دیدگاه‌ها</h2><div id="ry-ad-comments" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="reports"><h2>گزارش دیدگاه‌ها</h2><div id="ry-ad-reports" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="logs"><h2>گزارش فعالیت مدیر</h2><div id="ry-ad-logs" class="ad-list"></div></section>
+ </div>
+</div>
+
+<main>
 <div class="math-orbit" aria-hidden="true"><span>π</span><span>√x</span><span>∑</span><span>÷</span><span>∞</span><span>∫</span></div>
 <section id="welcome">
   <div class="welcome-hero">
@@ -1403,5 +1450,126 @@ document.body.classList.add('landing');document.querySelectorAll('main>section')
 ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password');if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};const setUser=u=>{if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(u)setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',()=>{setMode('login');show();});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script></body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password');if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};const setUser=u=>{if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(u)setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',()=>{setMode('login');show();});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
+<script>
+(()=> {
+ const root=document.getElementById('ry-admin-root');
+ if(!root || window.location.pathname.replace(/\\/+$/,'')!=='/admin') return;
+ document.querySelector('header')?.setAttribute('hidden','');
+ document.querySelector('main')?.setAttribute('hidden','');
+ root.hidden=false;
+ const $=id=>document.getElementById(id), client=window.riaziYarSupabase;
+ const msg=(s,bad=false)=>{ $('ry-ad-message').textContent=s; $('ry-ad-message').style.color=bad?'#a42d3b':''; };
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const fmt=s=>s?new Date(s).toLocaleString('fa-IR'):'—';
+ const count=async(table)=>{const {count,error}=await client.from(table).select('*',{count:'exact',head:true});if(error)throw error;return count||0};
+ const log=async(action,target,detail={})=>{try{await client.from('admin_logs').insert({actor_id:(await client.auth.getUser()).data.user.id,action,target,detail})}catch(e){}};
+ const card=(label,value)=>'<div class="ad-card ad-stat"><span class="ad-muted">'+esc(label)+'</span><strong>'+esc(value)+'</strong></div>';
+ const listError=(el,e)=>{el.innerHTML='<p class="ad-muted">خطا در دریافت اطلاعات: '+esc(e.message||e)+'</p>'};
+ let currentUser=null;
+ async function refreshStats(){
+  const names=['profiles','questions','exams','attempts','suggestions','comments'];
+  const values=await Promise.all(names.map(count));
+  $('ry-ad-stats').innerHTML=names.map((n,i)=>card(({profiles:'کاربران',questions:'سؤال‌ها',exams:'آزمون‌ها',attempts:'تلاش‌ها',suggestions:'پیشنهادها',comments:'دیدگاه‌ها'})[n],values[i])).join('');
+  $('ry-ad-overview').innerHTML='<div class="ad-item">تعداد کاربران ثبت‌شده: <b>'+values[0]+'</b></div><div class="ad-item">سؤال‌های بانک: <b>'+values[1]+'</b></div><div class="ad-item">آزمون‌های ساخته‌شده: <b>'+values[2]+'</b></div><div class="ad-item">تلاش‌های ثبت‌شده: <b>'+values[3]+'</b></div>';
+ }
+ async function loadUsers(){
+  const el=$('ry-ad-users');el.textContent='در حال بارگذاری…';
+  const [p,g,a]=await Promise.all([client.from('profiles').select('id,display_name,created_at').order('created_at',{ascending:false}).limit(200),client.from('user_progress').select('user_id,xp,level'),client.from('attempts').select('user_id,score')]);
+  if(p.error||g.error||a.error)return listError(el,p.error||g.error||a.error);
+  const prog=new Map((g.data||[]).map(x=>[x.user_id,x]));
+  const tries=new Map();(a.data||[]).forEach(x=>tries.set(x.user_id,(tries.get(x.user_id)||0)+1));
+  el.innerHTML='<table class="ad-table"><thead><tr><th>کاربر</th><th>تاریخ عضویت</th><th>سطح</th><th>XP</th><th>تلاش‌ها</th></tr></thead><tbody>'+
+   (p.data||[]).map(x=>{const z=prog.get(x.id)||{};return '<tr><td>'+esc(x.display_name||'بدون نام')+'<div class="ad-muted">'+esc(x.id.slice(0,8))+'…</div></td><td>'+fmt(x.created_at)+'</td><td>'+esc(z.level??1)+'</td><td>'+esc(z.xp??0)+'</td><td>'+esc(tries.get(x.id)||0)+'</td></tr>'}).join('')+'</tbody></table>';
+ }
+ async function loadQuestions(){
+  const el=$('ry-ad-questions');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('questions').select('id,chapter,topic,difficulty,question_text,is_published,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(q=>'<article class="ad-item"><div class="ad-row"><b>'+esc(q.chapter)+' · '+esc(q.topic||'بدون مبحث')+'</b><span class="ad-muted">'+esc(q.difficulty)+' · '+(q.is_published?'منتشرشده':'پیش‌نویس')+'</span><span style="margin-inline-start:auto"></span><button class="ad-btn" data-q-toggle="'+q.id+'" data-pub="'+q.is_published+'">'+(q.is_published?'لغو انتشار':'انتشار')+'</button><button class="ad-btn danger" data-q-delete="'+q.id+'">حذف</button></div><p>'+esc(q.question_text)+'</p></article>').join('')||'<p class="ad-muted">هنوز سؤالی ثبت نشده است.</p>';
+ }
+ async function loadExams(){
+  const el=$('ry-ad-exams');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('exams').select('id,title,description,duration_minutes,is_published,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(q=>'<article class="ad-item"><div class="ad-row"><b>'+esc(q.title)+'</b><span class="ad-muted">'+esc(q.duration_minutes||0)+' دقیقه · '+(q.is_published?'منتشرشده':'پیش‌نویس')+'</span><span style="margin-inline-start:auto"></span><button class="ad-btn" data-e-toggle="'+q.id+'" data-pub="'+q.is_published+'">'+(q.is_published?'لغو انتشار':'انتشار')+'</button><button class="ad-btn danger" data-e-delete="'+q.id+'">حذف</button></div><p>'+esc(q.description||'')+'</p></article>').join('')||'<p class="ad-muted">هنوز آزمونی ساخته نشده است.</p>';
+ }
+ async function loadSuggestions(){
+  const el=$('ry-ad-suggestions');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('suggestions').select('id,category,message,status,created_at,user_id').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><div class="ad-row"><b>'+esc(x.category||'پیشنهاد')+'</b><span class="ad-muted">'+fmt(x.created_at)+' · '+esc(x.status||'جدید')+'</span></div><p>'+esc(x.message)+'</p><div class="ad-row"><button class="ad-btn" data-s-status="'+x.id+'" data-status="reviewed">در حال بررسی</button><button class="ad-btn primary" data-s-status="'+x.id+'" data-status="resolved">انجام شد</button></div></article>').join('')||'<p class="ad-muted">پیشنهادی ثبت نشده است.</p>';
+ }
+ async function loadComments(){
+  const el=$('ry-ad-comments');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('comments').select('id,author_name,body,status,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><div class="ad-row"><b>'+esc(x.author_name||'کاربر')+'</b><span class="ad-muted">'+fmt(x.created_at)+' · '+esc(x.status)+'</span></div><p>'+esc(x.body)+'</p><div class="ad-row"><button class="ad-btn primary" data-c-status="'+x.id+'" data-status="approved">تأیید</button><button class="ad-btn" data-c-status="'+x.id+'" data-status="rejected">رد</button><button class="ad-btn danger" data-c-delete="'+x.id+'">حذف</button></div></article>').join('')||'<p class="ad-muted">دیدگاهی وجود ندارد.</p>';
+ }
+ async function loadReports(){
+  const el=$('ry-ad-reports');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('comment_reports').select('id,comment_id,reason,status,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><div class="ad-row"><b>گزارش دیدگاه</b><span class="ad-muted">'+fmt(x.created_at)+' · '+esc(x.status)+'</span></div><p>'+esc(x.reason)+'</p><div class="ad-row"><button class="ad-btn" data-r-status="'+x.id+'" data-status="reviewed">بررسی شد</button><button class="ad-btn primary" data-r-status="'+x.id+'" data-status="resolved">بسته شد</button></div></article>').join('')||'<p class="ad-muted">گزارشی ثبت نشده است.</p>';
+ }
+ async function loadLogs(){
+  const el=$('ry-ad-logs');el.textContent='در حال بارگذاری…';
+  const {data,error}=await client.from('admin_logs').select('action,target,detail,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error)return listError(el,error);
+  el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><b>'+esc(x.action)+'</b> · '+esc(x.target)+'<div class="ad-muted">'+fmt(x.created_at)+'</div></article>').join('')||'<p class="ad-muted">هنوز فعالیتی ثبت نشده است.</p>';
+ }
+ const loaders={overview:refreshStats,users:loadUsers,questions:loadQuestions,exams:loadExams,suggestions:loadSuggestions,comments:loadComments,reports:loadReports,logs:loadLogs};
+ async function showTab(tab){
+  document.querySelectorAll('#ry-ad-tabs [data-ad-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adTab===tab));
+  document.querySelectorAll('#ry-admin-root [data-ad-view]').forEach(s=>s.classList.toggle('ad-hidden',s.dataset.adView!==tab));
+  try{await (loaders[tab]||refreshStats)()}catch(e){msg('خطا: '+(e.message||e),true)}
+ }
+ async function gate(){
+  if(!client){msg('اتصال پایگاه داده آماده نیست. صفحه را دوباره بارگذاری کن.',true);return}
+  const {data:{session}}=await client.auth.getSession();
+  if(!session){msg('برای استفاده از پنل مدیریت، ابتدا وارد حساب مدیر شو.');$('ry-ad-login').classList.remove('ad-hidden');return}
+  currentUser=session.user;$('ry-ad-user').textContent=session.user.email||'مدیر';
+  const {data:role,error}=await client.from('user_roles').select('role').eq('user_id',session.user.id).eq('role','admin').maybeSingle();
+  if(error){msg('بررسی نقش مدیر ناموفق بود: '+error.message,true);return}
+  if(!role){msg('این حساب هنوز دسترسی مدیر ندارد. با حساب مدیر ثبت‌نام کن و ایمیل را تأیید کن؛ سپس دوباره وارد شو.',true);$('ry-ad-login').classList.remove('ad-hidden');return}
+  $('ry-ad-login').classList.add('ad-hidden');$('ry-ad-panel').classList.remove('ad-hidden');$('ry-ad-logout').hidden=false;msg('دسترسی مدیر تأیید شد.');await showTab('overview');
+ }
+ $('ry-ad-open-login').onclick=()=>document.getElementById('ry-auth-open')?.click();
+ $('ry-ad-home').onclick=()=>{window.location.href='/'};
+ $('ry-ad-logout').onclick=async()=>{await client.auth.signOut();window.location.reload()};
+ $('ry-ad-tabs').onclick=e=>{const b=e.target.closest('[data-ad-tab]');if(b)showTab(b.dataset.adTab)};
+ $('ry-ad-question-form').onsubmit=async e=>{
+  e.preventDefault();const fd=new FormData(e.currentTarget);let options,answer;
+  try{options=JSON.parse(fd.get('options')||'[]');answer=JSON.parse(fd.get('correct_answer'))}catch(err){return msg('JSON گزینه‌ها یا پاسخ درست معتبر نیست.',true)}
+  const row={chapter:fd.get('chapter'),topic:fd.get('topic'),difficulty:fd.get('difficulty'),question_text:fd.get('question_text'),options,correct_answer:answer,explanation:fd.get('explanation'),is_published:fd.get('is_published')==='on',created_by:currentUser.id};
+  const {error}=await client.from('questions').insert(row);if(error)return msg('ثبت سؤال ناموفق بود: '+error.message,true);
+  await log('create_question',row.chapter);e.currentTarget.reset();msg('سؤال با موفقیت ثبت شد.');await loadQuestions();await refreshStats();
+ };
+ $('ry-ad-exam-form').onsubmit=async e=>{
+  e.preventDefault();const fd=new FormData(e.currentTarget);const row={title:fd.get('title'),description:fd.get('description'),duration_minutes:Number(fd.get('duration_minutes')||30),is_published:fd.get('is_published')==='on',created_by:currentUser.id};
+  const {error}=await client.from('exams').insert(row);if(error)return msg('ساخت آزمون ناموفق بود: '+error.message,true);
+  await log('create_exam',row.title);e.currentTarget.reset();msg('آزمون ساخته شد.');await loadExams();await refreshStats();
+ };
+ root.addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  let res,action,target;
+  if(b.dataset.qToggle){res=await client.from('questions').update({is_published:b.dataset.pub!=='true'}).eq('id',b.dataset.qToggle);action='toggle_question_publish';target=b.dataset.qToggle}
+  else if(b.dataset.qDelete){if(!confirm('این سؤال حذف شود؟'))return;res=await client.from('questions').delete().eq('id',b.dataset.qDelete);action='delete_question';target=b.dataset.qDelete}
+  else if(b.dataset.eToggle){res=await client.from('exams').update({is_published:b.dataset.pub!=='true'}).eq('id',b.dataset.eToggle);action='toggle_exam_publish';target=b.dataset.eToggle}
+  else if(b.dataset.eDelete){if(!confirm('این آزمون حذف شود؟'))return;res=await client.from('exams').delete().eq('id',b.dataset.eDelete);action='delete_exam';target=b.dataset.eDelete}
+  else if(b.dataset.sStatus){res=await client.from('suggestions').update({status:b.dataset.status}).eq('id',b.dataset.sStatus);action='update_suggestion';target=b.dataset.sStatus}
+  else if(b.dataset.cStatus){res=await client.from('comments').update({status:b.dataset.status}).eq('id',b.dataset.cStatus);action='moderate_comment';target=b.dataset.cStatus}
+  else if(b.dataset.cDelete){if(!confirm('این دیدگاه حذف شود؟'))return;res=await client.from('comments').delete().eq('id',b.dataset.cDelete);action='delete_comment';target=b.dataset.cDelete}
+  else if(b.dataset.rStatus){res=await client.from('comment_reports').update({status:b.dataset.status}).eq('id',b.dataset.rStatus);action='update_report';target=b.dataset.rStatus}
+  else return;
+  if(res.error){msg('انجام عملیات ناموفق بود: '+res.error.message,true);return}
+  await log(action,target);msg('تغییرات ذخیره شد.');
+  const active=document.querySelector('#ry-ad-tabs .active')?.dataset.adTab;await (loaders[active]||refreshStats)();await refreshStats();
+ });
+ client.auth.onAuthStateChange(()=>setTimeout(gate,0));
+ gate();
+})();
+</script>
+
+</body>
 </html>
