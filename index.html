@@ -188,7 +188,12 @@ button,select,input{touch-action:manipulation;}
 
 /* GeoGebra official embedded tools */
 #geo-wonders .ry-ggb-intro{line-height:1.9;margin-bottom:14px}
-#geo-wonders .ry-ggb-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:14px 0}
+#geo-wonders .ry-ggb-tabs{display:flex;flex-wrap:nowrap;gap:10px;margin:14px 0;padding:0 0 12px;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;direction:rtl;scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;scroll-behavior:smooth}
+#geo-wonders .ry-ggb-tabs::-webkit-scrollbar{height:10px}
+#geo-wonders .ry-ggb-tabs::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
+#geo-wonders .ry-ggb-tabs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+#geo-wonders .ry-ggb-tabs::-webkit-scrollbar-thumb:hover{filter:brightness(.9)}
+#geo-wonders .ry-ggb-tabs .btn{flex:0 0 230px;max-width:80vw}
 #geo-wonders .ry-ggb-tabs .btn{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;min-height:76px;padding:11px 14px;text-align:right;white-space:normal;background:var(--surface);color:var(--ink);border:2px solid var(--stone);border-radius:13px;line-height:1.5;transition:border-color .15s,background .15s,transform .15s}
 #geo-wonders .ry-ggb-tabs .btn:hover{border-color:var(--accent);transform:translateY(-1px)}
 #geo-wonders .ry-ggb-tabs .btn:focus-visible,#geo-wonders .ry-ggb-fullscreen:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
@@ -205,7 +210,7 @@ button,select,input{touch-action:manipulation;}
 #geo-wonders:fullscreen{position:fixed;inset:0;z-index:99999;overflow:auto;background:var(--bg);padding:16px;box-sizing:border-box}
 #geo-wonders:fullscreen .card{max-width:none;margin:0 auto}
 #geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 300px);min-height:360px}
-@media(max-width:600px){#geo-wonders .ry-ggb-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}#geo-wonders .ry-ggb-tabs .btn{min-height:78px;padding:9px}#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}#geo-wonders:fullscreen{padding:8px}#geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 360px);min-height:300px}}
+@media(max-width:600px){#geo-wonders .ry-ggb-tabs{gap:7px}#geo-wonders .ry-ggb-tabs .btn{flex-basis:205px;min-height:78px;padding:9px}#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}#geo-wonders:fullscreen{padding:8px}#geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 360px);min-height:300px}}
 </style>
 </head>
 <body>
