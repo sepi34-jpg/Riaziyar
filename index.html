@@ -1558,7 +1558,7 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
   $('ry-community-body').value='';$('ry-community-status').textContent='دیدگاه ثبت شد و پس از تأیید مدیر نمایش داده می‌شود.';
  });
  $('welcome-list')?.addEventListener('click',e=>{if(e.target.closest('[data-ry-open="community"]')){showSection('community');loadCommunity();}});
- if(typeof S!=='undefined'&&S.set){const original=S.set.bind(S);S.set=(k,v)=>{original(k,v);if(window.rySyncUserProgress)window.rySyncUserProgress();};}
+ if(typeof S!=='undefined'&&S.set){const original=S.set.bind(S);let syncTimer=null;S.set=(k,v)=>{original(k,v);if(window.rySyncUserProgress){clearTimeout(syncTimer);syncTimer=setTimeout(()=>window.rySyncUserProgress(),1200);}};}
  if(client)client.auth.onAuthStateChange((event,session)=>{if(session&&event==='SIGNED_IN')setTimeout(()=>window.rySyncUserProgress?.(),300);});
 })();
 </script>
