@@ -188,14 +188,7 @@ button,select,input{touch-action:manipulation;}
 
 /* GeoGebra official embedded tools */
 #geo-wonders .ry-ggb-intro{line-height:1.9;margin-bottom:14px}
-/* پیمایش دوطرفه فقط برای پنل بیرونیِ بالای محیط سفید GeoGebra */
-#geo-wonders .ry-ggb-controls-viewport{width:100%;height:370px;max-height:52vh;min-height:260px;overflow:auto;overscroll-behavior:contain;border:1px solid var(--stone);border-radius:12px;padding:10px;background:var(--surface);scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);-webkit-overflow-scrolling:touch}
-#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar{width:12px;height:12px}
-#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
-#geo-wonders .ry-ggb-controls-viewport::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-#geo-wonders .ry-ggb-controls-content{min-width:980px;min-height:430px}
-#geo-wonders .ry-ggb-controls-content .ry-ggb-tabs{max-width:100%}
-
+/* کنترل‌های انتخاب ابزار بیرون از محیط سفید، بدون قاب اسکرول اضافی */
 #geo-wonders .ry-ggb-tabs{display:flex;flex-wrap:nowrap;gap:10px;margin:14px 0;padding:0 0 12px;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;direction:rtl;scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;scroll-behavior:smooth}
 #geo-wonders .ry-ggb-tabs::-webkit-scrollbar{height:10px}
 #geo-wonders .ry-ggb-tabs::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
@@ -220,8 +213,8 @@ button,select,input{touch-action:manipulation;}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar{width:12px;height:12px}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-#geo-wonders .ry-ggb-scale{width:1100px;min-width:1100px;height:850px;min-height:850px;overflow:visible}
-#geo-wonders .ry-ggb-scale iframe{display:block;width:100%;height:100%;min-width:1100px;min-height:850px;border:0}
+#geo-wonders .ry-ggb-scale{width:1500px;min-width:1500px;height:1000px;min-height:1000px;overflow:visible}
+#geo-wonders .ry-ggb-scale iframe{display:block;width:1500px;height:1000px;min-width:1500px;min-height:1000px;border:0}
 #geo-wonders:fullscreen{position:fixed;inset:0;z-index:99999;overflow:auto;background:var(--bg);padding:16px;box-sizing:border-box}
 #geo-wonders:fullscreen .card{max-width:none;margin:0 auto}
 #geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 300px);min-height:360px}
@@ -647,8 +640,6 @@ button,select,input{touch-action:manipulation;}
 <section id="geo-wonders" hidden>
  <div class="card">
   <h2>✨ عجایب هندسه</h2>
-  <div class="ry-ggb-controls-viewport" aria-label="بخش کنترل و انتخاب ابزارهای GeoGebra">
-   <div class="ry-ggb-controls-content">
   <p class="mute ry-ggb-intro">اینجا می‌توانی شکل بکشی، نمودار ببینی، اجسام سه‌بعدی بسازی و محاسبه کنی. اول یکی از کارت‌ها را انتخاب کن. برای کارکرد ابزارها اینترنت لازم است.</p>
   <div class="ry-ggb-tabs" id="ry-ggb-tabs" aria-label="انتخاب ابزار GeoGebra">
    <button class="btn" type="button" data-ggb-app="suite" aria-pressed="true"><span class="ry-ggb-btn-title">🌟 همه ابزارها</span><span class="ry-ggb-btn-desc">یک مجموعه برای رسم، هندسه و محاسبه</span></button>
@@ -670,9 +661,7 @@ button,select,input{touch-action:manipulation;}
    <button class="ry-ggb-fullscreen" id="ry-ggb-fullscreen" type="button" aria-pressed="false">⛶ تمام‌صفحه کردن صفحه</button>
   </div>
   <button class="ry-ggb-retry" id="ry-ggb-retry" type="button" hidden>↻ تلاش دوباره برای بارگذاری</button>
-   </div>
-  </div>
-  <div class="ry-ggb-frame"><div id="ry-ggb-scale" class="ry-ggb-scale"></div></div>
+  <div class="ry-ggb-frame" aria-label="محیط کامل ابزار GeoGebra"><div id="ry-ggb-scale" class="ry-ggb-scale"></div></div>
   <p class="mute" style="margin-top:12px">این ابزارها از سرویس رسمی GeoGebra باز می‌شوند. برای ذخیره‌کردن بعضی کارها ممکن است حساب GeoGebra لازم باشد.</p>
  </div>
 </section>
@@ -1904,7 +1893,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   try{
    await loadLibrary();
    const params={
-    appName:app,width:1000,height:700,scaleContainerClass:'ry-ggb-frame',autoHeight:false,
+    appName:app,width:1500,height:1000,scaleContainerClass:'ry-ggb-frame',autoHeight:false,
     language:'fa',showMenuBar:true,showToolBar:true,showToolBarHelp:true,
     showAlgebraInput:true,showResetIcon:true,showFullscreenButton:true,
     allowStyleBar:true,enable3d:true,enableCAS:true,enableRightClick:true,
