@@ -2206,91 +2206,144 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 </script>
 
 <script>
-(()=> {
- // کیبورد مجازی برای کادرهای نوشتن در تمام بخش‌های سایت، از جمله پنل ورود و مدیریت
- const panel=document.createElement('div');panel.id='ry-virtual-keyboard';panel.setAttribute('role','group');panel.setAttribute('aria-label','کیبورد مجازی');
+(()=>{
+ // کیبورد مجازی سراسری؛ فوکوس ورودی هنگام لمس کلیدها حفظ می‌شود.
+ const panel=document.createElement('div');
+ panel.id='ry-virtual-keyboard';
+ panel.setAttribute('role','group');
+ panel.setAttribute('aria-label','کیبورد مجازی');
  panel.innerHTML='<div class="ry-vk-head"><b>⌨️ کیبورد ریاضی‌یار</b><div class="row"><button type="button" data-vk-lang class="ry-vk-special">EN / فا</button><button type="button" data-vk-close class="ry-vk-special">بستن ✕</button></div></div><div class="ry-vk-rows"></div>';
  document.body.appendChild(panel);
- const rows=panel.querySelector('.ry-vk-rows');let active=null,lang='fa',shift=false,oldInputMode=null;
+ const rows=panel.querySelector('.ry-vk-rows');
+ let active=null,lang='fa',shift=false;
+ const savedInputModes=new WeakMap();
+ const faDigits='۰۱۲۳۴۵۶۷۸۹';
+ const enDigits='0123456789';
  const layouts={
   fa:[['ض','ص','ث','ق','ف','غ','ع','ه','خ','ح','ج','چ'],['ش','س','ی','ب','ل','ا','ت','ن','م','ک','گ'],['ظ','ط','ز','ر','ذ','د','پ','و','ژ']],
   en:[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']]
  };
- const makeKey=(label,value,cls='')=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.vk=value;b.className=cls;return b};
+ const makeKey=(label,value,cls='')=>{
+  const button=document.createElement('button');
+  button.type='button';button.textContent=label;button.dataset.vk=value;button.className=cls;
+  return button;
+ };
  const render=()=>{
   rows.replaceChildren();
   const number=document.createElement('div');number.className='ry-vk-row';
-  (lang==='fa'?'۱۲۳۴۵۶۷۸۹۰':'1234567890').split('').forEach(k=>number.appendChild(makeKey(k,k)));
+  (lang==='fa'?faDigits:enDigits).split('').forEach(k=>number.appendChild(makeKey(k,k)));
   rows.appendChild(number);
-  layouts[lang].forEach((line,i)=>{const row=document.createElement('div');row.className='ry-vk-row';line.forEach(k=>row.appendChild(makeKey(shift&&lang==='en'?k.toUpperCase():k,k)));if(i===2){row.appendChild(makeKey('⇧','SHIFT','ry-vk-special'));row.appendChild(makeKey('⌫','BACKSPACE','ry-vk-special'));}rows.appendChild(row)});
+  layouts[lang].forEach((line,index)=>{
+   const row=document.createElement('div');row.className='ry-vk-row';
+   line.forEach(k=>row.appendChild(makeKey(shift&&lang==='en'?k.toUpperCase():k,k)));
+   if(index===2){row.appendChild(makeKey('⇧','SHIFT','ry-vk-special'));row.appendChild(makeKey('⌫','BACKSPACE','ry-vk-special'))}
+   rows.appendChild(row);
+  });
+  const punctuation=document.createElement('div');punctuation.className='ry-vk-row';
+  ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>punctuation.appendChild(makeKey(k,k)));
+  rows.appendChild(punctuation);
   const bottom=document.createElement('div');bottom.className='ry-vk-row';
-  ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>bottom.appendChild(makeKey(k,k)));
+  bottom.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
+  bottom.appendChild(makeKey('فاصله',' ','ry-vk-wide'));
+  bottom.appendChild(makeKey('↵','ENTER','ry-vk-special'));
   rows.appendChild(bottom);
-  const last=document.createElement('div');last.className='ry-vk-row';
-  last.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
-  last.appendChild(makeKey('فاصله',' ','ry-vk-wide'));
-  last.appendChild(makeKey('↵','ENTER','ry-vk-special'));
-  rows.appendChild(last);
  };
  const editable=el=>{
   if(!el||el.disabled||el.readOnly)return false;
-  if(el.isContentEditable)return true;
-  if(el.tagName==='TEXTAREA')return true;
+  if(el.isContentEditable||el.tagName==='TEXTAREA')return true;
   if(el.tagName!=='INPUT')return false;
   return !['button','submit','reset','checkbox','radio','file','range','color','image','hidden'].includes((el.type||'text').toLowerCase());
  };
  const show=el=>{
   if(!editable(el))return;
   active=el;
-  if(oldInputMode===null)oldInputMode=el.getAttribute('inputmode');
+  if(!savedInputModes.has(el))savedInputModes.set(el,el.getAttribute('inputmode'));
   el.setAttribute('inputmode','none');
   panel.classList.add('open');
  };
  const hide=()=>{
   panel.classList.remove('open');
-  if(active&&oldInputMode!==null){if(oldInputMode===null)active.removeAttribute('inputmode');else active.setAttribute('inputmode',oldInputMode);}
-  else if(active)active.removeAttribute('inputmode');
-  active=null;oldInputMode=null;
+  if(active&&active.isConnected){
+   const old=savedInputModes.get(active);
+   if(old===null||old===undefined)active.removeAttribute('inputmode');
+   else active.setAttribute('inputmode',old);
+  }
+  active=null;
  };
- document.addEventListener('focusin',e=>{if(editable(e.target))show(e.target);else if(!panel.contains(e.target))hide()});
- document.addEventListener('focusout',e=>{setTimeout(()=>{if(!panel.contains(document.activeElement)&&!editable(document.activeElement))hide()},80)});
- panel.addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault()});
- panel.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
-  if(b.hasAttribute('data-vk-close')){hide();active?.blur();return}
-  if(b.hasAttribute('data-vk-lang')){lang=lang==='fa'?'en':'fa';shift=false;render();return}
-  if(!active)return;
-  const key=b.dataset.vk;
+ document.addEventListener('focusin',event=>{
+  if(editable(event.target))show(event.target);
+  else if(!panel.contains(event.target))hide();
+ });
+ // با جلوگیری از جابه‌جایی فوکوس در pointerdown، کلیک روی کلیدها ورودی فعال را از دست نمی‌دهد.
+ panel.addEventListener('pointerdown',event=>{
+  if(event.target.closest('button'))event.preventDefault();
+ });
+ panel.addEventListener('mousedown',event=>{
+  if(event.target.closest('button'))event.preventDefault();
+ });
+ panel.addEventListener('click',event=>{
+  const button=event.target.closest('button');
+  if(!button)return;
+  if(button.hasAttribute('data-vk-close')){hide();if(active)active.blur();return}
+  if(button.hasAttribute('data-vk-lang')){lang=lang==='fa'?'en':'fa';shift=false;render();return}
+  if(!active||!active.isConnected)return;
+  const key=button.dataset.vk;
   if(key==='NUM'){lang='en';render();return}
   if(key==='SHIFT'){shift=!shift;render();return}
   if(key==='ENTER'){
    if(active.tagName==='TEXTAREA'){insert('\n');return}
-   active.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));active.dispatchEvent(new KeyboardEvent('keyup',{key:'Enter',bubbles:true}));return;
+   active.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));
+   active.dispatchEvent(new KeyboardEvent('keyup',{key:'Enter',bubbles:true}));
+   return;
   }
   if(key==='BACKSPACE'){erase();return}
   insert(key);
   if(shift){shift=false;render()}
  });
+ const normalizeForInput=(value,el)=>{
+  if(el.tagName!=='INPUT'||el.type!=='number')return value;
+  return value.replace(/[۰-۹]/g,d=>String(faDigits.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace('٫','.');
+ };
+ const emitInput=(el,inputType,data)=>{
+  try{el.dispatchEvent(new InputEvent('input',{bubbles:true,inputType,data}))}
+  catch(error){el.dispatchEvent(new Event('input',{bubbles:true}))}
+  el.dispatchEvent(new Event('change',{bubbles:true}));
+ };
  function insert(value){
-  if(!active)return;
-  if(active.isContentEditable){document.execCommand('insertText',false,value);active.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText',data:value}));return}
-  const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
-  const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
-  const before=active.value.slice(0,start),after=active.value.slice(end);
-  active.value=before+value+after;
-  const pos=start+value.length;try{active.setSelectionRange(pos,pos)}catch(e){}
-  active.dispatchEvent(new Event('input',{bubbles:true}));
-  active.focus({preventScroll:true});
+  if(!active||!active.isConnected)return;
+  value=normalizeForInput(value,active);
+  if(active.isContentEditable){
+   active.focus();document.execCommand('insertText',false,value);
+   emitInput(active,'insertText',value);return;
+  }
+  const isNumber=active.tagName==='INPUT'&&active.type==='number';
+  if(isNumber&&!/^[0-9.\-]$/.test(value))return;
+  if(isNumber){
+   active.value=(active.value||'')+value;
+  }else{
+   const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
+   const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
+   active.value=active.value.slice(0,start)+value+active.value.slice(end);
+   const position=start+value.length;
+   try{active.setSelectionRange(position,position)}catch(error){}
+  }
+  emitInput(active,'insertText',value);
  }
  function erase(){
-  if(!active)return;
-  if(active.isContentEditable){document.execCommand('delete');active.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward'}));return}
-  const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
-  const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
-  const from=start===end?Math.max(0,start-1):start;
-  active.value=active.value.slice(0,from)+active.value.slice(end);
-  try{active.setSelectionRange(from,from)}catch(e){}
-  active.dispatchEvent(new Event('input',{bubbles:true}));active.focus({preventScroll:true});
+  if(!active||!active.isConnected)return;
+  if(active.isContentEditable){
+   document.execCommand('delete');emitInput(active,'deleteContentBackward',null);return;
+  }
+  if(active.tagName==='INPUT'&&active.type==='number'){
+   active.value=(active.value||'').slice(0,-1);
+  }else{
+   const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
+   const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
+   const from=start===end?Math.max(0,start-1):start;
+   active.value=active.value.slice(0,from)+active.value.slice(end);
+   try{active.setSelectionRange(from,from)}catch(error){}
+  }
+  emitInput(active,'deleteContentBackward',null);
  }
  render();
 })();
