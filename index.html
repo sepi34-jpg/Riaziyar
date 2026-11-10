@@ -15,6 +15,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Vazirmatn',Taho
 .top{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 5vw;border-bottom:1px solid var(--stone)}
 .top h1{font-size:1.2rem;margin:0;font-weight:900}
 nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+#tabs{min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 0 9px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+#tabs button{flex:0 0 auto;white-space:nowrap}
+#tabs::-webkit-scrollbar{height:9px}
+#tabs::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
+#tabs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+#tabs::-webkit-scrollbar-thumb:hover{filter:brightness(.9)}
 button,select,input{font-family:inherit;color:var(--ink)}
 nav button,.btn{border:1px solid var(--stone);background:var(--card);border-radius:12px;padding:8px 14px;cursor:pointer;font-size:.9rem;transition:transform .1s,background .2s}
 nav button.on,.btn.pri{background:var(--accent);color:var(--on);border-color:var(--accent)}
