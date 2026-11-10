@@ -1008,14 +1008,14 @@ function qBegin(ids,mode=''){
   qz={ids,i:0,ans:[],mode,timed:$('qtime').checked,locked:false};
   $('qsetup').hidden=true;$('qres').hidden=true;$('qplay').hidden=false;qShow();
 }
-$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||Q[i].c==c)&&(l==='all'||Q[i].level===l));
+$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||Q[i].chapter==c)&&(l==='all'||Q[i].level===l));
   qBegin(shuffle(ids).slice(0,+$('qcnt').value))};
 $('ry-contest').onclick=()=>{ $('qtime').checked=true; $('qcnt').value='20'; const ids=shuffle(Q.map((_,i)=>i)).slice(0,20); qBegin(ids,'contest'); $('qfb').innerHTML='<div class="fb">مسابقه شروع شد: برای هر سؤال ۳۰ ثانیه فرصت داری. با کسب حداقل ۷۰٪، ۲۵ XP جایزه می‌گیری.</div>'; };
 $('qwrong').onclick=()=>qBegin(shuffle(S.get('wrong',[])).slice(0,+$('qcnt').value));
 function qShow(){
   const o=Q[qz.ids[qz.i]];qz.locked=false;
   $('qn').textContent=`سوال ${qz.i+1} از ${qz.ids.length}`;$('qbar').style.width=(qz.i/qz.ids.length*100)+'%';
-  $('qcl').textContent=cats[o.c][0]+' • سطح '+({easy:'آسان',medium:'متوسط',hard:'پیشرفته'}[o.level]||'');$('qq').innerHTML=o.q;$('qh').innerHTML=o.h;
+  $('qcl').textContent=(ryChapters[o.chapter]?.title||'فصل '+(o.chapter+1))+' • سطح '+({easy:'آسان',medium:'متوسط',hard:'سخت',olympiad:'تیزهوشانی'}[o.level]||'');$('qq').innerHTML=o.q;$('qh').innerHTML=o.h;
   $('qin').value='';$('qin').disabled=false;$('qfb').innerHTML='';$('qsub').hidden=false;$('qnext').hidden=true;$('qin').focus();
   clearInterval(qz.iv);$('qtimer').textContent='';
   if(qz.timed){qz.t=30;$('qtimer').textContent='⏱ 30';qz.iv=setInterval(()=>{qz.t--;$('qtimer').textContent='⏱ '+qz.t;if(qz.t<=0)qGrade('',true)},1000)}
@@ -1023,16 +1023,15 @@ function qShow(){
 function ryStepExplain(o){
   const key=String(o.c);
   const reasons={
-    '0':'در جمع و تفریق اعداد صحیح، علامت و جهت تغییر مهم است؛ پس ابتدا علامت‌ها را بررسی می‌کنیم.',
-    '1':'در ضرب و تقسیم، ابتدا قدرمطلق‌ها را حساب می‌کنیم و بعد با توجه به یکسان یا متفاوت بودن علامت‌ها، علامت جواب را تعیین می‌کنیم.',
-    '2':'توان یعنی ضرب تکراری یک عدد در خودش؛ آن را پیش از ضرب، تقسیم، جمع و تفریق انجام می‌دهیم.',
-    '3':'جذر عددی است که اگر در خودش ضرب شود، عدد زیر رادیکال را به دست می‌دهد.',
-    '4':'درصد نسبت به ۱۰۰ سنجیده می‌شود؛ برای درصدِ یک مقدار، درصد را در مقدار ضرب و بر ۱۰۰ تقسیم می‌کنیم. در تخفیف، مقدار تخفیف را از قیمت اولیه کم می‌کنیم.',
-    '5':'برای حل معادله، مجهول را تنها می‌کنیم و هر عملی را که روی یک طرف انجام می‌دهیم، برای حفظ تساوی روی طرف دیگر هم انجام می‌دهیم.',
-    '6':'در عبارت جبری، مقدار داده‌شده را به جای متغیر می‌گذاریم و سپس ترتیب عملیات را رعایت می‌کنیم.',
-    '7':'اول تشخیص می‌دهیم سؤال محیط می‌خواهد یا مساحت؛ محیط دور شکل است و مساحت سطح داخل شکل را نشان می‌دهد.',
-    '8':'قضیهٔ فیثاغورس فقط برای مثلث قائم‌الزاویه است؛ وتر روبه‌روی زاویهٔ ۹۰ درجه قرار دارد.',
-    '9':'در کسرها باید به مخرج‌ها توجه کنیم؛ برای جمع و تفریق، مخرج مشترک لازم است و در اعشار باید جای ممیزها درست رعایت شود.'
+    '0':'در عددهای صحیح و گویا، علامت‌ها و مخرج‌ها را بررسی می‌کنیم و سپس چهار عمل اصلی را انجام می‌دهیم.',
+    '1':'برای عددهای اول، شمارنده‌ها را بررسی می‌کنیم؛ برای ب.م.م و ک.م.م از تجزیه یا الگوریتم اقلیدس کمک می‌گیریم.',
+    '2':'مجموع زاویه‌های داخلی nضلعی برابر (n−۲)×۱۸۰ درجه و مجموع زاویه‌های خارجی ۳۶۰ درجه است.',
+    '3':'برای حل معادله، عبارت‌های هم‌نوع را جمع می‌کنیم و مجهول را با انجام عملیات یکسان در دو طرف جدا می‌کنیم.',
+    '4':'در بردارها، مؤلفه‌های افقی و عمودی را جداگانه جمع می‌کنیم؛ مختصات نقطه نیز به ترتیب x و y نوشته می‌شود.',
+    '5':'مجموع زاویه‌های مثلث ۱۸۰ درجه است؛ در مثلث قائم‌الزاویه از رابطهٔ فیثاغورس استفاده می‌کنیم.',
+    '6':'قوانین توان‌ها را رعایت می‌کنیم و جذر عدد مربع کامل را با پیدا کردن ریشهٔ مثبت به دست می‌آوریم.',
+    '7':'میانگین از تقسیم مجموع داده‌ها بر تعداد آن‌ها به دست می‌آید؛ احتمال برابر نسبت حالت‌های مطلوب به کل حالت‌هاست.',
+    '8':'محیط دایره ۲πr و مساحت آن πr² است؛ مقدار π را طبق صورت سؤال جای‌گذاری می‌کنیم.'
   };
   const why=reasons[key]||'روش حل را با داده‌ها و خواستهٔ سؤال هماهنگ می‌کنیم.';
   const calcStep=o.e&&String(o.e).trim()?o.e:'محاسبه را با قاعدهٔ مربوط به این مبحث انجام می‌دهیم.';
@@ -1669,6 +1668,82 @@ ryChapterExercises.forEach((chapter,ci)=>chapter.forEach((topic,ti)=>topic.forEa
  }
 })));
 if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه موضوع‌ها (${Q.length})`;
+
+/* بانک آزمون بازسازی‌شده: ۹ فصل، چهار سطح، دقیقاً ۱۰۰۰ سؤال */
+(()=>{
+ const fa=n=>String(n).replace(/-/g,'−').replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[+d]);
+ const levels=['easy','medium','hard','olympiad'];
+ const make=(ch,level,q,a,e)=>({c:ch,chapter:ch,level,q,a,e,h:'پاسخ را به صورت عدد وارد کن.',t:fa(a)});
+ const gcd=(a,b)=>b?gcd(b,a%b):a;
+ const gen=(ch,level,k)=>{
+  const z=k+1;let q='',a=0,e='';
+  switch(ch){
+   case 0:
+    if(level==='easy'){const x=(z%2?-1:1)*(z+4),y=z%17+2;q='حاصل '+fa(x)+' + '+fa(y)+' را به دست بیاور.';a=x+y;e=fa(x)+' + '+fa(y)+' = '+fa(a)+'.';}
+    else if(level==='medium'){const d=2+z%7,x=1+z%5,y=1+(z*3)%5;q='حاصل '+fa(x)+'/'+fa(d)+' + '+fa(y)+'/'+fa(d)+' را پیدا کن.';a=(x+y)/d;e='مخرج‌ها برابرند؛ صورت‌ها را جمع می‌کنیم: '+fa(x+y)+'/'+fa(d)+' = '+fa(a)+'.';}
+    else if(level==='hard'){const x=z%9+3,y=z%7+2,w=z%5+1;q='حاصل '+fa(x)+' − ('+fa(y)+' − '+fa(w)+') × ۲ را حساب کن.';a=x-(y-w)*2;e='ابتدا پرانتز، سپس ضرب و تفریق: '+fa(x)+' − ('+fa(y-w)+')×۲ = '+fa(a)+'.';}
+    else{const x=z%13+4,y=z%9+2,w=z%6+1;q='عددی '+fa(x)+' است؛ '+fa(y)+' واحد به آن اضافه و سپس دو برابر '+fa(w)+' واحد از آن کم می‌شود. مقدار نهایی چیست؟';a=x+y-2*w;e=fa(x)+' + '+fa(y)+' − ۲×'+fa(w)+' = '+fa(a)+'.';}
+    break;
+   case 1:
+    if(level==='easy'){const p=[2,3,5,7,11,13][z%6],m=2+z%8;q='کوچک‌ترین شمارندهٔ اولِ عدد '+fa(p*m)+' (بزرگ‌تر از ۱) چیست؟';a=p;e=fa(p)+' کوچک‌ترین عامل اول این عدد است.';}
+    else if(level==='medium'){const p=[2,3,5,7][z%4],r=[3,5,7,11][(z+1)%4],n=p*r;q='عدد '+fa(n)+' حاصل‌ضرب دو عدد اول متفاوت است. چند شمارندهٔ مثبت دارد؟';a=4;e='شمارنده‌ها: ۱، '+fa(p)+'، '+fa(r)+' و '+fa(n)+'؛ پس ۴ شمارنده.';}
+    else if(level==='hard'){const x=12+z%18,y=18+(z*2)%24,g=gcd(x,y);q='ب.م.مِ '+fa(x)+' و '+fa(y)+' را پیدا کن.';a=g;e='با الگوریتم اقلیدس، ب.م.م برابر '+fa(g)+' است.';}
+    else{const x=8+z%17,y=9+(z*3)%19,g=gcd(x,y);q='دو زنگ هر '+fa(x)+' و '+fa(y)+' دقیقه یک‌بار به صدا درمی‌آیند. چند دقیقه بعد دوباره هم‌زمان می‌شوند؟';a=x/g*y;e='ک.م.م = ('+fa(x)+'×'+fa(y)+')÷'+fa(g)+' = '+fa(a)+' دقیقه.';}
+    break;
+   case 2:
+    if(level==='easy'){const n=3+z%6;q='مجموع زاویه‌های داخلی یک '+fa(n)+'ضلعی محدب چند درجه است؟';a=(n-2)*180;e='(n−۲)×۱۸۰ = ('+fa(n)+'−۲)×۱۸۰ = '+fa(a)+' درجه.';}
+    else if(level==='medium'){const n=3+z%6;q='هر زاویهٔ خارجیِ یک چندضلعی منتظم '+fa(n)+'ضلعی چند درجه است؟';a=360/n;e='۳۶۰÷'+fa(n)+' = '+fa(a)+' درجه.';}
+    else if(level==='hard'){const n=4+z%7;q='هر زاویهٔ داخلیِ یک '+fa(n)+'ضلعی منتظم چند درجه است؟';a=(n-2)*180/n;e='مجموع زاویه‌ها را بر تعداد آن‌ها تقسیم می‌کنیم: '+fa(a)+' درجه.';}
+    else{const n=4+z%8;q='تعداد قطرهای یک '+fa(n)+'ضلعی محدب چندتاست؟';a=n*(n-3)/2;e='فرمول قطرها n(n−۳)÷۲ است؛ جواب '+fa(a)+' قطر.';}
+    break;
+   case 3:
+    if(level==='easy'){const x=z%15+2,b=z%9+1;q='اگر ۳x + '+fa(b)+' = '+fa(3*x+b)+' باشد، x چند است؟';a=x;e='۳x = '+fa(3*x)+'؛ پس x = '+fa(x)+'.';}
+    else if(level==='medium'){const x=z%11+2,m=2+z%5,b=z%8+1;q='اگر x='+fa(x)+' باشد، مقدار '+fa(m)+'x − '+fa(b)+' چقدر است؟';a=m*x-b;e=fa(m)+'×'+fa(x)+'−'+fa(b)+'='+fa(a)+'.';}
+    else if(level==='hard'){const x=z%9+3,m=2+z%4,b=z%7+2,n=1+z%3;q='معادلهٔ '+fa(m)+'x + '+fa(b)+' = '+fa(n)+'x + '+fa(m*x+b-n*x)+' را حل کن.';a=x;e='جمله‌های xدار را یک طرف و عددها را طرف دیگر می‌بریم؛ x='+fa(x)+'.';}
+    else{const x=z%12+2,m=2+z%4,b=z%8+1;q='در معادلهٔ '+fa(m)+'(x+'+fa(b)+') = '+fa(m*(x+b))+'، مقدار x را پیدا کن.';a=x;e='دو طرف را بر '+fa(m)+' تقسیم می‌کنیم و سپس '+fa(b)+' را کم می‌کنیم؛ x='+fa(x)+'.';}
+    break;
+   case 4:
+    if(level==='easy'){const x=z%13-6,dx=z%9-4;q='نقطه‌ای با مختصات ('+fa(x)+'، '+fa(z)+')، '+fa(dx)+' واحد افقی جابه‌جا می‌شود. مختصات x جدید چیست؟';a=x+dx;e=fa(x)+' + '+fa(dx)+' = '+fa(a)+'.';}
+    else if(level==='medium'){const x=z%11-5,u=z%7-3;q='مؤلفهٔ افقی حاصل جمع دو بردار ('+fa(x)+'،۲) و ('+fa(u)+'،۵) چیست؟';a=x+u;e='مؤلفه‌های افقی را جمع می‌کنیم: '+fa(x)+' + '+fa(u)+' = '+fa(a)+'.';}
+    else if(level==='hard'){const x=3+z%8;q='طول برداری با مؤلفه‌های '+fa(3*x)+' و '+fa(4*x)+' چند واحد است؟';a=5*x;e='طول = √(('+fa(3*x)+')²+('+fa(4*x)+')²) = '+fa(a)+'.';}
+    else{const x=z%9-4,dx=z%7+2;q='نقطه‌ای از مبدأ، ابتدا '+fa(dx)+' واحد به راست و سپس '+fa(x)+' واحد افقی جابه‌جا می‌شود. مختصات نهایی x چیست؟';a=dx+x;e=fa(dx)+' + ('+fa(x)+') = '+fa(a)+'.';}
+    break;
+   case 5:
+    if(level==='easy'){const x=30+z%50,y=60+z%40;q='در مثلثی دو زاویه '+fa(x)+' و '+fa(y)+' درجه‌اند. زاویهٔ سوم چند درجه است؟';a=180-x-y;e='۱۸۰−'+fa(x)+'−'+fa(y)+' = '+fa(a)+' درجه.';}
+    else if(level==='medium'){const x=30+z%35;q='مثلثی متساوی‌الساقین، زاویهٔ رأس '+fa(2*x)+' درجه دارد. هر زاویهٔ قاعده چند درجه است؟';a=(180-2*x)/2;e='(۱۸۰−'+fa(2*x)+')÷۲ = '+fa(a)+' درجه.';}
+    else if(level==='hard'){const x=3+z%8;q='مثلث قائم‌الزاویه‌ای ضلع‌های قائم '+fa(3*x)+' و '+fa(4*x)+' دارد. وتر چند است؟';a=5*x;e='طبق فیثاغورس، وتر برابر '+fa(5*x)+' است.';}
+    else{const x=2+z%9;q='در مثلث قائم‌الزاویه، وتر '+fa(5*x)+' و یک ضلع قائم '+fa(3*x)+' است. ضلع قائم دیگر چند است؟';a=4*x;e='√(('+fa(5*x)+')²−('+fa(3*x)+')²) = '+fa(a)+'.';}
+    break;
+   case 6:
+    if(level==='easy'){const b=2+z%4,n=2+z%5;q='حاصل '+fa(b)+' به توان '+fa(n)+' چیست؟';a=b**n;e=fa(b)+' را '+fa(n)+' بار در خودش ضرب می‌کنیم؛ جواب '+fa(a)+'.';}
+    else if(level==='medium'){const n=3+z%15;q='جذرِ '+fa(n*n)+' چند است؟';a=n;e='چون '+fa(n)+'×'+fa(n)+'='+fa(n*n)+'، جذر برابر '+fa(n)+' است.';}
+    else if(level==='hard'){const b=2+z%4,m=2+z%4,n=1+z%3;q='حاصل '+fa(b)+' به توان '+fa(m)+' ضربدر '+fa(b)+' به توان '+fa(n)+' چیست؟';a=b**(m+n);e='در ضرب توان‌های هم‌پایه، توان‌ها جمع می‌شوند؛ جواب '+fa(a)+'.';}
+    else{const b=2+z%4,n=2+z%4;q='حاصل √('+fa(b*b*n*n)+') + '+fa(b*b)+' چیست؟';a=b*n+b*b;e='جذر برابر '+fa(b*n)+' است؛ سپس '+fa(b*b)+' را اضافه می‌کنیم: '+fa(a)+'.';}
+    break;
+   case 7:
+    if(level==='easy'){const x=z%15+5,y=z%13+7,w=z%11+9;q='میانگین عددهای '+fa(x)+'، '+fa(y)+' و '+fa(w)+' چند است؟';a=(x+y+w)/3;e='('+fa(x)+'+'+fa(y)+'+'+fa(w)+')÷۳ = '+fa(a)+'.';}
+    else if(level==='medium'){const x=z%20+2,y=z%17+25,w=z%12+40;q='دامنهٔ تغییرات داده‌های '+fa(x)+'، '+fa(y)+' و '+fa(w)+' چقدر است؟';a=Math.max(x,y,w)-Math.min(x,y,w);e='بزرگ‌ترین داده منهای کوچک‌ترین داده = '+fa(a)+'.';}
+    else if(level==='hard'){const red=2+z%5,total=red+5+z%8;q='در کیسه‌ای '+fa(red)+' مهرهٔ قرمز و '+fa(total-red)+' مهرهٔ دیگر است. احتمال قرمز بودن به درصد چند است؟';a=red/total*100;e='تعداد قرمز ÷ کل مهره‌ها ×۱۰۰ = '+fa(a)+'٪.';}
+    else{const x=10+z%12,y=14+z%15,w=18+z%17;q='میانگین سه عدد '+fa(x)+'، '+fa(y)+' و '+fa(w)+' برابر است. عدد چهارمی برابر مجموع این سه عدد است. میانگین چهار عدد چند است؟';a=(2*(x+y+w))/4;e='مجموع چهار داده '+fa(2*(x+y+w))+' است؛ تقسیم بر ۴ می‌کنیم: '+fa(a)+'.';}
+    break;
+   case 8:
+    if(level==='easy'){const r=2+z%12;q='محیط دایره‌ای با شعاع '+fa(r)+' را با فرض π=۳ حساب کن.';a=6*r;e='۲×۳×'+fa(r)+' = '+fa(a)+'.';}
+    else if(level==='medium'){const r=2+z%10;q='مساحت دایره‌ای با شعاع '+fa(r)+' را با فرض π=۳ حساب کن.';a=3*r*r;e='۳×'+fa(r)+'² = '+fa(a)+'.';}
+    else if(level==='hard'){const x=30+z%60;q='زاویهٔ مرکزی یک قطاع '+fa(x)+' درجه است. زاویهٔ باقی‌مانده تا یک دور کامل چند درجه است؟';a=360-x;e='۳۶۰−'+fa(x)+' = '+fa(a)+' درجه.';}
+    else{const r=2+z%9;q='اگر محیط دایره‌ای با π=۳ برابر '+fa(12*r)+' باشد، شعاع آن چند واحد است؟';a=2*r;e='۶r='+fa(12*r)؛ پس r='+fa(a)+'.';}
+    break;
+  }
+  return make(ch,level,q,a,e);
+ };
+ const fresh=[];
+ for(let ch=0;ch<9;ch++)for(const level of levels)for(let k=0;k<25;k++)fresh.push(gen(ch,level,k));
+ for(let ch=0;ch<9;ch++){const extra=ch===0?12:11;for(let k=25;k<25+extra;k++)fresh.push(gen(ch,'olympiad',k));}
+ Q.splice(0,Q.length,...fresh);
+ const cat=$('qcat');if(cat)cat.innerHTML='<option value="all">همهٔ فصل‌ها (۱۰۰۰ سؤال)</option>'+ryChapters.map((x,i)=>'<option value="'+i+'">'+ryEscape(x.title)+'</option>').join('');
+ const level=$('qlevel');if(level)level.innerHTML='<option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">سخت</option><option value="olympiad">تیزهوشانی</option>';
+ const count=$('qcnt');if(count&&!Array.from(count.options).some(o=>o.value==='1000'))count.add(new Option('1000','1000'));
+})();
+
 function ryRenderChapter(){const i=+$('ry-chapter-select').value, c=ryChapters[i];if(!c)return; $('ry-chapter-content').innerHTML=`<h2>${ryEscape(c.title)}</h2><div class="fb">سطح تمرین‌ها: متوسط رو به سخت. اول خودت حل کن، بعد روی «نمایش پاسخ تشریحی» بزن. هر تمرین چندمرحله‌ای طراحی شده تا فقط با یک محاسبهٔ ساده حل نشود.</div>`+c.sections.map((a,j)=>{const ex=(ryChapterExercises[i]||[])[j]||[];return `<div class="rv"><h3>${ryEscape(a[0])}</h3><p>${ryEscape(a[1])}</p><div class="tool-box"><b>تمرین‌های اختصاصی این مبحث</b>${ex.map((e,k)=>`<div class="rv"><b>تمرین ${k+1}.</b><p>${ryEscape(e[0])}</p><details><summary class="btn" style="display:inline-block;margin:5px 0;cursor:pointer">نمایش پاسخ تشریحی</summary><div class="fb"><b>پاسخ نهایی:</b> ${ryEscape(e[1])}<p><b>راه‌حل مرحله‌به‌مرحله:</b> ${ryEscape(e[2])}</p></div></details></div>`).join('')}</div></div>`}).join('')+`<div class="fb">نکته: بعد از یادگیری، مثال‌ها را بدون نگاه کردن دوباره حل کن و سپس پاسخ خود را بررسی کن.</div>`;S.set('chapterLast',i);S.set('usedChapters',true);ryXPRefresh();}
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=ryRenderChapter;$('ry-chapter-select').onchange=ryRenderChapter;
 $('ry-chapter-practice').onclick=()=>{
