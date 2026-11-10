@@ -2031,11 +2031,11 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const render=()=>{
   rows.replaceChildren();
   const number=document.createElement('div');number.className='ry-vk-row';
-  '۱۲۳۴۵۶۷۸۹۰'.split('').forEach(k=>number.appendChild(makeKey(k,k)));
+  (lang==='fa'?'۱۲۳۴۵۶۷۸۹۰':'1234567890').split('').forEach(k=>number.appendChild(makeKey(k,k)));
   rows.appendChild(number);
   layouts[lang].forEach((line,i)=>{const row=document.createElement('div');row.className='ry-vk-row';line.forEach(k=>row.appendChild(makeKey(shift&&lang==='en'?k.toUpperCase():k,k)));if(i===2){row.appendChild(makeKey('⇧','SHIFT','ry-vk-special'));row.appendChild(makeKey('⌫','BACKSPACE','ry-vk-special'));}rows.appendChild(row)});
   const bottom=document.createElement('div');bottom.className='ry-vk-row';
-  ['،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>bottom.appendChild(makeKey(k,k)));
+  ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>bottom.appendChild(makeKey(k,k)));
   rows.appendChild(bottom);
   const last=document.createElement('div');last.className='ry-vk-row';
   last.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
