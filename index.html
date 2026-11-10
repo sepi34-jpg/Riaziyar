@@ -15,8 +15,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Vazirmatn',Taho
 .top{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 5vw;border-bottom:1px solid var(--stone)}
 .top h1{font-size:1.2rem;margin:0;font-weight:900}
 nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}
-#tabs{min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 0 9px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+#tabs{flex:1 1 100%;width:100%;max-width:100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 0 10px;scrollbar-width:auto;scrollbar-color:var(--accent) var(--stone);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;direction:rtl;scroll-behavior:smooth}
 #tabs button{flex:0 0 auto;white-space:nowrap}
+#tabs-scroll-controls{display:flex;align-items:center;gap:10px;flex:1 1 100%;width:100%;margin-top:-5px}
+#tabs-scroll-controls .btn{min-width:42px;min-height:38px;padding:5px 12px}
+#tabs-scroll-controls .mute{font-size:.78rem}
+@media(max-width:600px){#tabs-scroll-controls{justify-content:space-between}#tabs-scroll-controls .mute{flex:1;text-align:center}}
 #tabs::-webkit-scrollbar{height:9px}
 #tabs::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
 #tabs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
@@ -228,6 +232,11 @@ button,select,input{touch-action:manipulation;}
     <button data-t="tizhooshani">تیزهوشانی</button>
     <button data-t="geo-wonders">✨ عجایب هندسه</button>
   </nav>
+  <div id="tabs-scroll-controls" aria-label="پیمایش نوار ابزار">
+    <button class="btn" id="tabs-scroll-next" type="button" aria-label="رفتن به دکمه‌های بعدی" title="دکمه‌های بعدی">◀</button>
+    <span class="mute">برای دیدن بقیهٔ ابزارها از فلش‌ها یا نوار پایین استفاده کن</span>
+    <button class="btn" id="tabs-scroll-prev" type="button" aria-label="رفتن به دکمه‌های قبلی" title="دکمه‌های قبلی">▶</button>
+  </div>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
 
@@ -1899,6 +1908,18 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  });
  document.addEventListener('fullscreenchange',syncFullscreen);
  window.ryGeoOpen=()=>selectApp('suite');
+})();
+</script>
+
+<script>
+(()=>{
+ const bar=document.getElementById('tabs');
+ const next=document.getElementById('tabs-scroll-next');
+ const prev=document.getElementById('tabs-scroll-prev');
+ if(!bar||!next||!prev)return;
+ const move=direction=>bar.scrollBy({left:direction*Math.max(220,bar.clientWidth*.72),behavior:'smooth'});
+ next.addEventListener('click',()=>move(-1));
+ prev.addEventListener('click',()=>move(1));
 })();
 </script>
 </body>
