@@ -245,7 +245,7 @@ button,select,input{touch-action:manipulation;}
 
 /* کیبورد مجازی سراسری */
 #ry-virtual-keyboard{position:fixed;z-index:100000;left:4px;right:4px;bottom:4px;max-width:900px;max-height:44vh;overflow-y:auto;margin:auto;padding:7px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:14px;box-shadow:0 12px 45px #0004;display:none;direction:rtl;overscroll-behavior:contain}
-@media(min-width:701px){#ry-virtual-keyboard{display:none!important}}
+
 @media(max-width:700px){#ry-virtual-keyboard .ry-vk-rows{gap:4px}#ry-virtual-keyboard .ry-vk-row{gap:3px}#ry-virtual-keyboard button{min-height:34px;font-size:.82rem;padding:4px 1px}#ry-virtual-keyboard .ry-vk-math-label{font-size:.7rem;padding-top:1px;margin-top:1px}}
 #ry-virtual-keyboard .ry-vk-math-label{font-size:.78rem;font-weight:800;color:var(--mute);padding:3px 5px 0;margin-top:3px}
 #ry-virtual-keyboard.open{display:block}
@@ -2329,30 +2329,38 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   return !['button','submit','reset','checkbox','radio','file','range','color','image','hidden'].includes((el.type||'text').toLowerCase());
  };
  const mobileKeyboard=()=>window.matchMedia('(max-width:700px)').matches;
+ const restoreInputMode=el=>{
+  if(!el||!savedInputModes.has(el))return;
+  const old=savedInputModes.get(el);
+  if(old===null||old===undefined)el.removeAttribute('inputmode');
+  else el.setAttribute('inputmode',old);
+ };
  const show=el=>{
   if(!editable(el))return;
-  if(!mobileKeyboard()){hide();return}
   active=el;
   if(!savedInputModes.has(el))savedInputModes.set(el,el.getAttribute('inputmode'));
-  el.setAttribute('inputmode','none');
+  // گوشی: کیبورد پیش‌فرض بسته می‌ماند؛ لپ‌تاپ: کیبورد فیزیکی هم فعال است.
+  if(mobileKeyboard())el.setAttribute('inputmode','none');
+  else restoreInputMode(el);
   panel.classList.add('open');
-  // ورودی را بالاتر می‌آوریم تا کیبورد روی متن در حال نوشتن نیفتد.
-  requestAnimationFrame(()=>{if(active===el)el.scrollIntoView({block:'center',behavior:'smooth'})});
+  if(mobileKeyboard())requestAnimationFrame(()=>{if(active===el)el.scrollIntoView({block:'center',behavior:'smooth'})});
  };
  const hide=()=>{
   panel.classList.remove('open');
-  if(active&&active.isConnected){
-   const old=savedInputModes.get(active);
-   if(old===null||old===undefined)active.removeAttribute('inputmode');
-   else active.setAttribute('inputmode',old);
-  }
+  if(active&&active.isConnected)restoreInputMode(active);
   active=null;
  };
  document.addEventListener('focusin',event=>{
   if(editable(event.target))show(event.target);
   else if(!panel.contains(event.target))hide();
  });
- window.addEventListener('resize',()=>{if(!mobileKeyboard())hide()});
+ window.addEventListener('resize',()=>{
+  if(active&&active.isConnected){
+   if(mobileKeyboard())active.setAttribute('inputmode','none');
+   else restoreInputMode(active);
+   panel.classList.add('open');
+  }
+ });
  // با جلوگیری از جابه‌جایی فوکوس در pointerdown، کلیک روی کلیدها ورودی فعال را از دست نمی‌دهد.
  panel.addEventListener('pointerdown',event=>{
   if(event.target.closest('button'))event.preventDefault();
