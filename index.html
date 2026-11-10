@@ -219,6 +219,30 @@ button,select,input{touch-action:manipulation;}
 #geo-wonders:fullscreen .card{max-width:none;margin:0 auto}
 #geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 300px);min-height:360px}
 @media(max-width:600px){#geo-wonders .ry-ggb-tabs{gap:7px}#geo-wonders .ry-ggb-tabs .btn{flex-basis:205px;min-height:78px;padding:9px}#geo-wonders .ry-ggb-scroll-controls .mute{display:none}#geo-wonders .ry-ggb-scroll-controls{justify-content:space-between}#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}#geo-wonders:fullscreen{padding:8px}#geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 360px);min-height:300px}}
+
+/* کیبورد مجازی سراسری */
+#ry-virtual-keyboard{position:fixed;z-index:100000;left:10px;right:10px;bottom:10px;max-width:900px;margin:auto;padding:12px;background:var(--card);color:var(--ink);border:1px solid var(--stone);border-radius:18px;box-shadow:0 12px 45px #0004;display:none;direction:rtl}
+#ry-virtual-keyboard.open{display:block}
+#ry-virtual-keyboard .ry-vk-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+#ry-virtual-keyboard .ry-vk-rows{display:grid;gap:6px}
+#ry-virtual-keyboard .ry-vk-row{display:flex;justify-content:center;gap:5px;flex-wrap:nowrap}
+#ry-virtual-keyboard button{min-width:0;flex:1;min-height:42px;padding:7px 3px;border:1px solid var(--stone);border-radius:9px;background:var(--surface);color:var(--ink);font:600 1rem Tahoma,sans-serif;cursor:pointer;touch-action:manipulation}
+#ry-virtual-keyboard button.ry-vk-wide{flex:1.7}
+#ry-virtual-keyboard button.ry-vk-special{background:var(--accent);color:var(--on)}
+#ry-virtual-keyboard button:active{transform:scale(.96)}
+@media(max-width:600px){#ry-virtual-keyboard{left:4px;right:4px;bottom:4px;padding:8px;border-radius:14px}#ry-virtual-keyboard .ry-vk-row{gap:3px}#ry-virtual-keyboard button{min-height:38px;font-size:.88rem;padding:6px 1px}}
+/* اشکال جادویی سه‌بعدی */
+#magic-shapes .ry-shape-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);gap:14px}
+#magic-shapes .ry-shape-stage{position:relative;min-height:360px;background:var(--surface);border:1px solid var(--stone);border-radius:16px;overflow:hidden}
+#ry-shape-canvas{display:block;width:100%;height:360px;touch-action:none}
+#magic-shapes .ry-shape-controls{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+#magic-shapes .ry-shape-controls button,#magic-shapes select{min-height:42px}
+#magic-shapes .ry-shape-net{min-height:250px;display:grid;place-items:center;padding:12px;background:var(--surface);border:1px solid var(--stone);border-radius:14px;overflow:auto}
+#magic-shapes .ry-shape-net svg{width:min(100%,440px);height:auto;max-height:360px}
+#magic-shapes .ry-shape-info{line-height:1.9}
+#magic-shapes .ry-shape-net[hidden]{display:none}
+@media(max-width:700px){#magic-shapes .ry-shape-layout{grid-template-columns:1fr}#magic-shapes .ry-shape-stage{min-height:300px}#ry-shape-canvas{height:300px}}
+
 </style>
 </head>
 <body>
@@ -244,6 +268,7 @@ button,select,input{touch-action:manipulation;}
     <button data-t="chapters">درس‌نامهٔ ریاضی هشتم</button>
     <button data-t="tizhooshani">تیزهوشانی</button>
     <button data-t="geo-wonders">✨ عجایب هندسه</button>
+    <button data-t="magic-shapes">🪄 اشکال جادویی</button>
   </nav>
   <div id="tabs-scroll-controls" aria-label="پیمایش نوار ابزار">
     <button class="btn" id="tabs-scroll-next" type="button" aria-label="رفتن به دکمه‌های بعدی" title="دکمه‌های بعدی">◀</button>
@@ -663,6 +688,40 @@ button,select,input{touch-action:manipulation;}
   <button class="ry-ggb-retry" id="ry-ggb-retry" type="button" hidden>↻ تلاش دوباره برای بارگذاری</button>
   <div class="ry-ggb-frame" aria-label="محیط کامل ابزار GeoGebra"><div id="ry-ggb-scale" class="ry-ggb-scale"></div></div>
   <p class="mute" style="margin-top:12px">این ابزارها از سرویس رسمی GeoGebra باز می‌شوند. برای ذخیره‌کردن بعضی کارها ممکن است حساب GeoGebra لازم باشد.</p>
+ </div>
+</section>
+
+
+<section id="magic-shapes" hidden>
+ <div class="card">
+  <h2>🪄 اشکال جادویی سه‌بعدی</h2>
+  <p class="mute">یک جسم را انتخاب کن؛ با ماوس یا انگشت روی مدل بکش تا بچرخد. برای شکل‌هایی که گستردهٔ مسطح دارند، دکمهٔ «دیدن گسترده» را بزن.</p>
+  <div class="row" style="margin:12px 0">
+   <label for="ry-shape-select">انتخاب شکل:</label>
+   <select id="ry-shape-select" style="flex:1;min-width:180px">
+    <option value="cube">مکعب</option><option value="cuboid">مکعب‌مستطیل</option>
+    <option value="triPrism">منشور سه‌گوش</option><option value="pentPrism">منشور پنج‌گوش</option>
+    <option value="squarePyramid">هرم مربعی</option><option value="cylinder">استوانه</option>
+    <option value="cone">مخروط</option><option value="sphere">کره</option>
+    <option value="tetra">چهاروجهی</option><option value="octa">هشت‌وجهی</option>
+    <option value="dodeca">دوازده‌وجهی</option><option value="icosa">بیست‌وجهی</option>
+   </select>
+  </div>
+  <div class="ry-shape-controls">
+   <button class="btn pri" id="ry-shape-auto" type="button" aria-pressed="true">⏸ توقف چرخش خودکار</button>
+   <button class="btn" id="ry-shape-reset" type="button">↻ زاویهٔ اولیه</button>
+   <button class="btn" id="ry-shape-net-toggle" type="button" aria-expanded="false">▱ دیدن گستردهٔ شکل</button>
+  </div>
+  <div class="ry-shape-layout">
+   <div>
+    <div class="ry-shape-stage"><canvas id="ry-shape-canvas" aria-label="مدل قابل چرخش جسم سه‌بعدی"></canvas></div>
+    <p class="mute" style="text-align:center">برای چرخاندن، روی شکل کلیک کن و بکش؛ در گوشی انگشتت را روی شکل حرکت بده.</p>
+   </div>
+   <div>
+    <div class="ry-shape-net" id="ry-shape-net" hidden></div>
+    <div class="tool-box ry-shape-info" id="ry-shape-info">مدل سه‌بعدی در حال آماده‌سازی است…</div>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -1956,5 +2015,186 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  prev.addEventListener('click',()=>move(1));
 })();
 </script>
+
+<script>
+(()=> {
+ // کیبورد مجازی برای کادرهای نوشتن در تمام بخش‌های سایت، از جمله پنل ورود و مدیریت
+ const panel=document.createElement('div');panel.id='ry-virtual-keyboard';panel.setAttribute('role','group');panel.setAttribute('aria-label','کیبورد مجازی');
+ panel.innerHTML='<div class="ry-vk-head"><b>⌨️ کیبورد ریاضی‌یار</b><div class="row"><button type="button" data-vk-lang class="ry-vk-special">EN / فا</button><button type="button" data-vk-close class="ry-vk-special">بستن ✕</button></div></div><div class="ry-vk-rows"></div>';
+ document.body.appendChild(panel);
+ const rows=panel.querySelector('.ry-vk-rows');let active=null,lang='fa',shift=false,oldInputMode=null;
+ const layouts={
+  fa:[['ض','ص','ث','ق','ف','غ','ع','ه','خ','ح','ج','چ'],['ش','س','ی','ب','ل','ا','ت','ن','م','ک','گ'],['ظ','ط','ز','ر','ذ','د','پ','و','ژ']],
+  en:[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']]
+ };
+ const makeKey=(label,value,cls='')=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.vk=value;b.className=cls;return b};
+ const render=()=>{
+  rows.replaceChildren();
+  const number=document.createElement('div');number.className='ry-vk-row';
+  '۱۲۳۴۵۶۷۸۹۰'.split('').forEach(k=>number.appendChild(makeKey(k,k)));
+  rows.appendChild(number);
+  layouts[lang].forEach((line,i)=>{const row=document.createElement('div');row.className='ry-vk-row';line.forEach(k=>row.appendChild(makeKey(shift&&lang==='en'?k.toUpperCase():k,k)));if(i===2){row.appendChild(makeKey('⇧','SHIFT','ry-vk-special'));row.appendChild(makeKey('⌫','BACKSPACE','ry-vk-special'));}rows.appendChild(row)});
+  const bottom=document.createElement('div');bottom.className='ry-vk-row';
+  ['،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>bottom.appendChild(makeKey(k,k)));
+  rows.appendChild(bottom);
+  const last=document.createElement('div');last.className='ry-vk-row';
+  last.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
+  last.appendChild(makeKey('فاصله',' ','ry-vk-wide'));
+  last.appendChild(makeKey('↵','ENTER','ry-vk-special'));
+  rows.appendChild(last);
+ };
+ const editable=el=>{
+  if(!el||el.disabled||el.readOnly)return false;
+  if(el.isContentEditable)return true;
+  if(el.tagName==='TEXTAREA')return true;
+  if(el.tagName!=='INPUT')return false;
+  return !['button','submit','reset','checkbox','radio','file','range','color','image','hidden'].includes((el.type||'text').toLowerCase());
+ };
+ const show=el=>{
+  if(!editable(el))return;
+  active=el;
+  if(oldInputMode===null)oldInputMode=el.getAttribute('inputmode');
+  el.setAttribute('inputmode','none');
+  panel.classList.add('open');
+ };
+ const hide=()=>{
+  panel.classList.remove('open');
+  if(active&&oldInputMode!==null){if(oldInputMode===null)active.removeAttribute('inputmode');else active.setAttribute('inputmode',oldInputMode);}
+  else if(active)active.removeAttribute('inputmode');
+  active=null;oldInputMode=null;
+ };
+ document.addEventListener('focusin',e=>{if(editable(e.target))show(e.target);else if(!panel.contains(e.target))hide()});
+ document.addEventListener('focusout',e=>{setTimeout(()=>{if(!panel.contains(document.activeElement)&&!editable(document.activeElement))hide()},80)});
+ panel.addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault()});
+ panel.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.hasAttribute('data-vk-close')){hide();active?.blur();return}
+  if(b.hasAttribute('data-vk-lang')){lang=lang==='fa'?'en':'fa';shift=false;render();return}
+  if(!active)return;
+  const key=b.dataset.vk;
+  if(key==='NUM'){lang='en';render();return}
+  if(key==='SHIFT'){shift=!shift;render();return}
+  if(key==='ENTER'){
+   if(active.tagName==='TEXTAREA'){insert('\n');return}
+   active.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));active.dispatchEvent(new KeyboardEvent('keyup',{key:'Enter',bubbles:true}));return;
+  }
+  if(key==='BACKSPACE'){erase();return}
+  insert(key);
+  if(shift){shift=false;render()}
+ });
+ function insert(value){
+  if(!active)return;
+  if(active.isContentEditable){document.execCommand('insertText',false,value);active.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText',data:value}));return}
+  const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
+  const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
+  const before=active.value.slice(0,start),after=active.value.slice(end);
+  active.value=before+value+after;
+  const pos=start+value.length;try{active.setSelectionRange(pos,pos)}catch(e){}
+  active.dispatchEvent(new Event('input',{bubbles:true}));
+  active.focus({preventScroll:true});
+ }
+ function erase(){
+  if(!active)return;
+  if(active.isContentEditable){document.execCommand('delete');active.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward'}));return}
+  const start=typeof active.selectionStart==='number'?active.selectionStart:active.value.length;
+  const end=typeof active.selectionEnd==='number'?active.selectionEnd:active.value.length;
+  const from=start===end?Math.max(0,start-1):start;
+  active.value=active.value.slice(0,from)+active.value.slice(end);
+  try{active.setSelectionRange(from,from)}catch(e){}
+  active.dispatchEvent(new Event('input',{bubbles:true}));active.focus({preventScroll:true});
+ }
+ render();
+})();
+</script>
+<script>
+(()=> {
+ const canvas=document.getElementById('ry-shape-canvas');if(!canvas)return;
+ const select=document.getElementById('ry-shape-select'),info=document.getElementById('ry-shape-info'),net=document.getElementById('ry-shape-net'),netBtn=document.getElementById('ry-shape-net-toggle'),autoBtn=document.getElementById('ry-shape-auto');
+ let THREE=null,renderer=null,scene=null,camera=null,mesh=null,auto=true,drag=false,lastX=0,lastY=0,raf=0;
+ const descriptions={
+  cube:'۶ وجه مربع، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مربع تشکیل می‌شود.',
+  cuboid:'۶ وجه مستطیلی، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مستطیل ساخته می‌شود.',
+  triPrism:'۲ قاعدهٔ مثلثی و ۳ وجه مستطیلی دارد؛ در مجموع ۵ وجه، ۹ یال و ۶ رأس.',
+  pentPrism:'۲ قاعدهٔ پنج‌ضلعی و ۵ وجه مستطیلی دارد؛ در مجموع ۷ وجه، ۱۵ یال و ۱۰ رأس.',
+  squarePyramid:'یک قاعدهٔ مربع و ۴ وجه مثلثی دارد؛ در مجموع ۵ وجه، ۸ یال و ۵ رأس.',
+  cylinder:'دو قاعدهٔ دایره‌ای و یک سطح خمیده دارد. گستردهٔ جانبی آن مستطیل است.',
+  cone:'یک قاعدهٔ دایره‌ای و یک رأس دارد. گستردهٔ جانبی آن بخشی از یک دایره است.',
+  sphere:'کره سطح خمیدهٔ پیوسته دارد و گستردهٔ دقیق و بدون تغییر شکل روی صفحه ندارد.',
+  tetra:'چهاروجهی از ۴ وجه مثلثی تشکیل شده است.',
+  octa:'هشت‌وجهی منتظم ۸ وجه مثلثی، ۱۲ یال و ۶ رأس دارد.',
+  dodeca:'دوازده‌وجهی منتظم ۱۲ وجه پنج‌ضلعی دارد.',
+  icosa:'بیست‌وجهی منتظم ۲۰ وجه مثلثی دارد.'
+ };
+ const loadThree=()=>new Promise((resolve,reject)=>{
+  if(window.THREE){resolve(window.THREE);return}
+  const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';sc.onload=()=>window.THREE?resolve(window.THREE):reject();sc.onerror=reject;document.head.appendChild(sc);
+ });
+ const buildGeometry=(T,key)=>{
+  switch(key){
+   case 'cube':return new T.BoxGeometry(2,2,2);
+   case 'cuboid':return new T.BoxGeometry(2.7,1.7,1.25);
+   case 'triPrism':return new T.CylinderGeometry(1,1,2,3,1,false);
+   case 'pentPrism':return new T.CylinderGeometry(1,1,2,5,1,false);
+   case 'squarePyramid':return new T.CylinderGeometry(0,1.25,1.9,4,1,false);
+   case 'cylinder':return new T.CylinderGeometry(1,1,2,48,1,false);
+   case 'cone':return new T.ConeGeometry(1.1,2.1,48,1,false);
+   case 'sphere':return new T.SphereGeometry(1.25,36,24);
+   case 'tetra':return new T.TetrahedronGeometry(1.55,0);
+   case 'octa':return new T.OctahedronGeometry(1.5,0);
+   case 'dodeca':return new T.DodecahedronGeometry(1.35,0);
+   case 'icosa':return new T.IcosahedronGeometry(1.4,0);
+   default:return new T.BoxGeometry(2,2,2);
+  }
+ };
+ const draw=()=>{
+  if(!renderer)return;
+  raf=requestAnimationFrame(draw);
+  if(auto&&mesh){mesh.rotation.y+=.006;mesh.rotation.x+=.0025}
+  renderer.render(scene,camera);
+ };
+ const init=async()=>{
+  try{
+   const T=await loadThree();THREE=T;
+   renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setClearColor(0x000000,0);
+   scene=new T.Scene();camera=new T.PerspectiveCamera(38,1,.1,100);camera.position.set(4,3,5);camera.lookAt(0,0,0);
+   scene.add(new T.HemisphereLight(0xffffff,0x667788,2));
+   const light=new T.DirectionalLight(0xffffff,2.2);light.position.set(4,6,5);scene.add(light);
+   const resize=()=>{const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};
+   new ResizeObserver(resize).observe(canvas);resize();
+   setShape();draw();
+  }catch(e){info.textContent='مدل سه‌بعدی بارگذاری نشد. برای نمایش مدل، اتصال اینترنت و پشتیبانی مرورگر از WebGL لازم است.'}
+ };
+ function setShape(){
+  if(!THREE||!scene)return;
+  if(mesh){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose()}
+  const key=select.value;mesh=new THREE.Mesh(buildGeometry(THREE,key),new THREE.MeshStandardMaterial({color:0x5d9b83,roughness:.42,metalness:.08,flatShading:false}));
+  mesh.rotation.set(.38,-.55,0);scene.add(mesh);
+  info.textContent=descriptions[key]||'مدل سه‌بعدی قابل چرخاندن است.';
+  net.hidden=true;netBtn.setAttribute('aria-expanded','false');netBtn.textContent='▱ دیدن گستردهٔ شکل';
+  net.innerHTML=netMarkup(key);
+ }
+ function netMarkup(key){
+  const svg=(inside)=>'<svg viewBox="0 0 360 260" role="img" aria-label="گستردهٔ مسطح شکل">'+inside+'</svg>';
+  const r='<g fill="#8dbda6" fill-opacity=".55" stroke="#386d58" stroke-width="2">';
+  if(key==='cube')return svg(r+'<path d="M130 45h50v50h-50z M80 95h50v50H80z M130 95h50v50h-50z M180 95h50v50h-50z M230 95h50v50h-50z M130 145h50v50h-50z"/></g>');
+  if(key==='cuboid')return svg(r+'<path d="M130 35h90v45h-90z M40 80h90v100H40z M130 80h90v100h-90z M220 80h90v100h-90z M130 180h90v45h-90z M130 225h90v25h-90z"/></g>');
+  if(key==='triPrism')return svg(r+'<path d="M80 85l45-55 45 55z M80 85h45v90H80z M125 85h45v90h-45z M170 85l45-55 45 55v90H170z M80 175l45 55 45-55z"/></g>');
+  if(key==='pentPrism')return svg(r+'<path d="M130 25l45 33-17 53h-56l-17-53z M102 58h56v70h-56z M158 58l56-0 17 70h-73z M85 58h17v70H85z M214 58h17v70h-17z M102 128h56v70h-56z"/></g>');
+  if(key==='squarePyramid')return svg(r+'<path d="M130 105h100v100H130z M130 105l50 5 50-5 M130 105l50-75 50 75 M130 205l50 25 50-25 M130 105l-55 50 55 50 M230 105l55 50-55 50"/></g>');
+  if(key==='cylinder')return svg(r+'<path d="M65 65a55 18 0 1 0 110 0a55 18 0 1 0-110 0 M65 65v125 M175 65v125 M65 190a55 18 0 1 0 110 0 M220 65h90v125h-90z"/></g>');
+  if(key==='cone')return svg(r+'<path d="M180 30L80 190a100 32 0 0 0 200 0z M80 190a100 32 0 0 0 200 0"/></g>');
+  return '<div class="mute">برای این جسم، گستردهٔ دقیق در این نمایش آموزشی آماده نشده است. می‌توانی مدل سه‌بعدی را با ماوس یا انگشت بچرخانی.</div>';
+ }
+ select.addEventListener('change',setShape);
+ autoBtn.addEventListener('click',()=>{auto=!auto;autoBtn.textContent=auto?'⏸ توقف چرخش خودکار':'▶ شروع چرخش خودکار';autoBtn.setAttribute('aria-pressed',String(auto))});
+ document.getElementById('ry-shape-reset').addEventListener('click',()=>{if(mesh)mesh.rotation.set(.38,-.55,0)});
+ netBtn.addEventListener('click',()=>{net.hidden=!net.hidden;netBtn.setAttribute('aria-expanded',String(!net.hidden));netBtn.textContent=net.hidden?'▱ دیدن گستردهٔ شکل':'▱ پنهان‌کردن گسترده'});
+ canvas.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId);auto=false;autoBtn.textContent='▶ شروع چرخش خودکار';autoBtn.setAttribute('aria-pressed','false')});
+ canvas.addEventListener('pointermove',e=>{if(!drag||!mesh)return;mesh.rotation.y+=(e.clientX-lastX)*.009;mesh.rotation.x+=(e.clientY-lastY)*.009;lastX=e.clientX;lastY=e.clientY});
+ canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+ init();
+})();
+</script>
+
 </body>
 </html>
