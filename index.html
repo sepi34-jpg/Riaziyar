@@ -141,6 +141,29 @@ body.landing main:after{background:#00c9a7;right:-130px;bottom:-100px;animation:
 #welcome-list{display:flex!important;visibility:visible!important;opacity:1!important}
 #welcome-list>.welcome-option{display:flex!important;visibility:visible!important;opacity:1!important}
 #tabs{display:none!important}
+/* ابزارهایی که در فهرست صفحهٔ شروع کارت اختصاصی دارند، در نوار بالا دوباره نمایش داده نشوند.
+   دکمه‌ها در DOM باقی می‌مانند تا میان‌بُرهای صفحهٔ شروع و فلش‌های جابه‌جایی کار کنند. */
+#tabs button[data-t="calc"],
+#tabs button[data-t="quiz"],
+#tabs button[data-t="sieve"],
+#tabs button[data-t="primecheck"],
+#tabs button[data-t="solver"],
+#tabs button[data-t="formulas"],
+#tabs button[data-t="geometry"],
+#tabs button[data-t="numberline"],
+#tabs button[data-t="daily"],
+#tabs button[data-t="mistakes"],
+#tabs button[data-t="achievements"],
+#tabs button[data-t="teacher"],
+#tabs button[data-t="analysis"],
+#tabs button[data-t="study"],
+#tabs button[data-t="searchbank"],
+#tabs button[data-t="chapters"],
+#tabs button[data-t="tizhooshani"],
+#tabs button[data-t="geo-wonders"],
+#tabs button[data-t="factor-tree"],
+#tabs button[data-t="gcf-lcm"]{display:none!important}
+
 #ry-home-back{display:none}
 body:not(.landing) #ry-home-back{display:inline-flex}
 .welcome-option{width:100%;display:flex;align-items:center;gap:13px;text-align:right;border:1px solid #ffffff22;background:#ffffff0d;color:#f7f8ff;border-radius:16px;padding:13px 15px;cursor:pointer;backdrop-filter:blur(10px);transition:transform .2s,border-color .2s,background .2s}
