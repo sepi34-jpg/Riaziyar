@@ -1000,7 +1000,7 @@ let qz={};
 function qSetup(){
   $('qsetup').hidden=false;$('qplay').hidden=true;$('qres').hidden=true;clearInterval(qz.iv);
   const w=S.get('wrong',[]),r=S.get('res',[]);
-  $('qstat').innerHTML=`<div>بانک سؤال<b>${Q.length} سؤال</b></div><div>سطح‌ها<b>آسان، متوسط، پیشرفته</b></div><div>امتیاز کل<b>${S.get('total',0)}</b></div><div>بهترین درصد<b>${S.get('best',0)}٪</b></div><div>اشتباهات ذخیره‌شده<b>${w.length}</b></div><div>آزمون‌های انجام‌شده<b>${S.get('exams',0)}</b></div>`;
+  $('qstat').innerHTML=`<div>بانک سؤال<b>${Q.length} سؤال</b></div><div>سطح‌ها<b>آسان، متوسط، سخت، تیزهوشانی</b></div><div>امتیاز کل<b>${S.get('total',0)}</b></div><div>بهترین درصد<b>${S.get('best',0)}٪</b></div><div>اشتباهات ذخیره‌شده<b>${w.length}</b></div><div>آزمون‌های انجام‌شده<b>${S.get('exams',0)}</b></div>`;
   $('qwrong').disabled=!w.length;
   $('qrecent').innerHTML=r.length?'<b>آخرین نتیجه‌ها:</b><br>'+r.slice(0,5).map(x=>`${x.d} — ${x.ok} درست از ${x.n} (${x.p}٪)`).join('<br>'):'';
 }
@@ -1748,15 +1748,10 @@ function ryRenderChapter(){const i=+$('ry-chapter-select').value, c=ryChapters[i
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=ryRenderChapter;$('ry-chapter-select').onchange=ryRenderChapter;
 $('ry-chapter-practice').onclick=()=>{
  const chapterIndex=+$('ry-chapter-select').value;
- // دسته‌های نزدیک به موضوع فصل در بانک فعلی سؤال‌ها
- const topicMap={0:[0,1,9],1:[2],2:[7,8],3:[5,6],4:[6],5:[8],6:[2,3],7:[4],8:[7]};
- const chapterPrefix=`تمرین پیشرفته — ${ryChapters[chapterIndex].title}`;
- let ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].q.startsWith(chapterPrefix))).slice(0,10);
- if(!ids.length){const allowed=topicMap[chapterIndex]||[];ids=shuffle(Q.map((q,i)=>i).filter(i=>allowed.includes(Q[i].c))).slice(0,10)}
- if(!ids.length)ids=shuffle(Q.map((q,i)=>i)).slice(0,10);
- $('qcat').value='all';$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
+ const ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].chapter===chapterIndex)).slice(0,10);
+ $('qcat').value=String(chapterIndex);$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
  ryOpenSection('quiz');qBegin(ids,'chapter');
- $('qfb').innerHTML=`<div class="fb">تمرین درس‌نامه: ${ryEscape(ryChapters[chapterIndex].title)}. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>`;
+ $('qfb').innerHTML='<div class="fb">تمرین درس‌نامه: '+ryEscape(ryChapters[chapterIndex].title)+'. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>';
 };
 
 const studyNotes={
