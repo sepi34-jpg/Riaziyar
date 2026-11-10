@@ -197,6 +197,7 @@ button,select,input{touch-action:manipulation;}
     <button data-t="study">جزوه‌ساز</button>
     <button data-t="searchbank">جست‌وجوی سؤال</button>
     <button data-t="chapters">درس‌نامهٔ ریاضی هشتم</button>
+    <button data-t="tizhooshani">تیزهوشانی</button>
   </nav>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
@@ -278,6 +279,7 @@ button,select,input{touch-action:manipulation;}
   <button type="button" class="welcome-option" data-ry-open="searchbank"><span class="wo-icon" aria-hidden="true">🔍</span><span class="wo-text"><strong>جست‌وجوی سؤال</strong><small>پیدا کردن سؤال با کلمه یا مبحث</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="chapters"><span class="wo-icon" aria-hidden="true">📖</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش و مثال‌های ۹ فصل</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="community"><span class="wo-icon" aria-hidden="true">💬</span><span class="wo-text"><strong>دیدگاه‌ها</strong><small>گفت‌وگو و نظرهای کاربران</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="tizhooshani"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>تیزهوشانی نهم به دهم</strong><small>دفترچه‌ها، پاسخ‌نامه‌ها و تمرین‌های تألیفی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
@@ -561,6 +563,23 @@ button,select,input{touch-action:manipulation;}
  </div>
 </section>
 
+
+<section id="tizhooshani" hidden>
+ <div class="card">
+  <div class="row" style="justify-content:space-between;align-items:center"><h2>تیزهوشانی نهم به دهم 🧠</h2><button class="btn" type="button" id="ry-tiz-back">بازگشت</button></div>
+  <p class="mute">ویژهٔ آمادگی آزمون ورودی پایه دهم مدارس استعدادهای درخشان (سمپاد). دفترچه‌ها و کلیدهای منتشرشده را از صفحات منبع ببین؛ فایل‌ها در سایت ریاضی‌یار کپی یا بازنشر نشده‌اند.</p>
+  <div class="extra-grid">
+   <article class="extra-tile"><strong>📚 آرشیو دفترچه‌ها و پاسخ‌نامه‌ها</strong><p>فهرست سال‌های ۱۳۹۵ تا ۱۴۰۴، شامل آزمون نهم به دهم و پیوندهای دفترچه و پاسخ‌نامه در صفحهٔ منبع.</p><a href="https://iqaval.ir/نمونه-سوالات-آزمون-تیزهوشان-ششم-و-نهم/" target="_blank" rel="noopener noreferrer">مشاهده آرشیو سال‌های ۱۳۹۵ تا ۱۴۰۴</a></article>
+   <article class="extra-tile"><strong>📄 نمونهٔ دفترچهٔ سال ۱۴۰۱–۱۴۰۲</strong><p>صفحهٔ منبع شامل دفترچه‌های استعداد تحلیلی و تحصیلی است. شرایط استفاده و حقوق نشر را در خود فایل بررسی کن.</p><a href="https://iqaval.ir/wp-content/uploads/2025/10/1401-9-1.pdf" target="_blank" rel="noopener noreferrer">مشاهده دفترچهٔ استعداد تحلیلی</a></article>
+   <article class="extra-tile"><strong>📰 انتشار دفترچه و کلید سال ۱۴۰۴</strong><p>خبر انتشار دفترچه‌های شمارهٔ یک و دو و کلید اولیهٔ آزمون پایه دهم.</p><a href="https://mehrayeen-complex.ir/news/ab64bbe3-%D8%B9%D9%86%D9%88%D8%A7%D9%86" target="_blank" rel="noopener noreferrer">مشاهده خبر و پیوندهای فایل</a></article>
+  </div>
+ </div>
+ <div class="card">
+  <h2>تمرین‌های تألیفی استعداد تحلیلی ✍️</h2>
+  <p class="mute">این سؤال‌ها برای تمرین طراحی شده‌اند و سؤال رسمی آزمون‌های گذشته نیستند. پاسخ هر سؤال را با دکمهٔ «نمایش پاسخ» بررسی کن.</p>
+  <div id="ry-tiz-questions" class="tool-grid"></div>
+ </div>
+</section>
 </main>
 
 <script>
@@ -1558,6 +1577,18 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
   $('ry-community-body').value='';$('ry-community-status').textContent='دیدگاه ثبت شد و پس از تأیید مدیر نمایش داده می‌شود.';
  });
  $('welcome-list')?.addEventListener('click',e=>{if(e.target.closest('[data-ry-open="community"]')){showSection('community');loadCommunity();}});
+ $('welcome-list')?.addEventListener('click',e=>{if(e.target.closest('[data-ry-open="tizhooshani"]'))showSection('tizhooshani');});
+ $('ry-tiz-back').onclick=()=>showSection('welcome');
+ const tizItems=[
+  {q:'دنبالهٔ زیر را کامل کن: ۲، ۶، ۱۲، ۲۰، ۳۰، ؟',a:'۴۲',why:'اختلاف‌ها به‌ترتیب ۴، ۶، ۸ و ۱۰ هستند؛ اختلاف بعدی ۱۲ است. پس ۳۰+۱۲=۴۲.'},
+  {q:'اگر همهٔ «لارها» آبی باشند و هیچ چیز آبی «سنگین» نباشد، کدام نتیجه حتماً درست است؟',a:'هیچ لاری سنگین نیست.',why:'هر لار آبی است و هیچ چیز آبی سنگین نیست؛ پس لار نمی‌تواند سنگین باشد.'},
+  {q:'در یک مسابقه، سارا از مینا جلوتر و مینا از ندا جلوتر است. نفر آخر بین این سه نفر کیست؟',a:'ندا',why:'ترتیب از جلو به عقب: سارا، مینا، ندا.'},
+  {q:'عدد دو رقمی‌ای داریم که رقم دهگانش دو برابر رقم یکان است و مجموع رقم‌هایش ۹ است. آن عدد چیست؟',a:'۶۳',why:'اگر رقم یکان x باشد، دهگان ۲x است؛ ۳x=۹ پس x=۳ و دهگان ۶ می‌شود.'},
+  {q:'سه جعبه با برچسب‌های «سیب»، «پرتقال» و «مخلوط» داریم؛ هر سه برچسب اشتباه‌اند. با برداشتن فقط یک میوه از یک جعبه، از کدام جعبه باید شروع کرد تا بتوان برچسب‌ها را درست کرد؟',a:'از جعبه‌ای که برچسب «مخلوط» دارد.',why:'چون برچسب همهٔ جعبه‌ها غلط است، این جعبه مخلوط نیست. میوهٔ بیرون‌آمده نوع واقعی آن را مشخص می‌کند و دو جعبهٔ دیگر با حذف حالت‌ها تعیین می‌شوند.'}
+ ];
+ $('ry-tiz-questions').innerHTML=tizItems.map((x,i)=>'<article class="tool-box"><b>سؤال '+(i+1)+'</b><p>'+x.q+'</p><button class="btn" type="button" data-tiz-answer="'+i+'">نمایش پاسخ</button><div class="fb" id="ry-tiz-answer-'+i+'" hidden><b>پاسخ: '+x.a+'</b><p>'+x.why+'</p></div></article>').join('');
+ $('ry-tiz-questions').addEventListener('click',e=>{const b=e.target.closest('[data-tiz-answer]');if(!b)return;const el=$('ry-tiz-answer-'+b.dataset.tizAnswer);el.hidden=!el.hidden;b.textContent=el.hidden?'نمایش پاسخ':'پنهان کردن پاسخ';});
+
  if(typeof S!=='undefined'&&S.set){const original=S.set.bind(S);let syncTimer=null;S.set=(k,v)=>{original(k,v);if(window.rySyncUserProgress){clearTimeout(syncTimer);syncTimer=setTimeout(()=>window.rySyncUserProgress(),1200);}};}
  if(client)client.auth.onAuthStateChange((event,session)=>{if(session&&event==='SIGNED_IN')setTimeout(()=>window.rySyncUserProgress?.(),300);});
 })();
