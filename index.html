@@ -292,6 +292,13 @@ body.landing #tabs-scroll-controls{display:none!important}
 #gcf-lcm .gcf-result{background:var(--surface);padding:14px;border-radius:12px;text-align:center}
 #gcf-lcm .gcf-result strong{display:block;font-size:1.6rem;color:var(--accent);font-family:'IBM Plex Mono',monospace}
 
+/* راهنمای کوتاه زیر هر نماد ریاضی در کیبورد */
+#ry-virtual-keyboard .ry-vk-math{align-items:flex-start}
+#ry-virtual-keyboard .ry-vk-math-item{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:44px;max-width:100px}
+#ry-virtual-keyboard .ry-vk-help{border:0;background:transparent;color:var(--mute);font-size:.62rem;line-height:1.2;padding:2px 5px;border-radius:5px;cursor:pointer}
+#ry-virtual-keyboard .ry-vk-help:hover,#ry-virtual-keyboard .ry-vk-help[aria-expanded="true"]{background:var(--surface);color:var(--accent)}
+#ry-virtual-keyboard .ry-vk-help-text{font-size:.68rem;line-height:1.55;text-align:center;color:var(--ink);background:var(--surface);border:1px solid var(--stone);border-radius:7px;padding:5px;width:96px;white-space:normal}
+#ry-virtual-keyboard .ry-vk-help-text[hidden]{display:none}
 /* کلیدهای اختصاصی عملیات ریاضی در کیبورد مجازی */
 #ry-virtual-keyboard .ry-vk-math{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
 #ry-virtual-keyboard .ry-vk-math-key{min-width:42px;min-height:40px;padding:7px 10px;font-weight:800;font-size:1rem;color:var(--accent);background:var(--surface);border:1px solid var(--stone);border-radius:9px;touch-action:manipulation}
@@ -2255,10 +2262,52 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    ['توان و ریشهٔ دوم',[['^','^'],['x²','^2'],['√','√('],['|x|','abs(']]],
    ['جبر و هندسهٔ هشتم',[['x','x'],['y','y'],['a','a'],['b','b'],['π','π'],['°','°'],['∠','∠'],['⟂','⟂'],['∥','∥'],['(x,y)','(x,y)']]]
   ];
+  const mathHelp={
+   '+':'دو عدد را با هم جمع می‌کند و حاصل را به دست می‌دهد.',
+   '−':'یک عدد را از عدد دیگر کم می‌کند و اختلاف را نشان می‌دهد.',
+   '×':'برای ضرب دو عدد و پیدا کردن حاصل‌ضرب به کار می‌رود.',
+   '÷':'یک عدد را بر عدد دیگر تقسیم می‌کند.',
+   '=':'نشان می‌دهد دو عبارت با هم برابر هستند.',
+   '≠':'نشان می‌دهد دو مقدار با هم برابر نیستند.',
+   '<':'یعنی مقدار سمت چپ کوچک‌تر از مقدار سمت راست است.',
+   '>':'یعنی مقدار سمت چپ بزرگ‌تر از مقدار سمت راست است.',
+   '≤':'یعنی مقدار کوچک‌تر است یا با مقدار دیگر برابر است.',
+   '≥':'یعنی مقدار بزرگ‌تر است یا با مقدار دیگر برابر است.',
+   '٪':'برای نشان دادن درصد یا محاسبهٔ بخشی از صد به کار می‌رود.',
+   '(':'شروع پرانتز است و عبارت‌های داخل آن با هم در نظر گرفته می‌شوند.',
+   ')':'پایان پرانتز را مشخص می‌کند؛ اول عبارت داخل پرانتز حساب می‌شود.',
+   '[':'برای دسته‌بندی عبارت‌ها یا نوشتن بازه‌ها استفاده می‌شود.',
+   ']':'پرانتز مربعی را می‌بندد و محدودهٔ عبارت را کامل می‌کند.',
+   '/':'خط کسر را نشان می‌دهد؛ عدد بالا بر عدد پایین تقسیم می‌شود.',
+   '٫':'جداکنندهٔ بخش صحیح و اعشاری یک عدد است.',
+   ': ':'برای نشان دادن نسبت دو مقدار استفاده می‌شود.',
+   'ب.م.م':'بزرگ‌ترین عددی را پیدا می‌کند که هر دو عدد بر آن بخش‌پذیرند.',
+   'ک.م.م':'کوچک‌ترین مضرب مشترکِ مثبتِ دو عدد را پیدا می‌کند.',
+   '^':'عدد سمت چپ را به توان عدد نوشته‌شده در بالا می‌رساند.',
+   'x²':'یعنی عدد یا متغیر x در خودش ضرب می‌شود.',
+   '√':'ریشهٔ دوم را نشان می‌دهد؛ عددی که مربعش برابر مقدار زیر رادیکال است.',
+   '|x|':'قدر مطلق است؛ فاصلهٔ عدد از صفر را بدون علامت منفی نشان می‌دهد.',
+   'x':'یک متغیر است و می‌تواند مقدارهای مختلفی داشته باشد.',
+   'y':'متغیری دیگر برای نمایش عدد یا مختصات است.',
+   'a':'حرفی برای نشان دادن یک عدد یا مقدار نامشخص در جبر است.',
+   'b':'متغیر دیگری است که در عبارت‌ها و معادله‌ها به کار می‌رود.',
+   'π':'عدد پی است؛ در محاسبه‌های مربوط به دایره کاربرد دارد.',
+   '°':'واحد اندازه‌گیری زاویه را به درجه نشان می‌دهد.',
+   '∠':'علامت زاویه است و برای نام‌گذاری یا نمایش زاویه به کار می‌رود.',
+   '⟂':'نشان می‌دهد دو خط بر هم عمودند و زاویهٔ ۹۰ درجه می‌سازند.',
+   '∥':'نشان می‌دهد دو خط موازی‌اند و همدیگر را قطع نمی‌کنند.',
+   '(x,y)':'مختصات یک نقطه را نشان می‌دهد؛ x افقی و y عمودی است.'
+  };
   mathGroups.forEach(([heading,keys])=>{
    const label=document.createElement('div');label.className='ry-vk-math-label';label.textContent=heading;rows.appendChild(label);
    const group=document.createElement('div');group.className='ry-vk-row ry-vk-math';
-   keys.forEach(([key,value])=>group.appendChild(makeKey(key,value,'ry-vk-math-key')));
+   keys.forEach(([key,value])=>{
+    const item=document.createElement('div');item.className='ry-vk-math-item';
+    item.appendChild(makeKey(key,value,'ry-vk-math-key'));
+    const help=document.createElement('button');help.type='button';help.className='ry-vk-help';help.textContent='راهنما';help.dataset.vkHelp='1';help.setAttribute('aria-expanded','false');
+    const description=document.createElement('div');description.className='ry-vk-help-text';description.textContent=mathHelp[key]||'این نماد در نوشتن عبارت‌های ریاضی به کار می‌رود.';description.hidden=true;
+    item.append(help,description);group.appendChild(item);
+   });
    rows.appendChild(group);
   });
   const bottom=document.createElement('div');bottom.className='ry-vk-row';
@@ -2303,6 +2352,13 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  panel.addEventListener('click',event=>{
   const button=event.target.closest('button');
   if(!button)return;
+  if(button.hasAttribute('data-vk-help')){
+   const item=button.closest('.ry-vk-math-item');if(!item)return;
+   const note=item.querySelector('.ry-vk-help-text');const opening=note.hidden;
+   rows.querySelectorAll('.ry-vk-help-text').forEach(el=>el.hidden=true);
+   rows.querySelectorAll('.ry-vk-help').forEach(el=>el.setAttribute('aria-expanded','false'));
+   note.hidden=!opening;button.setAttribute('aria-expanded',String(opening));return;
+  }
   if(button.hasAttribute('data-vk-close')){hide();if(active)active.blur();return}
   if(button.hasAttribute('data-vk-lang')){lang=lang==='fa'?'en':'fa';shift=false;render();return}
   if(!active||!active.isConnected)return;
