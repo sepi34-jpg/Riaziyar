@@ -277,6 +277,7 @@ button,select,input{touch-action:manipulation;}
   <button type="button" class="welcome-option" data-ry-open="study"><span class="wo-icon" aria-hidden="true">📚</span><span class="wo-text"><strong>جزوه‌ساز</strong><small>ساخت جزوه و برگهٔ تمرین</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="searchbank"><span class="wo-icon" aria-hidden="true">🔍</span><span class="wo-text"><strong>جست‌وجوی سؤال</strong><small>پیدا کردن سؤال با کلمه یا مبحث</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="chapters"><span class="wo-icon" aria-hidden="true">📖</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش و مثال‌های ۹ فصل</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="community"><span class="wo-icon" aria-hidden="true">💬</span><span class="wo-text"><strong>دیدگاه‌ها</strong><small>گفت‌وگو و نظرهای کاربران</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
@@ -535,6 +536,30 @@ button,select,input{touch-action:manipulation;}
 </section>
 
 
+
+
+<section id="account" hidden>
+ <div class="card">
+  <div class="row" style="justify-content:space-between"><h2>حساب کاربری من 👤</h2><button class="btn" id="ry-account-back" type="button">بازگشت</button></div>
+  <p class="mute" id="ry-account-name">در حال دریافت اطلاعات حساب…</p>
+  <div class="stat" id="ry-account-stats"></div>
+  <h3>دستاوردهای من 🏆</h3><div class="badge-list" id="ry-account-badges"></div>
+  <p class="mute" id="ry-account-status"></p>
+ </div>
+</section>
+<section id="community" hidden>
+ <div class="card">
+  <div class="row" style="justify-content:space-between"><h2>دیدگاه‌های کاربران 💬</h2><button class="btn" id="ry-community-back" type="button">بازگشت</button></div>
+  <p class="mute">دیدگاه‌ها پس از بررسی مدیر منتشر می‌شوند. لطفاً محترمانه بنویس.</p>
+  <form id="ry-community-form">
+   <label for="ry-community-body">دیدگاه تو</label>
+   <textarea id="ry-community-body" maxlength="2000" rows="4" placeholder="نظرت را بنویس…" style="width:100%;margin:8px 0" required></textarea>
+   <button class="btn pri" type="submit">ارسال دیدگاه</button>
+  </form>
+  <p class="mute" id="ry-community-status" role="status"></p>
+  <div id="ry-community-list" class="extra-grid"></div>
+ </div>
+</section>
 
 </main>
 
@@ -1474,7 +1499,70 @@ document.body.classList.add('landing');document.querySelectorAll('main>section')
 ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};const setUser=u=>{if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u)setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',()=>{setMode('login');show();});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};let currentAuthUser=null;const setUser=u=>{currentAuthUser=u||null;if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u){hide();setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');}};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',async()=>{if(!currentAuthUser){setMode('login');show();return;}const {data:role}=await client.from('user_roles').select('role').eq('user_id',currentAuthUser.id).eq('role','admin').maybeSingle();if(role){window.location.href='/admin';return;}if(window.ryShowAccount)window.ryShowAccount();else{setMode('login');show();}});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
+
+<script>
+(()=>{
+ const client=window.riaziYarSupabase;
+ const $=id=>document.getElementById(id);
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const fmt=n=>Number(n||0).toLocaleString('fa-IR');
+ const showSection=id=>{document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==id);document.body.classList.remove('landing');document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));window.scrollTo(0,0);};
+ const localStats=()=>({exams:Number(S.get('exams',0)||0),xp:Number(S.get('total',0)||0),level:1+Math.floor(Number(S.get('total',0)||0)/100),streak:Number(S.get('streak',0)||0),best:Number(S.get('best',0)||0),achievements:(typeof ryBadges!=='undefined'?ryBadges.filter(b=>b.test()).map(b=>({id:b.id,name:b.name,emoji:b.emoji,desc:b.desc})):[])});
+ window.rySyncUserProgress=async()=>{
+  if(!client)return;
+  const {data:{session}}=await client.auth.getSession();if(!session)return;
+  const s=localStats();
+  const {data:old}=await client.from('user_progress').select('xp,level,streak_days,progress').eq('user_id',session.user.id).maybeSingle();
+  const p=old?.progress&&typeof old.progress==='object'?old.progress:{};
+  const merged={...p,exams:Math.max(Number(p.exams||0),s.exams),best:Math.max(Number(p.best||0),s.best),achievements:s.achievements.length?s.achievements:(p.achievements||[])};
+  const row={user_id:session.user.id,xp:Math.max(Number(old?.xp||0),s.xp),level:Math.max(Number(old?.level||1),s.level),streak_days:Math.max(Number(old?.streak_days||0),s.streak),progress:merged};
+  const {error}=await client.from('user_progress').upsert(row,{onConflict:'user_id'});if(error)console.warn('ذخیره پیشرفت حساب ناموفق بود:',error.message);
+ };
+ window.ryShowAccount=async()=>{
+  if(!client)return;
+  const {data:{session}}=await client.auth.getSession();
+  if(!session){$('ry-auth-open')?.click();return;}
+  showSection('account');
+  $('ry-account-name').textContent='در حال دریافت اطلاعات حساب…';
+  const [p,g,a]=await Promise.all([
+   client.from('profiles').select('display_name,created_at').eq('id',session.user.id).maybeSingle(),
+   client.from('user_progress').select('xp,level,streak_days,progress').eq('user_id',session.user.id).maybeSingle(),
+   client.from('attempts').select('id',{count:'exact',head:true}).eq('user_id',session.user.id)
+  ]);
+  const display=p.data?.display_name||session.user.user_metadata?.display_name||session.user.email||'کاربر ریاضی‌یار';
+  $('ry-account-name').textContent=display+' · '+(session.user.email||'');
+  const progress=g.data?.progress||{};
+  const exams=Number(progress.exams||0),xp=Number(g.data?.xp||0),level=Number(g.data?.level||1),streak=Number(g.data?.streak_days||0),attempts=Number(a.count||0);
+  $('ry-account-stats').innerHTML='<div>آزمون‌های کامل‌شده<b>'+fmt(exams)+'</b></div><div>تلاش‌های ثبت‌شده<b>'+fmt(attempts)+'</b></div><div>امتیاز<b>'+fmt(xp)+'</b></div><div>سطح<b>'+fmt(level)+'</b></div><div>روزهای پیوسته<b>'+fmt(streak)+'</b></div>';
+  const badges=Array.isArray(progress.achievements)?progress.achievements:[];
+  $('ry-account-badges').innerHTML=badges.length?badges.map(b=>'<div class="achievement unlocked"><span class="emoji">'+esc(b.emoji||'🏅')+'</span><b>'+esc(b.name||b.id)+'</b><div class="mute">'+esc(b.desc||'دستاورد بازشده')+'</div></div>').join(''):'<p class="mute">هنوز دستاوردی در حساب ثبت نشده است. پس از تمرین، پیشرفتت ذخیره می‌شود.</p>';
+  $('ry-account-status').textContent=(p.error||g.error||a.error)?'بخشی از اطلاعات حساب قابل دریافت نبود. لطفاً بعداً دوباره امتحان کن.':'اطلاعات این حساب جداگانه از پایگاه داده خوانده می‌شود.';
+ };
+ $('ry-account-back').onclick=()=>{showSection('welcome');};
+ $('ry-community-back').onclick=()=>{showSection('welcome');};
+ async function loadCommunity(){
+  const el=$('ry-community-list');el.textContent='در حال بارگذاری دیدگاه‌ها…';
+  const {data,error}=await client.from('comments').select('id,author_name,body,status,created_at').eq('status','approved').order('created_at',{ascending:false}).limit(50);
+  if(error){el.textContent='دریافت دیدگاه‌ها ناموفق بود: '+error.message;return;}
+  el.innerHTML=(data||[]).map(x=>'<article class="extra-tile"><b>'+esc(x.author_name||'کاربر')+'</b><div class="mute">'+esc(new Date(x.created_at).toLocaleString('fa-IR'))+'</div><p>'+esc(x.body)+'</p></article>').join('')||'<p class="mute">هنوز دیدگاه منتشرشده‌ای وجود ندارد.</p>';
+ }
+ $('ry-community-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const {data:{session}}=await client.auth.getSession();
+  if(!session){$('ry-community-status').textContent='برای ارسال دیدگاه ابتدا وارد حساب کاربری شو.';$('ry-auth-open')?.click();return;}
+  const body=$('ry-community-body').value.trim();if(body.length<2)return;
+  const author_name=session.user.user_metadata?.display_name||session.user.email?.split('@')[0]||'کاربر';
+  const {error}=await client.from('comments').insert({user_id:session.user.id,author_name,body,status:'pending'});
+  if(error){$('ry-community-status').textContent='ارسال ناموفق بود: '+error.message;return;}
+  $('ry-community-body').value='';$('ry-community-status').textContent='دیدگاه ثبت شد و پس از تأیید مدیر نمایش داده می‌شود.';
+ });
+ $('welcome-list')?.addEventListener('click',e=>{if(e.target.closest('[data-ry-open="community"]')){showSection('community');loadCommunity();}});
+ if(typeof S!=='undefined'&&S.set){const original=S.set.bind(S);S.set=(k,v)=>{original(k,v);if(window.rySyncUserProgress)window.rySyncUserProgress();};}
+ if(client)client.auth.onAuthStateChange((event,session)=>{if(session&&event==='SIGNED_IN')setTimeout(()=>window.rySyncUserProgress?.(),300);});
+})();
+</script>
+
 <script>
 (()=> {
  const root=document.getElementById('ry-admin-root');
