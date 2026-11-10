@@ -175,6 +175,13 @@ button,select,input{touch-action:manipulation;}
 
 .ry-password-wrap{position:relative;width:100%}.ry-password-wrap input{padding-right:48px!important;padding-left:10px!important}.ry-password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:1px solid var(--stone);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 9px;cursor:pointer;line-height:1}.ry-password-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
+
+/* GeoGebra official embedded tools */
+#geo-wonders .ry-ggb-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+#geo-wonders .ry-ggb-tabs .btn[aria-pressed="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+#geo-wonders .ry-ggb-scale{width:100%;height:min(76vh,760px);min-height:520px;background:#fff;border:1px solid var(--stone);border-radius:12px;overflow:hidden}
+#geo-wonders .ry-ggb-frame{width:100%;min-width:0;overflow:hidden;border-radius:12px}
+@media(max-width:600px){#geo-wonders .ry-ggb-scale{height:70vh;min-height:480px}}
 </style>
 </head>
 <body>
@@ -199,6 +206,7 @@ button,select,input{touch-action:manipulation;}
     <button data-t="searchbank">جست‌وجوی سؤال</button>
     <button data-t="chapters">درس‌نامهٔ ریاضی هشتم</button>
     <button data-t="tizhooshani">تیزهوشانی</button>
+    <button data-t="geo-wonders">✨ عجایب هندسه</button>
   </nav>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
 <button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
@@ -270,6 +278,7 @@ button,select,input{touch-action:manipulation;}
   <button type="button" class="welcome-option" data-ry-open="solver"><span class="wo-icon" aria-hidden="true">✏️</span><span class="wo-text"><strong>حل‌کنندهٔ معادله</strong><small>حل مرحله‌به‌مرحله</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="formulas"><span class="wo-icon" aria-hidden="true">📘</span><span class="wo-text"><strong>فرمول‌نامه</strong><small>فرمول‌های مهم ریاضی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="geometry"><span class="wo-icon" aria-hidden="true">🧪</span><span class="wo-text"><strong>آزمایشگاه هندسه</strong><small>مختصات، کسرها و فیثاغورس</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="geo-wonders"><span class="wo-icon" aria-hidden="true">✨</span><span class="wo-text"><strong>عجایب هندسه</strong><small>ابزارهای رسمی GeoGebra؛ هندسه، نمودار و سه‌بعدی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="numberline"><span class="wo-icon" aria-hidden="true">↔️</span><span class="wo-text"><strong>محور اعداد</strong><small>نمایش و حل روی محور</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="daily"><span class="wo-icon" aria-hidden="true">⚡</span><span class="wo-text"><strong>چالش روزانه</strong><small>یک چالش تازه برای امروز</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="mistakes"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>دفتر اشتباهات</strong><small>مرور سؤال‌های اشتباه</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
@@ -584,6 +593,27 @@ button,select,input{touch-action:manipulation;}
  </div>
 </section>
 
+
+
+<section id="geo-wonders" hidden>
+ <div class="card">
+  <h2>✨ عجایب هندسه</h2>
+  <p class="mute">ابزارهای اصلی GeoGebra را مستقیماً در ریاضی‌یار استفاده کن. یک محیط را انتخاب کن؛ برای بارگذاری ابزارها اتصال اینترنت لازم است.</p>
+  <div class="ry-ggb-tabs" id="ry-ggb-tabs" aria-label="انتخاب ابزار GeoGebra">
+   <button class="btn" type="button" data-ggb-app="suite" aria-pressed="true">مجموعهٔ کامل</button>
+   <button class="btn" type="button" data-ggb-app="geometry" aria-pressed="false">هندسه</button>
+   <button class="btn" type="button" data-ggb-app="graphing" aria-pressed="false">رسم نمودار</button>
+   <button class="btn" type="button" data-ggb-app="3d" aria-pressed="false">سه‌بعدی</button>
+   <button class="btn" type="button" data-ggb-app="classic" aria-pressed="false">GeoGebra Classic</button>
+   <button class="btn" type="button" data-ggb-app="scientific" aria-pressed="false">ماشین‌حساب علمی</button>
+   <button class="btn" type="button" data-ggb-app="evaluator" aria-pressed="false">ویرایشگر عبارت</button>
+   <button class="btn" type="button" data-ggb-app="notes" aria-pressed="false">یادداشت ریاضی</button>
+  </div>
+  <p class="mute" id="ry-ggb-status" role="status">برای شروع، ابزار «مجموعهٔ کامل» در حال آماده‌سازی است.</p>
+  <div class="ry-ggb-frame"><div id="ry-ggb-scale" class="ry-ggb-scale"></div></div>
+  <p class="mute" style="margin-top:12px">این ابزارها توسط سرویس رسمی GeoGebra بارگذاری می‌شوند. قابلیت‌های ذخیره و ورود به حساب ممکن است به حساب GeoGebra نیاز داشته باشند.</p>
+ </div>
+</section>
 
 </main>
 
@@ -1549,7 +1579,7 @@ function ryOpenSection(t){
  if(!document.getElementById(t))return;
  document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==t);
  document.body.classList.toggle('landing',t==='welcome');
- if(t==='quiz')qSetup();if(t==='chapters')ryRenderChapter();if(t==='daily')ryDailyRefresh();if(t==='mistakes')ryMistakesRefresh();if(t==='achievements')ryAchievementsRefresh();if(t==='geometry')S.set('usedGeometry',true);if(t==='numberline')S.set('usedNumberline',true);if(t==='analysis')ryAnalysisRefresh();if(t==='study')ryAchievementsRefresh();if(t==='searchbank')ryBankSearch();ryXPRefresh();
+ if(t==='geo-wonders')window.ryGeoOpen?.();if(t==='quiz')qSetup();if(t==='chapters')ryRenderChapter();if(t==='daily')ryDailyRefresh();if(t==='mistakes')ryMistakesRefresh();if(t==='achievements')ryAchievementsRefresh();if(t==='geometry')S.set('usedGeometry',true);if(t==='numberline')S.set('usedNumberline',true);if(t==='analysis')ryAnalysisRefresh();if(t==='study')ryAchievementsRefresh();if(t==='searchbank')ryBankSearch();ryXPRefresh();
  window.scrollTo(0,0);
 }
 $('tabs').onclick=e=>{const t=e.target.dataset.t;if(t)ryOpenSection(t)};
@@ -1775,5 +1805,58 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 </script>
 
 
+
+<script>
+(()=>{
+ const host=document.getElementById('ry-ggb-scale');
+ const tabs=document.getElementById('ry-ggb-tabs');
+ const status=document.getElementById('ry-ggb-status');
+ if(!host||!tabs||!status)return;
+ let loader=null, currentApp=null, loading=false;
+ const loadLibrary=()=>{
+  if(window.GGBApplet)return Promise.resolve();
+  if(loader)return loader;
+  loader=new Promise((resolve,reject)=>{
+   const script=document.createElement('script');
+   script.src='https://www.geogebra.org/apps/deployggb.js';
+   script.async=true;
+   script.onload=()=>window.GGBApplet?resolve():reject(new Error('کتابخانهٔ GeoGebra بارگذاری نشد.'));
+   script.onerror=()=>reject(new Error('اتصال به سرور GeoGebra برقرار نشد.'));
+   document.head.appendChild(script);
+  });
+  return loader;
+ };
+ const selectApp=async(app,force=false)=>{
+  if(loading)return;
+  if(currentApp===app&&!force)return;
+  loading=true;
+  tabs.querySelectorAll('[data-ggb-app]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ggbApp===app)));
+  status.textContent='در حال بارگذاری ابزار رسمی GeoGebra…';
+  host.replaceChildren();
+  currentApp=app;
+  try{
+   await loadLibrary();
+   const params={
+    appName:app,width:1000,height:700,scaleContainerClass:'ry-ggb-scale',autoHeight:false,
+    language:'fa',showMenuBar:true,showToolBar:true,showToolBarHelp:true,
+    showAlgebraInput:true,showResetIcon:true,showFullscreenButton:true,
+    allowStyleBar:true,enable3d:true,enableCAS:true,enableRightClick:true,
+    enableShiftDragZoom:true,showZoomButtons:true
+   };
+   const applet=new window.GGBApplet(params,true);
+   applet.inject('ry-ggb-scale');
+   status.textContent='ابزار بارگذاری شد. برای استفاده از همهٔ امکانات، از نوار ابزار داخل GeoGebra کمک بگیر.';
+  }catch(err){
+   currentApp=null;
+   status.textContent=(err&&err.message)||'بارگذاری GeoGebra ناموفق بود. اتصال اینترنت را بررسی کن و دوباره بزن.';
+  }finally{loading=false;}
+ };
+ tabs.addEventListener('click',e=>{
+  const b=e.target.closest('[data-ggb-app]');
+  if(b)selectApp(b.dataset.ggbApp);
+ });
+ window.ryGeoOpen=()=>selectApp('suite');
+})();
+</script>
 </body>
 </html>
