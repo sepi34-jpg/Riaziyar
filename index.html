@@ -291,6 +291,12 @@ body.landing #tabs-scroll-controls{display:none!important}
 #gcf-lcm .gcf-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
 #gcf-lcm .gcf-result{background:var(--surface);padding:14px;border-radius:12px;text-align:center}
 #gcf-lcm .gcf-result strong{display:block;font-size:1.6rem;color:var(--accent);font-family:'IBM Plex Mono',monospace}
+
+/* کلیدهای اختصاصی عملیات ریاضی در کیبورد مجازی */
+#ry-virtual-keyboard .ry-vk-math{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+#ry-virtual-keyboard .ry-vk-math-key{min-width:42px;min-height:40px;padding:7px 10px;font-weight:800;font-size:1rem;color:var(--accent);background:var(--surface);border:1px solid var(--stone);border-radius:9px;touch-action:manipulation}
+#ry-virtual-keyboard .ry-vk-math-key:active{background:var(--accent);color:var(--on)}
+@media(max-width:600px){#ry-virtual-keyboard .ry-vk-math-key{min-width:36px;min-height:42px;padding:6px 8px}}
 </style>
 </head>
 <body>
@@ -2242,6 +2248,13 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const punctuation=document.createElement('div');punctuation.className='ry-vk-row';
   ['آ','ء','ئ','ؤ','،','؛','؟','.',',','@','-','_','(',')'].forEach(k=>punctuation.appendChild(makeKey(k,k)));
   rows.appendChild(punctuation);
+  // ردیف عملگرهای ریاضی برای ورودی‌های متنی و عبارت‌های ریاضی
+  const math=document.createElement('div');math.className='ry-vk-row ry-vk-math';
+  [['+','+'],['−','-'],['×','*'],['÷','/'],['=','='],['^','^'],['√','√('],['π','π'],['%','%'],['(', '('],[')',')'],['!','!']].forEach(([label,value])=>math.appendChild(makeKey(label,value,'ry-vk-math-key')));
+  rows.appendChild(math);
+  const functions=document.createElement('div');functions.className='ry-vk-row ry-vk-math';
+  [['sin','sin('],['cos','cos('],['tan','tan('],['log','log('],['ln','ln('],['x²','^2'],['x³','^3'],['√x','√('],['|x|','abs(']].forEach(([label,value])=>functions.appendChild(makeKey(label,value,'ry-vk-math-key')));
+  rows.appendChild(functions);
   const bottom=document.createElement('div');bottom.className='ry-vk-row';
   bottom.appendChild(makeKey('۱۲۳','NUM','ry-vk-special'));
   bottom.appendChild(makeKey('فاصله',' ','ry-vk-wide'));
