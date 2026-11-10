@@ -255,7 +255,24 @@ button,select,input{touch-action:manipulation;}
   </div>
   <p class="welcome-label">یکی از قابلیت‌ها رو انتخاب کن</p>
   <div class="card" id="ry-xp-home" style="margin:12px 0"><h3>🎮 مسیر پیشرفت تو</h3><div id="ry-xp-home-stats" class="stat"></div><div class="bar"><i id="ry-xp-home-bar" style="width:0%"></i></div><p id="ry-xp-home-next" class="mute"></p></div>
-  <div id="welcome-list" aria-label="فهرست قابلیت‌های ریاضی‌یار"></div>
+  <div id="welcome-list" aria-label="فهرست قابلیت‌های ریاضی‌یار">
+  <button type="button" class="welcome-option" data-ry-open="calc"><span class="wo-icon" aria-hidden="true">🧮</span><span class="wo-text"><strong>ماشین‌حساب</strong><small>محاسبهٔ عبارت‌ها و دیدن تاریخچه</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="quiz"><span class="wo-icon" aria-hidden="true">🎯</span><span class="wo-text"><strong>آزمون ۱۰۰۰ سؤالی</strong><small>تمرین از بانک سؤال</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="sieve"><span class="wo-icon" aria-hidden="true">🔢</span><span class="wo-text"><strong>غربال اراتستن</strong><small>پیدا کردن عددهای اول</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="primecheck"><span class="wo-icon" aria-hidden="true">🔎</span><span class="wo-text"><strong>تشخیص عدد اول یا مرکب</strong><small>بررسی عددهای صحیح</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="solver"><span class="wo-icon" aria-hidden="true">✏️</span><span class="wo-text"><strong>حل‌کنندهٔ معادله</strong><small>حل مرحله‌به‌مرحله</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="formulas"><span class="wo-icon" aria-hidden="true">📘</span><span class="wo-text"><strong>فرمول‌نامه</strong><small>فرمول‌های مهم ریاضی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="geometry"><span class="wo-icon" aria-hidden="true">🧪</span><span class="wo-text"><strong>آزمایشگاه هندسه</strong><small>مختصات، کسرها و فیثاغورس</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="numberline"><span class="wo-icon" aria-hidden="true">↔️</span><span class="wo-text"><strong>محور اعداد</strong><small>نمایش و حل روی محور</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="daily"><span class="wo-icon" aria-hidden="true">⚡</span><span class="wo-text"><strong>چالش روزانه</strong><small>یک چالش تازه برای امروز</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="mistakes"><span class="wo-icon" aria-hidden="true">🧠</span><span class="wo-text"><strong>دفتر اشتباهات</strong><small>مرور سؤال‌های اشتباه</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="achievements"><span class="wo-icon" aria-hidden="true">🏆</span><span class="wo-text"><strong>دستاوردها</strong><small>نشان‌ها و رکوردها</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="teacher"><span class="wo-icon" aria-hidden="true">📝</span><span class="wo-text"><strong>آزمون‌ساز معلم</strong><small>ساخت آزمون قابل چاپ</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="analysis"><span class="wo-icon" aria-hidden="true">📊</span><span class="wo-text"><strong>تحلیل پیشرفت</strong><small>شناخت نقاط قوت و نیازمند تمرین</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="study"><span class="wo-icon" aria-hidden="true">📚</span><span class="wo-text"><strong>جزوه‌ساز</strong><small>ساخت جزوه و برگهٔ تمرین</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="searchbank"><span class="wo-icon" aria-hidden="true">🔍</span><span class="wo-text"><strong>جست‌وجوی سؤال</strong><small>پیدا کردن سؤال با کلمه یا مبحث</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="chapters"><span class="wo-icon" aria-hidden="true">📖</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش و مثال‌های ۹ فصل</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
 <section id="calc" hidden>
@@ -1573,5 +1590,17 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
 })();
 </script>
 
+
+<script>
+// اطمینان از کارکرد دکمه‌های صفحهٔ شروع حتی اگر ساخت منوی پویا اجرا نشود.
+document.getElementById('welcome-list')?.addEventListener('click', function(e){
+ const b=e.target.closest('[data-ry-open]'); if(!b) return;
+ const id=b.getAttribute('data-ry-open');
+ if(typeof window.ryOpenSection==='function'){ window.ryOpenSection(id); return; }
+ document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==id);
+ document.body.classList.remove('landing');
+ window.scrollTo(0,0);
+});
+</script>
 </body>
 </html>
