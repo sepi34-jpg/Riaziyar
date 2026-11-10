@@ -179,9 +179,10 @@ button,select,input{touch-action:manipulation;}
 /* GeoGebra official embedded tools */
 #geo-wonders .ry-ggb-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 #geo-wonders .ry-ggb-tabs .btn[aria-pressed="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
-#geo-wonders .ry-ggb-scale{width:100%;height:min(76vh,760px);min-height:520px;background:#fff;border:1px solid var(--stone);border-radius:12px;overflow:hidden}
-#geo-wonders .ry-ggb-frame{width:100%;min-width:0;overflow:hidden;border-radius:12px}
-@media(max-width:600px){#geo-wonders .ry-ggb-scale{height:70vh;min-height:480px}}
+#geo-wonders .ry-ggb-frame{width:100%;height:min(76vh,760px);min-height:520px;min-width:0;background:#fff;border:1px solid var(--stone);border-radius:12px;overflow:hidden}
+#geo-wonders .ry-ggb-scale{width:100%;height:100%;min-height:0;overflow:hidden}
+#geo-wonders .ry-ggb-scale iframe{display:block;width:100%;height:100%;border:0}
+@media(max-width:600px){#geo-wonders .ry-ggb-frame{height:70vh;min-height:480px}}
 </style>
 </head>
 <body>
@@ -1837,15 +1838,15 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   try{
    await loadLibrary();
    const params={
-    appName:app,width:1000,height:700,scaleContainerClass:'ry-ggb-scale',autoHeight:false,
+    appName:app,width:1000,height:700,scaleContainerClass:'ry-ggb-frame',autoHeight:false,
     language:'fa',showMenuBar:true,showToolBar:true,showToolBarHelp:true,
     showAlgebraInput:true,showResetIcon:true,showFullscreenButton:true,
     allowStyleBar:true,enable3d:true,enableCAS:true,enableRightClick:true,
-    enableShiftDragZoom:true,showZoomButtons:true
+    enableShiftDragZoom:true,showZoomButtons:true,
+    appletOnLoad:()=>{status.textContent='ابزار GeoGebra آماده است. می‌توانی از نوار ابزار داخل آن استفاده کنی.';}
    };
    const applet=new window.GGBApplet(params,true);
    applet.inject('ry-ggb-scale');
-   status.textContent='ابزار بارگذاری شد. برای استفاده از همهٔ امکانات، از نوار ابزار داخل GeoGebra کمک بگیر.';
   }catch(err){
    currentApp=null;
    status.textContent=(err&&err.message)||'بارگذاری GeoGebra ناموفق بود. اتصال اینترنت را بررسی کن و دوباره بزن.';
