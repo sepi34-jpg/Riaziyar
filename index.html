@@ -2975,8 +2975,9 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   try{localStorage.setItem('ry-language',en?'en':'fa');}catch(e){}
  };
  toggle.addEventListener('click',()=>apply(lang()==='en'?'fa':'en'));
- let saved='fa';try{saved=localStorage.getItem('ry-language')||'fa';}catch(e){}
- apply(saved);
+ // Always start in Persian to prevent a previously saved English session from crashing startup.
+ try{localStorage.setItem('ry-language','fa');}catch(e){}
+ apply('fa');
  window.rySetLanguage=apply;
 })();
 </script>
