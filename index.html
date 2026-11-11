@@ -832,7 +832,7 @@ body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
     <div class="row no-print">
       <label>مبحث <select id="tcat"></select></label>
       <label>تعداد سؤال <select id="tcnt"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option><option>50</option></select></label>
-      <label>سطح <select id="tlevel"><option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">پیشرفته</option></select></label>
+      <label>سطح <select id="tlevel"><option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">پیشرفته</option><option value="olympiad">تیزهوشانی</option></select></label>
       <label class="row"><input type="checkbox" id="tanswers"> نمایش پاسخ‌نامهٔ تشریحی</label>
     </div>
     <div class="row no-print" style="margin-top:12px"><button class="btn pri" id="tmake">ساخت آزمون</button><button class="btn" id="tprint">چاپ / ذخیره به PDF</button></div>
@@ -1264,17 +1264,16 @@ function ryStepExplain(o){
   const key=String(o.c);
   // شمارهٔ مبحث‌ها باید با ترتیب واقعی cats در بانک سؤال هماهنگ باشد.
   const reasons={
-    '0':'در جمع و تفریق عددهای صحیح، تفریق را به جمعِ قرینه تبدیل می‌کنیم و علامت‌ها را با دقت بررسی می‌کنیم.',
-    '1':'در ضرب و تقسیم عددهای صحیح، ابتدا قدرمطلق‌ها را محاسبه می‌کنیم؛ حاصلِ هم‌علامت‌ها مثبت و ناهم‌علامت‌ها منفی است.',
-    '2':'توان یعنی ضرب تکراری پایه در خودش؛ ابتدا توان‌ها را حساب می‌کنیم و سپس جمع یا تفریق را انجام می‌دهیم.',
-    '3':'جذر اصلی هر عدد نامنفی، عددی نامنفی است که مربع آن برابر عدد زیر رادیکال باشد.',
-    '4':'برای محاسبهٔ درصد، مقدار را در درصد ضرب و بر ۱۰۰ تقسیم می‌کنیم؛ در تخفیف، مقدار تخفیف را از قیمت اولیه کم می‌کنیم.',
-    '5':'برای حل معادله، با انجام یک عمل یکسان در دو طرف، مجهول را تنها می‌کنیم و در پایان جواب را بررسی می‌کنیم.',
-    '6':'مقدار x را در عبارت جای‌گذاری می‌کنیم و ترتیب انجام عملیات را رعایت می‌کنیم؛ توان پیش از ضرب و جمع محاسبه می‌شود.',
-    '7':'برای محیط، طول ضلع‌های مرزی را جمع می‌کنیم؛ برای مساحت، فرمول متناسب با شکل را به کار می‌بریم.',
-    '8':'در مثلث قائم‌الزاویه، مربع وتر برابر مجموع مربع‌های دو ضلع قائم است: a²+b²=c².',
-    '9':'در جمع کسرها ابتدا مخرج مشترک می‌گیریم؛ در محاسبهٔ اعشار، ممیزها را هم‌ستون می‌نویسیم.'
-  };
+    '0':'در عددهای صحیح و گویا، علامت‌ها و مخرج‌ها را درست مدیریت می‌کنیم؛ در کسرها باید مخرج مشترک یا معکوسِ کسر را به‌درستی به کار ببریم.',
+    '1':'برای عددهای اول، مقسوم‌علیه‌های اول را بررسی می‌کنیم؛ برای ب.م.م و ک.م.م از تجزیه به عامل‌های اول یا الگوریتم اقلیدس کمک می‌گیریم.',
+    '2':'در چندضلعی‌ها از مجموع زاویه‌های داخلی، مجموع زاویه‌های خارجی و ویژگی‌های تقارن استفاده می‌کنیم؛ تعداد ضلع‌ها تعیین‌کنندهٔ فرمول است.',
+    '3':'در جبر، جمله‌های هم‌نوع را ترکیب و از خاصیت توزیع‌پذیری استفاده می‌کنیم؛ در معادله باید تساوی دو طرف حفظ شود.',
+    '4':'در مختصات و بردارها، مؤلفه‌های افقی و عمودی را جداگانه بررسی می‌کنیم؛ ترتیب (x,y) را حفظ می‌کنیم.',
+    '5':'در مثلث، مجموع زاویه‌ها ۱۸۰ درجه است؛ اگر مثلث قائم‌الزاویه باشد، برای ضلع‌ها از قضیهٔ فیثاغورس استفاده می‌کنیم.',
+    '6':'توان، ضرب تکراری است و جذر عمل معکوسِ مربع‌کردن؛ ترتیب عملیات و علامت پایه را با دقت رعایت می‌کنیم.',
+    '7':'در آمار، میانگین از مجموع داده‌ها و تعداد آن‌ها به دست می‌آید؛ در احتمال، حالت‌های مطلوب را بر کل حالت‌های هم‌شانس تقسیم می‌کنیم.',
+    '8':'در دایره، شعاع و قطر و رابطهٔ محیط و مساحت را به کار می‌بریم؛ زاویهٔ محاطی نصف زاویهٔ مرکزیِ متناظر است.'
+  }
   const why=reasons[key]||'روش حل را با داده‌ها و خواستهٔ سؤال هماهنگ می‌کنیم.';
   const calcStep=o.e&&String(o.e).trim()?o.e:'محاسبه را با قاعدهٔ مربوط به این مبحث انجام می‌دهیم.';
   return `<div class="tool-box" style="margin-top:10px"><b>حل تشریحی مرحله‌به‌مرحله</b><ol style="margin:8px 0;padding-right:22px;line-height:2"><li><b>فهم سؤال:</b> مشخص می‌کنیم چه داده‌هایی داریم و سؤال چه چیزی می‌خواهد.</li><li><b>چرا این روش؟</b> ${why}</li><li><b>محاسبه:</b> ${calcStep}</li><li><b>پاسخ نهایی:</b> ${o.t}</li><li><b>بررسی:</b> جواب را با خواسته و داده‌های سؤال مقایسه می‌کنیم تا مطمئن شویم به همان پرسش پاسخ داده‌ایم.</li></ol></div>`;
@@ -1695,7 +1694,7 @@ $('dailyrefresh').onclick=ryDailyRefresh;
 function ryMistakesRefresh(){
  const ids=S.get('wrong',[]).filter(id=>Number.isInteger(id)&&Q[id]);
  $('mistakepractice').disabled=!ids.length;$('mistakeclear').disabled=!ids.length;
- $('mistakelist').innerHTML=ids.length?`<p>تعداد سؤال‌های ذخیره‌شده: <b>${ids.length}</b></p>`+ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<br><span class="mute">مبحث: ${cats[Q[id].c][0]}</span></div>`).join(''):'<div class="fb">هنوز سؤالی در دفتر اشتباهات نیست. بعد از پاسخ اشتباه در آزمون، سؤال به اینجا اضافه می‌شود.</div>';
+ $('mistakelist').innerHTML=ids.length?`<p>تعداد سؤال‌های ذخیره‌شده: <b>${ids.length}</b></p>`+ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<br><span class="mute">مبحث: ${ryChapters[Q[id].chapter]?.title||'نامشخص'}</span></div>`).join(''):'<div class="fb">هنوز سؤالی در دفتر اشتباهات نیست. بعد از پاسخ اشتباه در آزمون، سؤال به اینجا اضافه می‌شود.</div>';
 }
 $('mistakepractice').onclick=()=>{const ids=S.get('wrong',[]).filter(id=>Number.isInteger(id)&&Q[id]);if(ids.length)qBegin(shuffle(ids))};
 $('mistakerefresh').onclick=ryMistakesRefresh;
@@ -1722,16 +1721,16 @@ function ryAchievementsRefresh(){
 }
 
 // آزمون‌ساز مستقل از آزمون عادی؛ برگه و پاسخ‌نامه را می‌سازد.
-$('tcat').innerHTML=`<option value="all">همهٔ مباحث</option>`+cats.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join('');
+$('tcat').innerHTML=`<option value="all">همهٔ فصل‌ها</option>`+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');
 let ryTeacherAnswers=false;
 function ryMakeTeacher(){
- const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>(c==='all'||Q[i].c===+c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
+ const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>(c==='all'||Q[i].chapter===+c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
  ryTeacherAnswers=$('tanswers').checked;
  if(!ids.length){
   $('teacherout').innerHTML='<div class="fb bad">برای این مبحث و سطح، سؤالی در بانک فعلی پیدا نشد. سطح را روی «همهٔ سطح‌ها» بگذار یا مبحث دیگری انتخاب کن.</div>';
   $('teacherout').dataset.ids='[]';return;
  }
- $('teacherout').innerHTML=`<div style="text-align:center;border-bottom:1px solid var(--stone);padding-bottom:12px;margin-bottom:12px"><h2>برگهٔ تمرین ریاضی</h2><div>نام و نام خانوادگی: .....................................　 کلاس: ............　 تاریخ: ............</div><div>مبحث: ${c==='all'?'ترکیبی':cats[+c][0]}　 |　 سطح: ${{all:'همهٔ سطح‌ها',easy:'آسان',medium:'متوسط',hard:'پیشرفته'}[l]}　 |　 تعداد سؤال: ${ids.length}</div></div>`+
+ $('teacherout').innerHTML=`<div style="text-align:center;border-bottom:1px solid var(--stone);padding-bottom:12px;margin-bottom:12px"><h2>برگهٔ تمرین ریاضی</h2><div>نام و نام خانوادگی: .....................................　 کلاس: ............　 تاریخ: ............</div><div>مبحث: ${c==='all'?'ترکیبی':ryEscape(ryChapters[+c]?.title||'')}　 |　 سطح: ${{all:'همهٔ سطح‌ها',easy:'آسان',medium:'متوسط',hard:'پیشرفته',olympiad:'تیزهوشانی'}[l]}　 |　 تعداد سؤال: ${ids.length}</div></div>`+
  ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<div style="height:24px;border-bottom:1px dotted var(--stone);margin-top:8px"></div>${ryTeacherAnswers?`<div class="fb"><b>پاسخ:</b> ${Q[id].t}</div>${ryStepExplain(Q[id])}`:''}</div>`).join('');
  $('teacherout').dataset.ids=JSON.stringify(ids);
 }
@@ -1760,19 +1759,19 @@ $('tabs').onclick=e=>{
 /* ================= ابزارهای تکمیلی و گزارش پیشرفت ================= */
 function ryEscape(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ryAnalysisRefresh(){
- const stats=S.get('topicStats',{}),logs=S.get('attemptLog',[]),used=Object.keys(stats).map(Number).filter(i=>cats[i]);
+ const stats=S.get('topicStats',{}),logs=S.get('attemptLog',[]),used=Object.keys(stats).map(Number).filter(i=>ryChapters[i]);
  const attempts=Object.values(stats).reduce((a,x)=>a+(x.attempts||0),0),correct=Object.values(stats).reduce((a,x)=>a+(x.correct||0),0),rate=attempts?Math.round(correct/attempts*100):0;
  $('analysisstats').innerHTML=`<div>پاسخ‌های ثبت‌شده<b>${attempts}</b></div><div>دقت کلی<b>${attempts?rate+'٪':'—'}</b></div><div>روزهای پیوسته<b>${S.get('streak',0)}</b></div><div>آزمون‌های کامل‌شده<b>${S.get('exams',0)}</b></div>`;
  if(!used.length){$('analysisout').innerHTML='<div class="fb">هنوز دادهٔ کافی برای تحلیل مبحثی نداریم. یک آزمون انجام بده تا دقت هر مبحث ثبت شود.</div>';window.ryWeakestCat=null}
  else {const arr=used.map(i=>({i,a:stats[i].attempts||0,c:stats[i].correct||0,p:stats[i].attempts?Math.round(stats[i].correct/stats[i].attempts*100):0})).sort((a,b)=>a.p-b.p||b.a-a.a);window.ryWeakestCat=arr[0].i;
- $('analysisout').innerHTML='<h3>عملکرد بر اساس مبحث</h3>'+arr.map(x=>`<div class="rv"><div class="row" style="justify-content:space-between"><b>${ryEscape(cats[x.i][0])}</b><span>${x.c}/${x.a} درست · ${x.p}٪</span></div><div class="bar"><i style="width:${x.p}%"></i></div></div>`).join('')+`<div class="fb">${arr[0].p<70?'پیشنهاد: ابتدا روی «'+ryEscape(cats[arr[0].i][0])+'» تمرین کن.':'عملکردت در مبحث‌های ثبت‌شده خوب است؛ برای حفظ پیشرفت، تمرین ترکیبی را ادامه بده.'}</div>`;
+ $('analysisout').innerHTML='<h3>عملکرد بر اساس مبحث</h3>'+arr.map(x=>`<div class="rv"><div class="row" style="justify-content:space-between"><b>${ryEscape(ryChapters[x.i]?.title||'فصل '+(x.i+1))}</b><span>${x.c}/${x.a} درست · ${x.p}٪</span></div><div class="bar"><i style="width:${x.p}%"></i></div></div>`).join('')+`<div class="fb">${arr[0].p<70?'پیشنهاد: ابتدا روی «'+ryEscape(ryChapters[arr[0].i]?.title||'این فصل')+'» تمرین کن.':'عملکردت در مبحث‌های ثبت‌شده خوب است؛ برای حفظ پیشرفت، تمرین ترکیبی را ادامه بده.'}</div>`;
  }
  const goal=S.get('weeklyGoal',20),week=S.get('weeklyLog',[]),now=Date.now(),weekly=week.filter(x=>{const d=String(x.date).split('-').map(Number);const tm=Date.UTC(d[0],d[1]-1,d[2]);return Number.isFinite(tm)&&now-tm<7*86400000&&tm<=now+86400000}).reduce((a,x)=>a+(x.n||0),0);
  $('weeklygoal').value=String(goal);$('goalout').innerHTML=`این هفته: <b>${weekly}</b> از <b>${goal}</b> سؤال<div class="bar"><i style="width:${Math.min(100,Math.round(weekly/goal*100))}%"></i></div>`;
 }
 $('analysisrefresh').onclick=ryAnalysisRefresh;
 $('goalsave').onclick=()=>{S.set('weeklyGoal',Math.max(1,Math.min(500,+$('weeklygoal').value||20)));ryAnalysisRefresh()};
-$('weakpractice').onclick=()=>{const i=window.ryWeakestCat;if(i===null||i===undefined){alert('اول یک آزمون انجام بده تا نقاط ضعف مشخص شوند.');return}const ids=shuffle(Q.map((q,j)=>j).filter(j=>Q[j].c===i));qBegin(ids.slice(0,Math.min(10,ids.length)))};
+$('weakpractice').onclick=()=>{const i=window.ryWeakestCat;if(i===null||i===undefined){alert('اول یک آزمون انجام بده تا نقاط ضعف مشخص شوند.');return}const ids=shuffle(Q.map((q,j)=>j).filter(j=>Q[j].chapter===i));qBegin(ids.slice(0,Math.min(10,ids.length)))};
 
 
 // سیستم XP و سطح‌بندی؛ امتیازهای قبلی کاربر نیز حفظ می‌شوند.
@@ -2027,35 +2026,23 @@ $('ry-chapter-practice').onclick=()=>{
  $('qfb').innerHTML='<div class="fb">تمرین درس‌نامه: '+ryEscape(ryChapters[chapterIndex].title)+'. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>';
 };
 
-const studyNotes={
- '0':'اعداد صحیح می‌توانند مثبت، منفی یا صفر باشند. در جمع و تفریق، علامت‌ها مهم‌اند: اگر دو عدد هم‌علامت باشند، قدرمطلق‌ها را جمع می‌کنیم و همان علامت را نگه می‌داریم؛ اگر علامت‌ها متفاوت باشند، قدرمطلق کوچک‌تر را از بزرگ‌تر کم می‌کنیم و علامت عددی را می‌گذاریم که قدرمطلق بزرگ‌تری دارد. چرا؟ چون حرکت در جهت‌های مخالف همدیگر را خنثی می‌کند.',
- '1':'در ضرب و تقسیم اعداد صحیح، اول مقدار عددها را بدون علامت حساب می‌کنیم و بعد علامت را تعیین می‌کنیم. دو علامت یکسان حاصل مثبت می‌دهند و دو علامت متفاوت حاصل منفی. چرا؟ چون ضربِ منفی یعنی تغییر جهت؛ دو بار تغییر جهت، جهت را دوباره به حالت اول برمی‌گرداند.',
- '2':'توان، راه کوتاه نوشتن ضرب تکراری یک عدد در خودش است؛ مثلاً 3² یعنی 3×3، نه 3×2. ابتدا پرانتزها و توان‌ها را حساب کن، بعد ضرب و تقسیم و در آخر جمع و تفریق. چرا؟ چون رعایت ترتیب عملیات باعث می‌شود همه یک عبارت را به یک جواب یکسان برسانند.',
- '3':'جذرِ عدد مثبت، عدد نامنفی‌ای است که ضرب آن در خودش عدد زیر رادیکال را می‌دهد؛ مثلاً √49=7 چون 7×7=49. چرا جذر می‌گیریم؟ چون جذر، عمل برعکسِ به توان دو رساندن است. در پاسخ جذر اصلی، علامت مثبت را می‌گیریم؛ اما در حل x²=49 دو جواب x=7 و x=−7 داریم.',
- '4':'درصد یعنی «از هر صد». برای پیدا کردن p درصدِ یک مقدار، آن مقدار را در p ضرب و بر 100 تقسیم کن. برای تخفیف، مقدار تخفیف را از قیمت اولیه کم کن. چرا تقسیم بر 100؟ چون درصد، نسبت به صد است؛ مثلاً 25٪ یعنی 25 از 100 قسمت مساوی.',
- '5':'معادله مانند یک ترازو است: دو طرف باید برابر بمانند. هر عملی که برای تنها گذاشتن x روی یک طرف انجام می‌دهی، باید روی طرف دیگر هم انجام شود؛ سپس عمل‌ها را برعکس می‌کنیم. چرا؟ چون اگر فقط یک طرف را تغییر دهیم، برابری معادله از بین می‌رود. در پایان جواب را در معادلهٔ اولیه جای‌گذاری کن.',
- '6':'در عبارت جبری، حرفی مثل x نشان‌دهندهٔ یک عدد است. برای مقداردهی، عدد داده‌شده را به‌جای حرف قرار بده؛ اگر عدد منفی است آن را داخل پرانتز بنویس. سپس ترتیب عملیات را رعایت کن. چرا؟ چون جای‌گذاری یعنی همان عدد را در تمام جاهایی که متغیر آمده قرار دهیم، بدون اینکه ساختار عبارت تغییر کند.',
- '7':'محیط، طول دور شکل است؛ مساحت، اندازهٔ سطح داخل آن. برای مستطیل، مساحت=طول×عرض و محیط=2×(طول+عرض). چرا روش‌ها فرق دارند؟ محیط طول مرز را اندازه می‌گیرد، اما مساحت تعداد واحدهای مربعی داخل شکل را. پیش از حساب‌کردن، ببین سؤال محیط می‌خواهد یا مساحت و واحد مناسب را بنویس.',
- '8':'در مثلث قائم‌الزاویه، وتر روبه‌روی زاویهٔ ۹۰ درجه است و طولش از هر ضلع قائم بیشتر است. قضیهٔ فیثاغورس می‌گوید مربع وتر برابر مجموع مربع‌های دو ضلع قائم است: a²+b²=c². چرا از این رابطه استفاده می‌کنیم؟ چون این رابطه بین سه ضلع هر مثلث قائم‌الزاویه برقرار است. اگر وتر مجهول باشد جذر مجموع مربع‌ها را می‌گیریم؛ اگر یک ضلع قائم مجهول باشد، مربع ضلع معلوم را از مربع وتر کم می‌کنیم و سپس جذر می‌گیریم.',
- '9':'برای جمع و تفریق کسرها باید مخرج‌ها یکسان باشند؛ چون تنها در این حالت صورت‌ها نشان‌دهندهٔ تعداد قسمت‌های هم‌اندازه‌اند. اگر مخرج‌ها فرق دارند، مخرج مشترک پیدا کن و کسرها را هم‌ارز بنویس. در ضرب کسرها، صورت‌ها و مخرج‌ها را در هم ضرب می‌کنیم؛ در تقسیم، در معکوس کسر دوم ضرب می‌کنیم. برای اعشار نیز ممیزها را در جمع و تفریق زیر هم قرار بده.'
-};
+const studyNotes=Object.fromEntries(ryChapters.map((chapter,index)=>[index,chapter.sections.map(([heading,body])=>heading+': '+body).join('\\n\\n')]));
 const studyWhy={
- '0':'علامت عدد نشان می‌دهد مقدار در کدام جهت است؛ به همین دلیل در جمع اعداد منفی و مثبت، علامت‌ها را نمی‌توان نادیده گرفت.',
- '1':'در ضرب و تقسیم، ابتدا قدرمطلق جواب را پیدا می‌کنیم تا محاسبهٔ عددی از تعیین علامت جدا و ساده‌تر شود.',
- '2':'توان را طبق ترتیب عملیات حساب می‌کنیم تا حاصل عبارت درست باشد؛ توان، ضرب تکراری است و باید پیش از جمع و تفریق محاسبه شود.',
- '3':'جذر می‌گیریم چون می‌خواهیم عددی را پیدا کنیم که مربعش برابر مقدار داده‌شده باشد.',
- '4':'از روش درصد استفاده می‌کنیم چون درصد سهمی از یک کل است که بر پایهٔ ۱۰۰ سنجیده می‌شود.',
- '5':'هدف حل معادله تنها کردن متغیر است؛ انجام یک عمل برابر روی دو طرف، تساوی را حفظ می‌کند.',
- '6':'جای‌گذاری مقدار متغیر، عبارت کلی را به یک محاسبهٔ عددی تبدیل می‌کند؛ پرانتز برای عدد منفی از اشتباه در علامت جلوگیری می‌کند.',
- '7':'ابتدا مشخص می‌کنیم سؤال دربارهٔ دور شکل است یا سطح آن؛ انتخاب فرمول به همین خواسته بستگی دارد.',
- '8':'قضیهٔ فیثاغورس مخصوص مثلث قائم‌الزاویه است و رابطهٔ ثابت بین ضلع‌ها را می‌دهد.',
- '9':'مخرج مشترک باعث می‌شود قسمت‌های کسر هم‌اندازه شوند؛ سپس می‌توان صورت‌ها را درست جمع یا تفریق کرد.'
+ '0':'در این فصل، علامت عددها و شیوهٔ کار با کسرها و عددهای گویا اهمیت دارد؛ ابتدا نوع عدد و عمل خواسته‌شده را مشخص کن.',
+ '1':'برای تشخیص اول بودن، کافی است مقسوم‌علیه‌های اول تا جذر عدد را بررسی کنیم؛ برای ب.م.م و ک.م.م از عامل‌های اول یا الگوریتم اقلیدس استفاده می‌شود.',
+ '2':'در چندضلعی‌ها تعداد ضلع‌ها و منتظم بودن شکل را مشخص کن؛ سپس فرمول زاویه‌ها، قطرها یا تقارن را انتخاب کن.',
+ '3':'در عبارت جبری جمله‌های هم‌نوع را ساده کن؛ در معادله، هر عملی را که روی یک طرف انجام می‌دهی روی طرف دیگر هم انجام بده.',
+ '4':'در صفحهٔ مختصات ترتیب x و y را حفظ کن؛ در جمع بردارها، مؤلفه‌های هم‌جهت را جداگانه جمع می‌کنیم.',
+ '5':'از مجموع زاویه‌های مثلث و ویژگی مثلث‌های متساوی‌الساقین استفاده کن؛ فقط در مثلث قائم‌الزاویه رابطهٔ فیثاغورس کاربرد دارد.',
+ '6':'توان را پیش از ضرب و جمع محاسبه کن؛ برای جذر، مربع‌های کامل اطراف عدد را پیدا کن و جذر اصلی را نامنفی بگیر.',
+ '7':'برای میانگین، مجموع داده‌ها را بر تعدادشان تقسیم کن؛ برای احتمال، تعداد حالت‌های مطلوب را بر کل حالت‌های هم‌شانس تقسیم کن.',
+ '8':'ابتدا شعاع یا قطر را مشخص کن؛ برای محیط و مساحت فرمول جداگانه داریم و در زاویه‌های دایره باید کمان متناظر را تشخیص بدهی.'
 };
 function ryStudyMake(){
  const c=$('studycat').value,answers=$('studyanswers').checked;
- let ids=shuffle(Q.map((q,i)=>i).filter(i=>c==='all'||Q[i].c===+c)).slice(0,8);
- const title=c==='all'?'مرور ترکیبی':cats[+c][0];
- let note=c==='all'?Object.keys(studyNotes).map(k=>cats[+k][0]+': '+studyNotes[k]).join('\n\n'):(studyNotes[c]||'صورت سؤال را با دقت بخوان، داده‌ها و خواسته را جدا کن، سپس از روش مناسب استفاده کن و در پایان جواب را بررسی کن.');
+ let ids=shuffle(Q.map((q,i)=>i).filter(i=>c==='all'||Q[i].chapter===+c)).slice(0,8);
+ const title=c==='all'?'مرور ترکیبی':(ryChapters[+c]?.title||'فصل انتخاب‌شده');
+ let note=c==='all'?Object.keys(studyNotes).map(k=>ryChapters[+k].title+': '+studyNotes[k]).join('\\n\\n'):(studyNotes[c]||'صورت سؤال را با دقت بخوان، داده‌ها و خواسته را جدا کن، سپس از روش مناسب استفاده کن و در پایان جواب را بررسی کن.');
  $('studyout').innerHTML=`<div style="text-align:center"><h2>جزوهٔ آموزشی: ${ryEscape(title)}</h2><p>ریاضی‌یار · تاریخ تهیه: ${new Date().toLocaleDateString('fa-IR')}</p></div><div class="tool-box"><b>نکته‌های درس و دلیل استفاده از روش</b><p style="white-space:pre-line">${ryEscape(note)}</p></div><h3>تمرین با توضیح تشریحی</h3>`+ids.map((id,i)=>{
   const q=Q[id],key=String(q.c),why=studyWhy[key]||'روش انتخاب‌شده با نوع داده‌ها و چیزی که سؤال خواسته هماهنگ است.';
   const explanation=q.e&&String(q.e).trim()?q.e:'ابتدا داده‌های سؤال را مشخص کن، سپس فرمول یا قاعدهٔ مربوط به این مبحث را به‌کار ببر و محاسبه را مرحله‌به‌مرحله انجام بده. در پایان جواب را با صورت سؤال مقایسه کن تا مطمئن شوی به همان چیزی پاسخ داده‌ای که خواسته شده است.';
@@ -2063,10 +2050,10 @@ function ryStudyMake(){
  }).join('');
  S.set('usedStudy',true);ryAchievementsRefresh()
 }
-$('studycat').innerHTML='<option value="all">همهٔ مباحث</option>'+cats.map((c,i)=>`<option value="${i}">${ryEscape(c[0])}</option>`).join('');$('studymake').onclick=ryStudyMake;$('studyanswers').onchange=()=>{if($('studyout').innerHTML.trim())ryStudyMake()};$('studyprint').onclick=()=>{if(!$('studyout').innerHTML.trim())ryStudyMake();window.print()};
+$('studycat').innerHTML='<option value="all">همهٔ فصل‌ها</option>'+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('studymake').onclick=ryStudyMake;$('studyanswers').onchange=()=>{if($('studyout').innerHTML.trim())ryStudyMake()};$('studyprint').onclick=()=>{if(!$('studyout').innerHTML.trim())ryStudyMake();window.print()};
 
-$('bankcat').innerHTML='<option value="all">همهٔ مباحث</option>'+cats.map((c,i)=>`<option value="${i}">${ryEscape(c[0])}</option>`).join('');
-function ryBankSearch(){const q=$('bankquery').value.trim().toLocaleLowerCase(),cat=$('bankcat').value;const ids=Q.map((x,i)=>i).filter(i=>(cat==='all'||Q[i].c===+cat)&&(!q||(String(Q[i].q)+' '+cats[Q[i].c][0]).toLocaleLowerCase().includes(q))).slice(0,100);$('bankcount').textContent=`${ids.length} سؤال نمایش داده می‌شود (حداکثر ۱۰۰ نتیجه).`;$('bankresults').innerHTML=ids.length?ids.map(i=>`<div class="rv"><b>${ryEscape(cats[Q[i].c][0])}</b><p>${Q[i].q}</p><button class="btn" data-bank-id="${i}">تمرین این سؤال</button></div>`).join(''):'<div class="fb">سؤالی پیدا نشد؛ واژهٔ دیگری امتحان کن.</div>';}
+$('bankcat').innerHTML='<option value="all">همهٔ فصل‌ها</option>'+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');
+function ryBankSearch(){const q=$('bankquery').value.trim().toLocaleLowerCase(),cat=$('bankcat').value;const ids=Q.map((x,i)=>i).filter(i=>(cat==='all'||Q[i].chapter===+cat)&&(!q||(String(Q[i].q)+' '+(ryChapters[Q[i].chapter]?.title||'')).toLocaleLowerCase().includes(q))).slice(0,100);$('bankcount').textContent=`${ids.length} سؤال نمایش داده می‌شود (حداکثر ۱۰۰ نتیجه).`;$('bankresults').innerHTML=ids.length?ids.map(i=>`<div class="rv"><b>${ryEscape(ryChapters[Q[i].chapter]?.title||'فصل نامشخص')}</b><p>${Q[i].q}</p><button class="btn" data-bank-id="${i}">تمرین این سؤال</button></div>`).join(''):'<div class="fb">سؤالی پیدا نشد؛ واژهٔ دیگری امتحان کن.</div>';}
 $('banksearch').onclick=ryBankSearch;$('bankquery').addEventListener('keydown',e=>{if(e.key==='Enter')ryBankSearch()});$('bankresults').onclick=e=>{const b=e.target.closest('[data-bank-id]');if(!b)return;qBegin([+b.dataset.bankId])};
 
 // تشخیص دقیق اول/مرکب برای عدد صحیح با اندازهٔ دلخواه (BigInt؛ بدون سقف ثابت).
