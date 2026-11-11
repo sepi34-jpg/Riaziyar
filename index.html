@@ -2752,9 +2752,6 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 (()=> {
  const canvas=document.getElementById('ry-shape-canvas');if(!canvas)return;
  const select=document.getElementById('ry-shape-select'),info=document.getElementById('ry-shape-info'),net=document.getElementById('ry-shape-net'),netBtn=document.getElementById('ry-shape-net-toggle'),autoBtn=document.getElementById('ry-shape-auto');
- const sectionObserver=canvas.closest('section');
- if(sectionObserver){new MutationObserver(resumeDraw).observe(sectionObserver,{attributes:true,attributeFilter:['hidden']});}
- document.addEventListener('visibilitychange',resumeDraw);
  let THREE=null,renderer=null,scene=null,camera=null,mesh=null,auto=true,drag=false,lastX=0,lastY=0,raf=0;
  const descriptions={
   cube:'۶ وجه مربع، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مربع تشکیل می‌شود.',
@@ -2800,6 +2797,8 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   renderer.render(scene,camera);
  };
  const resumeDraw=()=>{if(renderer&&!raf&&document.visibilityState!=='hidden'&&(!section||!section.hidden))draw();};
+ if(section){new MutationObserver(resumeDraw).observe(section,{attributes:true,attributeFilter:['hidden']});}
+ document.addEventListener('visibilitychange',resumeDraw);
  const init=async()=>{
   try{
    const T=await loadThree();THREE=T;
