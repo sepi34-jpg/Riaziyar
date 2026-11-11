@@ -1617,7 +1617,8 @@ $('ryPa').onchange=ryPythUpdate;$('ryPb').onchange=ryPythUpdate;ryPythUpdate();
 /* ======================= محور اعداد: جمع مثبت و منفی ======================= */
 function nlParse(source){
   let s=source.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776))
-    .replace(/[−–﹣]/g,'-').replace(/[＋]/g,'+').replace(/[،]/g,'.')
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632))
+    .replace(/[−–﹣]/g,'-').replace(/[＋]/g,'+').replace(/[٫،]/g,'.')
     .replace(/\(([+-]?\d+(?:\.\d+)?)\)/g,'$1').replace(/\s+/g,'');
   if(!s)throw Error('یک عبارت وارد کن.');
   // جمع‌های دارای علامت‌های پشت‌سرهم را به علامت نهایی تبدیل می‌کند؛ مانند 3+-5 و 3-(-2)
