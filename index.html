@@ -2006,7 +2006,7 @@ $('ry-chapter-practice').onclick=()=>{
  $('qfb').innerHTML='<div class="fb">تمرین درس‌نامه: '+ryEscape(ryChapters[chapterIndex].title)+'. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>';
 };
 
-const studyNotes=Object.fromEntries(ryChapters.map((chapter,index)=>[index,chapter.sections.map(([heading,body])=>heading+': '+body).join('\\n\\n')]));
+const studyNotes=Object.fromEntries(ryChapters.map((chapter,index)=>[index,chapter.sections.map(([heading,body])=>heading+': '+body).join('\n\n')]));
 const studyWhy={
  '0':'در این فصل، علامت عددها و شیوهٔ کار با کسرها و عددهای گویا اهمیت دارد؛ ابتدا نوع عدد و عمل خواسته‌شده را مشخص کن.',
  '1':'برای تشخیص اول بودن، کافی است مقسوم‌علیه‌های اول تا جذر عدد را بررسی کنیم؛ برای ب.م.م و ک.م.م از عامل‌های اول یا الگوریتم اقلیدس استفاده می‌شود.',
