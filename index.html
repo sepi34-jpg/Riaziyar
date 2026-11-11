@@ -2806,9 +2806,15 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){shut();toggle.focus()}});
  }
  const stage=$('ry-hero-stage'),reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
- if(reduce||low)document.body.classList.add('ry-lite');
- document.querySelector('.ry-hero-cta')?.addEventListener('click',()=>{if(typeof window.ryOpenSection==='function')window.ryOpenSection('chapters')});
  const low=(navigator.deviceMemory&&navigator.deviceMemory<=4)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||navigator.connection?.saveData;
+ if(reduce||low)document.body.classList.add('ry-lite');
+ // دکمهٔ شروع ماجراجویی کاربر را مستقیم به فهرست ابزارها می‌برد.
+ document.querySelector('.ry-hero-cta')?.addEventListener('click',()=>{
+  const tools=document.getElementById('welcome-list');
+  if(!tools)return;
+  tools.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+  tools.querySelector('button')?.focus({preventScroll:true});
+ });
  if(stage&&!reduce&&!low){
   let raf=0,tx=0,ty=0;
   stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-.5)*34;ty=((e.clientY-r.top)/r.height-.5)*-28;if(raf)return;raf=requestAnimationFrame(()=>{stage.style.setProperty('--mx',tx.toFixed(2));stage.style.setProperty('--my',ty.toFixed(2));stage.style.transform='rotateX('+((ty/34)*-3).toFixed(2)+'deg) rotateY('+((tx/34)*4).toFixed(2)+'deg)';stage.querySelectorAll('[data-depth]').forEach(el=>{const d=Number(el.dataset.depth)||20;el.style.translate=(tx*d/70).toFixed(1)+'px '+(ty*d/70).toFixed(1)+'px'});raf=0})});
