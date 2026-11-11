@@ -1593,24 +1593,42 @@ function ryInitExactNumbers(){document.querySelectorAll('select.ry-exact-number'
 ryInitExactNumbers();
 function ryCoordUpdate(){let xi=$('ryX'),yi=$('ryY');if(xi.value===''||yi.value==='')return;let x=Math.max(-100,Math.min(100,+xi.value)),y=Math.max(-100,Math.min(100,+yi.value));xi.value=x;yi.value=y;$('ryXVal').textContent=x;$('ryYVal').textContent=y;const w=2220,h=1920,L=110,R=2110,T=30,B=1830,px=n=>L+(n+100)*(R-L)/200,py=n=>B-(n+100)*(B-T)/200;let g='';for(let i=-100;i<=100;i++){let xx=px(i),yy=py(i),major=i%10===0;g+=`<line x1="${xx}" y1="${T}" x2="${xx}" y2="${B}" stroke="var(--stone)" stroke-width="${major?1.5:.6}" opacity="${major?1:.65}"/><line x1="${L}" y1="${yy}" x2="${R}" y2="${yy}" stroke="var(--stone)" stroke-width="${major?1.5:.6}" opacity="${major?1:.65}"/>`;if(i!==0){g+=`<text x="${xx}" y="${B+17}" font-size="10" text-anchor="middle" fill="var(--mute)">${i}</text><text x="${L-9}" y="${yy+3}" font-size="10" text-anchor="end" fill="var(--mute)">${i}</text>`}}let ox=px(0),oy=py(0);g+=`<line x1="${L}" y1="${oy}" x2="${R}" y2="${oy}" stroke="var(--ink)" stroke-width="2.5"/><line x1="${ox}" y1="${T}" x2="${ox}" y2="${B}" stroke="var(--ink)" stroke-width="2.5"/><text x="${R}" y="${oy-12}" fill="var(--ink)" font-size="16" text-anchor="end">x</text><text x="${ox+12}" y="${T+8}" fill="var(--ink)" font-size="16">y</text><text x="${ox-8}" y="${oy+17}" fill="var(--ink)" font-size="11" text-anchor="end">0</text>`;let svg=`<div style="overflow:auto;max-width:100%;"><svg viewBox="0 0 ${w} ${h}" role="img" aria-label="صفحه مختصات از منفی صد تا مثبت صد" style="width:2220px;max-width:none;height:auto;display:block"><g>${g}</g><circle cx="${px(x)}" cy="${py(y)}" r="7" fill="var(--accent)"/><text x="${Math.min(Math.max(px(x)+10,L+4),R-95)}" y="${Math.max(Math.min(py(y)-10,B-5),T+20)}" fill="var(--ink)" font-size="16">P(${x}, ${y})</text></svg></div>`;$('ryCoordPlot').innerHTML=svg;$('ryCoordInfo').textContent=`نقطهٔ P(${x}، ${y})؛ فاصله از مبدأ: √(${x}² + ${y}²) = ${Math.sqrt(x*x+y*y).toFixed(2)}`}
 $('ryX').onchange=ryCoordUpdate;$('ryY').onchange=ryCoordUpdate;ryCoordUpdate();
-function ryFractionUpdate(){let n=+$('ryNum').value,d=+$('ryDen').value;$('ryNumVal').textContent=n;$('ryDenVal').textContent=d;let pct=n/d*100,parts='';for(let i=0;i<d;i++)parts+=`<span style="display:block;flex:1;min-width:12px;height:56px;background:${i<n?'var(--accent)':'var(--surface)'};border:1px solid var(--stone);border-radius:5px"></span>`;$('ryFractionBar').innerHTML=`<div style="display:flex;gap:4px;width:100%">${parts}</div>`;$('ryFractionInfo').textContent=`کسر ${n}/${d} = ${pct.toFixed(2)}٪ = ${(n/d).toFixed(3)}؛ قسمت رنگ‌شده ${n} بخش از ${d} بخش مساوی است.`}
+function ryFractionUpdate(){
+ let n=Math.max(0,Math.min(100,Math.trunc(+$('ryNum').value||0))),d=Math.max(1,Math.min(100,Math.trunc(+$('ryDen').value||1)));
+ $('ryNumVal').textContent=n;$('ryDenVal').textContent=d;
+ const whole=Math.floor(n/d),remainder=n%d,units=Math.ceil(n/d),visibleRows=Math.min(units,5);
+ const fa=value=>String(value).replace(/\d/g,digit=>'۰۱۲۳۴۵۶۷۸۹'[Number(digit)]);
+ let rows='';
+ for(let unit=0;unit<visibleRows;unit++){
+  const filled=unit<whole?d:(unit===whole?remainder:0);
+  let cells='';
+  for(let part=0;part<d;part++)cells+=`<span style="display:block;min-width:0;height:28px;background:${part<filled?'var(--accent)':'var(--surface)'};border:1px solid var(--stone);border-radius:3px"></span>`;
+  rows+=`<div style="display:grid;grid-template-columns:repeat(${d},minmax(0,1fr));gap:2px;width:100%;margin:4px 0">${cells}</div>`;
+ }
+ if(units>visibleRows)rows+=`<div class="mute">به‌علاوهٔ ${fa(units-visibleRows)} واحد کامل دیگر…</div>`;
+ $('ryFractionBar').innerHTML=rows||'<span class="mute">هنوز بخشی رنگی نشده است.</span>';
+ const gcd=(x,y)=>y?gcd(y,x%y):x,common=gcd(n,d)||1;
+ const simplified=n===0?'۰':(n/common===1?fa(d/common)=== '۱'?'۱':fa(n/common)+'/'+fa(d/common):fa(n/common)+'/'+fa(d/common));
+ const mixed=whole?(remainder?fa(whole)+' و '+fa(remainder)+'/'+fa(d):fa(whole)+' واحد کامل'):fa(n)+'/'+fa(d);
+ $('ryFractionInfo').textContent=`کسر ${fa(n)}/${fa(d)} = ${simplified} = ${(n/d*100).toFixed(2).replace(/\d/g,digit=>'۰۱۲۳۴۵۶۷۸۹'[Number(digit)])}٪؛ نمایش به شکل عدد مخلوط: ${mixed}.`;
+}
 $('ryNum').onchange=ryFractionUpdate;$('ryDen').onchange=ryFractionUpdate;ryFractionUpdate();
 function ryPythUpdate(){
  let a=+$('ryPa').value,b=+$('ryPb').value,c=Math.sqrt(a*a+b*b);
  $('ryPaVal').textContent=a;$('ryPbVal').textContent=b;
- // مقیاس پویا: حتی برای ضلع‌های بزرگ هم مثلث و مربع‌ها کامل داخل قاب بمانند.
- let scale=Math.min(300/(a+b),170/Math.max(a,b),28),ox=25,oy=205,ax=ox+a*scale,by=oy-b*scale;
- let svg=`<svg viewBox="0 0 360 245" role="img" aria-label="مثلث قائم‌الزاویه و مربع‌های مربوط به قضیه فیثاغورس" style="display:block;width:100%;height:auto;max-height:360px">
- <rect x="${ox}" y="${oy-a*scale}" width="${a*scale}" height="${a*scale}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>
+ // مربع هر ضلع بیرون از مثلث قرار می‌گیرد؛ مقیاس طوری انتخاب می‌شود که هر سه مربع در قاب جا شوند.
+ let scale=Math.min(260/(a+b),100/Math.max(a,b),20),ox=25,oy=130,ax=ox+a*scale,by=oy-b*scale;
+ let svg=`<svg viewBox="0 0 360 300" role="img" aria-label="مثلث قائم‌الزاویه و مربع‌های روی سه ضلع برای نمایش قضیهٔ فیثاغورس" style="display:block;width:100%;height:auto;max-height:360px">
+ <rect x="${ox}" y="${oy}" width="${a*scale}" height="${a*scale}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>
  <rect x="${ax}" y="${by}" width="${b*scale}" height="${b*scale}" fill="#e5a23d" fill-opacity=".3" stroke="#e5a23d"/>
  <path d="M${ox} ${oy} L${ax} ${oy} L${ax} ${by} Z" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
  <path d="M${ax-10} ${oy} L${ax-10} ${oy-10} L${ax} ${oy-10}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
- <text x="${ox+a*scale/2}" y="${oy+16}" text-anchor="middle" fill="var(--ink)" font-size="12">a=${a}</text>
- <text x="${ax+5}" y="${(oy+by)/2}" fill="var(--ink)" font-size="12">b=${b}</text>
+ <text x="${ox+a*scale/2}" y="${oy+a*scale/2+4}" text-anchor="middle" fill="var(--ink)" font-size="12">a²=${a*a}</text>
+ <text x="${ax+b*scale/2}" y="${by+b*scale/2+4}" text-anchor="middle" fill="var(--ink)" font-size="12">b²=${b*b}</text>
  <text x="${(ox+ax)/2+7}" y="${(oy+by)/2-8}" fill="var(--ink)" font-size="12">c=${c.toFixed(2)}</text>
- <text x="180" y="15" text-anchor="middle" fill="var(--mute)" font-size="10">مثلث قائم‌الزاویه و مربع‌های ضلع‌ها</text></svg>`;
+ <text x="180" y="15" text-anchor="middle" fill="var(--mute)" font-size="10">مربع‌ها بیرون از مثلث و روی ضلع‌های آن قرار دارند</text></svg>`;
  $('ryPythPlot').innerHTML=svg;
- $('ryPythInfo').textContent=`مساحت مربع اول: a² = ${a*a}؛ مربع دوم: b² = ${b*b}؛ مجموع: ${a*a+b*b}. پس c² = ${a*a+b*b} و طول وتر c = √${a*a+b*b} ≈ ${c.toFixed(3)}. دو مساحت مربع روی ضلع‌های قائم با مساحت مربع متناظر با وتر رابطهٔ فیثاغورس را نشان می‌دهند.`
+ $('ryPythInfo').textContent=`مساحت مربع روی ضلع a: a² = ${a*a}؛ مساحت مربع روی ضلع b: b² = ${b*b}؛ مجموع: ${a*a+b*b}. پس c² = ${a*a+b*b} و طول وتر c = √${a*a+b*b} ≈ ${c.toFixed(3)}. مربع روی وتر، در ساختار هندسی برابر مجموع مساحت دو مربع روی ضلع‌های قائم است.`
 }
 $('ryPa').onchange=ryPythUpdate;$('ryPb').onchange=ryPythUpdate;ryPythUpdate();
 
