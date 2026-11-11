@@ -1609,26 +1609,29 @@ function ryFractionUpdate(){
  $('ryFractionBar').innerHTML=rows||'<span class="mute">هنوز بخشی رنگی نشده است.</span>';
  const gcd=(x,y)=>y?gcd(y,x%y):x,common=gcd(n,d)||1,sn=n/common,sd=d/common;
  const simplified=n===0?'۰':(sd===1?fa(sn):fa(sn)+'/'+fa(sd));
- const mixed=whole?(remainder?fa(whole)+' و '+fa(remainder)+'/'+fa(d):fa(whole)+' واحد کامل'):fa(n)+'/'+fa(d);
+ const remainderGcd=gcd(remainder,d)||1;
+ const mixed=whole?(remainder?fa(whole)+' و '+fa(remainder/remainderGcd)+'/'+fa(d/remainderGcd):fa(whole)+' واحد کامل'):(n===0?'۰':fa(n/common)+'/'+fa(d/common));
  $('ryFractionInfo').textContent=`کسر ${fa(n)}/${fa(d)} = ${simplified} = ${(n/d*100).toFixed(2).replace(/\d/g,digit=>'۰۱۲۳۴۵۶۷۸۹'[Number(digit)])}٪؛ نمایش به شکل عدد مخلوط: ${mixed}.`;
 }
 $('ryNum').onchange=ryFractionUpdate;$('ryDen').onchange=ryFractionUpdate;ryFractionUpdate();
 function ryPythUpdate(){
  let a=+$('ryPa').value,b=+$('ryPb').value,c=Math.sqrt(a*a+b*b);
  $('ryPaVal').textContent=a;$('ryPbVal').textContent=b;
- // مربع هر ضلع بیرون از مثلث قرار می‌گیرد؛ مقیاس طوری انتخاب می‌شود که هر سه مربع در قاب جا شوند.
- let scale=Math.min(260/(a+b),100/Math.max(a,b),20),ox=25,oy=130,ax=ox+a*scale,by=oy-b*scale;
- let svg=`<svg viewBox="0 0 360 300" role="img" aria-label="مثلث قائم‌الزاویه و مربع‌های روی سه ضلع برای نمایش قضیهٔ فیثاغورس" style="display:block;width:100%;height:auto;max-height:360px">
+ // سه مربعِ ساخته‌شده روی سه ضلع؛ مربع وتر بیرون از مثلث قرار می‌گیرد.
+ let scale=Math.min(230/(a+b),90/Math.max(a,b),20),ox=110,oy=130,ax=ox+a*scale,by=oy-b*scale;
+ const hypX=ox-b*scale,hypY=oy-a*scale;
+ let svg=`<svg viewBox="0 0 360 300" role="img" aria-label="قضیهٔ فیثاغورس با سه مربع روی سه ضلع مثلث قائم‌الزاویه" style="display:block;width:100%;height:auto;max-height:360px">
  <rect x="${ox}" y="${oy}" width="${a*scale}" height="${a*scale}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>
  <rect x="${ax}" y="${by}" width="${b*scale}" height="${b*scale}" fill="#e5a23d" fill-opacity=".3" stroke="#e5a23d"/>
+ <polygon points="${ox},${oy} ${ax},${by} ${ax-b*scale},${by-a*scale} ${hypX},${hypY}" fill="#9a70ff" fill-opacity=".24" stroke="#9a70ff" stroke-width="1.5"/>
  <path d="M${ox} ${oy} L${ax} ${oy} L${ax} ${by} Z" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
- <path d="M${ax-10} ${oy} L${ax-10} ${oy-10} L${ax} ${oy-10}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+ <path d="M${ax-9} ${oy} L${ax-9} ${oy-9} L${ax} ${oy-9}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
  <text x="${ox+a*scale/2}" y="${oy+a*scale/2+4}" text-anchor="middle" fill="var(--ink)" font-size="12">a²=${a*a}</text>
  <text x="${ax+b*scale/2}" y="${by+b*scale/2+4}" text-anchor="middle" fill="var(--ink)" font-size="12">b²=${b*b}</text>
- <text x="${(ox+ax)/2+7}" y="${(oy+by)/2-8}" fill="var(--ink)" font-size="12">c=${c.toFixed(2)}</text>
- <text x="180" y="15" text-anchor="middle" fill="var(--mute)" font-size="10">مربع‌ها بیرون از مثلث و روی ضلع‌های آن قرار دارند</text></svg>`;
+ <text x="${ox-b*scale/2}" y="${oy-a*scale/2}" text-anchor="middle" fill="var(--ink)" font-size="11">c²=${(a*a+b*b)}</text>
+ <text x="180" y="15" text-anchor="middle" fill="var(--mute)" font-size="10">مساحت مربع روی وتر برابر مجموع دو مربع دیگر است</text></svg>`;
  $('ryPythPlot').innerHTML=svg;
- $('ryPythInfo').textContent=`مساحت مربع روی ضلع a: a² = ${a*a}؛ مساحت مربع روی ضلع b: b² = ${b*b}؛ مجموع: ${a*a+b*b}. پس c² = ${a*a+b*b} و طول وتر c = √${a*a+b*b} ≈ ${c.toFixed(3)}. مربع روی وتر، در ساختار هندسی برابر مجموع مساحت دو مربع روی ضلع‌های قائم است.`
+ $('ryPythInfo').textContent=`مساحت مربع روی ضلع a: a² = ${a*a}؛ مساحت مربع روی ضلع b: b² = ${b*b}؛ مساحت مربع روی وتر: c² = ${a*a+b*b}. بنابراین a² + b² = c² و طول وتر c = √${a*a+b*b} ≈ ${c.toFixed(3)}.`
 }
 $('ryPa').onchange=ryPythUpdate;$('ryPb').onchange=ryPythUpdate;ryPythUpdate();
 
