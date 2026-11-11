@@ -1242,7 +1242,7 @@ function qShow(){
 }
 function ryStepExplain(o){
   const key=String(o.c);
-  // شمارهٔ مبحث‌ها باید با ترتیب واقعی cats در بانک سؤال هماهنگ باشد.
+  // شمارهٔ فصل‌ها در این نقشه با ترتیب ryChapters هماهنگ است.
   const reasons={
     '0':'در عددهای صحیح و گویا، علامت‌ها و مخرج‌ها را درست مدیریت می‌کنیم؛ در کسرها باید مخرج مشترک یا معکوسِ کسر را به‌درستی به کار ببریم.',
     '1':'برای عددهای اول، مقسوم‌علیه‌های اول را بررسی می‌کنیم؛ برای ب.م.م و ک.م.م از تجزیه به عامل‌های اول یا الگوریتم اقلیدس کمک می‌گیریم.',
@@ -1672,11 +1672,11 @@ $('dailygo').onclick=()=>{if(S.get('dailyDone','')===ryDateKey()){ryDailyRefresh
 $('dailyrefresh').onclick=ryDailyRefresh;
 
 function ryMistakesRefresh(){
- const ids=S.get('wrong',[]).filter(id=>Number.isInteger(id)&&Q[id]);
+ const saved=S.get('wrong',[]),ids=Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&id>=0&&Q[id]):[];
  $('mistakepractice').disabled=!ids.length;$('mistakeclear').disabled=!ids.length;
  $('mistakelist').innerHTML=ids.length?`<p>تعداد سؤال‌های ذخیره‌شده: <b>${ids.length}</b></p>`+ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<br><span class="mute">مبحث: ${ryChapters[Q[id].chapter]?.title||'نامشخص'}</span></div>`).join(''):'<div class="fb">هنوز سؤالی در دفتر اشتباهات نیست. بعد از پاسخ اشتباه در آزمون، سؤال به اینجا اضافه می‌شود.</div>';
 }
-$('mistakepractice').onclick=()=>{const ids=S.get('wrong',[]).filter(id=>Number.isInteger(id)&&Q[id]);if(ids.length)qBegin(shuffle(ids))};
+$('mistakepractice').onclick=()=>{const saved=S.get('wrong',[]),ids=Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&id>=0&&Q[id]):[];if(ids.length)qBegin(shuffle(ids))};
 $('mistakerefresh').onclick=ryMistakesRefresh;
 $('mistakeclear').onclick=()=>{if(confirm('همهٔ سؤال‌های ذخیره‌شده در دفتر اشتباهات پاک شوند؟')){S.set('wrong',[]);ryMistakesRefresh();qSetup()}};
 
@@ -1739,14 +1739,14 @@ $('tabs').onclick=e=>{
 /* ================= ابزارهای تکمیلی و گزارش پیشرفت ================= */
 function ryEscape(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ryAnalysisRefresh(){
- const stats=S.get('topicStats',{}),logs=S.get('attemptLog',[]),used=Object.keys(stats).map(Number).filter(i=>ryChapters[i]);
- const attempts=Object.values(stats).reduce((a,x)=>a+(x.attempts||0),0),correct=Object.values(stats).reduce((a,x)=>a+(x.correct||0),0),rate=attempts?Math.round(correct/attempts*100):0;
+ const rawStats=S.get('topicStats',{}),stats=rawStats&&typeof rawStats==='object'&&!Array.isArray(rawStats)?rawStats:{},used=Object.keys(stats).map(Number).filter(i=>ryChapters[i]&&stats[i]&&typeof stats[i]==='object');
+ const values=Object.values(stats).filter(x=>x&&typeof x==='object'),attempts=values.reduce((a,x)=>a+Math.max(0,Number(x.attempts)||0),0),correct=values.reduce((a,x)=>a+Math.max(0,Number(x.correct)||0),0),rate=attempts?Math.round(correct/attempts*100):0;
  $('analysisstats').innerHTML=`<div>پاسخ‌های ثبت‌شده<b>${attempts}</b></div><div>دقت کلی<b>${attempts?rate+'٪':'—'}</b></div><div>روزهای پیوسته<b>${S.get('streak',0)}</b></div><div>آزمون‌های کامل‌شده<b>${S.get('exams',0)}</b></div>`;
  if(!used.length){$('analysisout').innerHTML='<div class="fb">هنوز دادهٔ کافی برای تحلیل مبحثی نداریم. یک آزمون انجام بده تا دقت هر مبحث ثبت شود.</div>';window.ryWeakestCat=null}
  else {const arr=used.map(i=>({i,a:stats[i].attempts||0,c:stats[i].correct||0,p:stats[i].attempts?Math.round(stats[i].correct/stats[i].attempts*100):0})).sort((a,b)=>a.p-b.p||b.a-a.a);window.ryWeakestCat=arr[0].i;
  $('analysisout').innerHTML='<h3>عملکرد بر اساس مبحث</h3>'+arr.map(x=>`<div class="rv"><div class="row" style="justify-content:space-between"><b>${ryEscape(ryChapters[x.i]?.title||'فصل '+(x.i+1))}</b><span>${x.c}/${x.a} درست · ${x.p}٪</span></div><div class="bar"><i style="width:${x.p}%"></i></div></div>`).join('')+`<div class="fb">${arr[0].p<70?'پیشنهاد: ابتدا روی «'+ryEscape(ryChapters[arr[0].i]?.title||'این فصل')+'» تمرین کن.':'عملکردت در مبحث‌های ثبت‌شده خوب است؛ برای حفظ پیشرفت، تمرین ترکیبی را ادامه بده.'}</div>`;
  }
- const goal=S.get('weeklyGoal',20),week=S.get('weeklyLog',[]),now=Date.now(),weekly=week.filter(x=>{const d=String(x.date).split('-').map(Number);const tm=Date.UTC(d[0],d[1]-1,d[2]);return Number.isFinite(tm)&&now-tm<7*86400000&&tm<=now+86400000}).reduce((a,x)=>a+(x.n||0),0);
+ const goal=Math.max(1,Number(S.get('weeklyGoal',20))||20),savedWeek=S.get('weeklyLog',[]),week=Array.isArray(savedWeek)?savedWeek:[],now=Date.now(),weekly=week.filter(x=>{if(!x||typeof x!=='object'||!x.date)return false;const d=String(x.date).split('-').map(Number);const tm=Date.UTC(d[0],d[1]-1,d[2]);return Number.isFinite(tm)&&now-tm<7*86400000&&tm<=now+86400000}).reduce((a,x)=>a+Math.max(0,Number(x.n)||0),0);
  $('weeklygoal').value=String(goal);$('goalout').innerHTML=`این هفته: <b>${weekly}</b> از <b>${goal}</b> سؤال<div class="bar"><i style="width:${Math.min(100,Math.round(weekly/goal*100))}%"></i></div>`;
 }
 $('analysisrefresh').onclick=ryAnalysisRefresh;
