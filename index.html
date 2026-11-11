@@ -2945,8 +2945,8 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    instruction.textContent='حاصل عبارت را حساب کن.';
   }else if(t==='missing'){
    a=rand(2,scale);b=rand(2,Math.max(3,Math.floor(scale/2)));op=rand(0,1)?'+':'×';
-   expected=op==='+'?a+b:a*b;
-   question.textContent=fa(a)+' '+op+' ؟ = '+fa(expected);
+   const result=op==='+'?a+b:a*b;expected=b;
+   question.textContent=fa(a)+' '+op+' ؟ = '+fa(result);
    instruction.textContent='عدد گمشده را پیدا کن.';
   }else{
    a=rand(1,Math.max(3,Math.floor(scale/4)));b=rand(2,l==='easy'?5:l==='medium'?9:15);
