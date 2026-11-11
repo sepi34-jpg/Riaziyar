@@ -162,7 +162,9 @@ body.landing main:after{background:#00c9a7;right:-130px;bottom:-100px;animation:
 #tabs button[data-t="tizhooshani"],
 #tabs button[data-t="geo-wonders"],
 #tabs button[data-t="factor-tree"],
-#tabs button[data-t="gcf-lcm"]{display:none!important}
+#tabs button[data-t="gcf-lcm"],
+#tabs button[data-t="mock-exam"],
+#tabs button[data-t="math-games"]{display:none!important}
 
 #ry-home-back{display:none}
 body:not(.landing) #ry-home-back{display:inline-flex}
@@ -353,6 +355,8 @@ html[lang="en"] #ry-admin-root .ad-table th,html[lang="en"] #ry-admin-root .ad-t
     <button data-t="factor-tree">🌳 درخت تجزیهٔ عدد</button>
     <button data-t="gcf-lcm">➗ ب.م.م و ک.م.م</button>
     <button data-t="notes">📝 یادداشت‌برداری</button>
+    <button data-t="mock-exam">📝 آزمون شبیه‌ساز</button>
+    <button data-t="math-games">🎮 بازی‌های ریاضی</button>
   </nav>
   <div id="tabs-scroll-controls" aria-label="رفتن به بخش قبلی یا بعدی">
     <button class="btn" id="tabs-scroll-next" type="button" aria-label="بخش بعدی" title="رفتن به بخش بعدی">◀</button>
@@ -443,7 +447,43 @@ html[lang="en"] #ry-admin-root .ad-table th,html[lang="en"] #ry-admin-root .ad-t
   <button type="button" class="welcome-option" data-ry-open="factor-tree"><span class="wo-icon" aria-hidden="true">🌳</span><span class="wo-text"><strong>درخت تجزیهٔ عدد</strong><small>تجزیهٔ انیمیشنی به عامل‌های اول</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="gcf-lcm"><span class="wo-icon" aria-hidden="true">➗</span><span class="wo-text"><strong>ب.م.م و ک.م.م</strong><small>محاسبهٔ بزرگ‌ترین مقسوم‌علیه و کوچک‌ترین مضرب مشترک</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="notes"><span class="wo-icon" aria-hidden="true">📝</span><span class="wo-text"><strong>یادداشت‌برداری</strong><small>نوشتن و نگهداری نکته‌ها و فرمول‌های ریاضی</small></span><span class="wo-arrow" aria-hidden="true">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="mock-exam"><span class="wo-icon">📝</span><span class="wo-text"><strong>آزمون شبیه‌ساز</strong><small>آزمون زمان‌دار از بانک سؤال‌های ریاضی هشتم</small></span><span class="wo-arrow">←</span></button>
+  <button type="button" class="welcome-option" data-ry-open="math-games"><span class="wo-icon">🎮</span><span class="wo-text"><strong>بازی‌های ریاضی</strong><small>محاسبهٔ سریع، عدد گمشده و کشف الگو</small></span><span class="wo-arrow">←</span></button>
   </div>
+</section>
+<!-- ================= آزمون شبیه‌ساز ================= -->
+<section id="mock-exam" hidden>
+ <div class="card">
+  <h2>📝 آزمون شبیه‌ساز ریاضی هشتم</h2>
+  <p class="mute">از بانک سؤال‌های موجود آزمون بساز. برای هر سؤال ۳۰ ثانیه زمان داری و در پایان پاسخ‌ها و توضیحات را می‌بینی.</p>
+  <div class="row" style="margin:12px 0">
+   <label>تعداد سؤال <select id="mock-count"><option value="10">۱۰ سؤال</option><option value="20" selected>۲۰ سؤال</option><option value="30">۳۰ سؤال</option><option value="50">۵۰ سؤال</option></select></label>
+   <label>مبحث <select id="mock-topic"><option value="all">همهٔ مباحث</option><option value="0">عددهای صحیح و گویا</option><option value="1">عددهای اول و بخش‌پذیری</option><option value="2">هندسه و زاویه</option><option value="3">جبر و معادله</option><option value="4">درصد و کاربردها</option><option value="5">بردار و مختصات</option><option value="6">توان و جذر</option><option value="7">آمار و احتمال</option><option value="8">دایره</option></select></label>
+   <label>سطح <select id="mock-level"><option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">سخت</option></select></label>
+  </div>
+  <div class="fb">آزمون از بانک سؤال فعلی انتخاب می‌شود؛ نتیجه در کارنامه و دفتر اشتباهات اصلی ثبت خواهد شد.</div>
+  <button class="btn pri" id="mock-start" type="button">شروع آزمون زمان‌دار</button>
+  <div id="mock-message" class="mute" role="status" style="margin-top:10px"></div>
+ </div>
+</section>
+<!-- ================= بازی‌های ریاضی ================= -->
+<section id="math-games" hidden>
+ <div class="card">
+  <h2>🎮 بازی‌های ریاضی</h2>
+  <p class="mute">هر بار یک چالش تازه بساز، جواب بده و رکوردت را بهتر کن.</p>
+  <div class="row" style="margin:12px 0">
+   <label>نوع بازی <select id="game-type"><option value="mental">محاسبهٔ سریع</option><option value="missing">عدد گمشده</option><option value="pattern">کشف الگو</option></select></label>
+   <label>سختی <select id="game-level"><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">سخت</option></select></label>
+  </div>
+  <div class="stat" id="game-stats"><div>امتیاز این دور<b id="game-score">۰</b></div><div>پاسخ درست پیاپی<b id="game-streak">۰</b></div><div>بهترین رکورد<b id="game-best">۰</b></div></div>
+  <div class="tool-box" style="text-align:center;padding:22px">
+   <div class="mute" id="game-instruction">چالش را شروع کن.</div>
+   <div class="qq" id="game-question" aria-live="polite">آماده‌ای؟</div>
+   <input id="game-answer" type="text" inputmode="decimal" autocomplete="off" placeholder="پاسخت را بنویس" style="max-width:230px;width:100%;text-align:center;direction:ltr">
+   <div class="row" style="justify-content:center;margin-top:12px"><button class="btn pri" id="game-check" type="button">بررسی پاسخ</button><button class="btn" id="game-next" type="button">چالش بعدی</button></div>
+   <div id="game-feedback" class="fb" aria-live="polite">برای شروع روی «چالش بعدی» بزن.</div>
+  </div>
+ </div>
 </section>
 <!-- ================= ماشین‌حساب ================= -->
 <section id="calc" hidden>
@@ -1055,7 +1095,7 @@ function qBegin(ids,mode=''){
   $('qsetup').hidden=true;$('qres').hidden=true;$('qplay').hidden=false;qShow();
 }
 $('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||Q[i].chapter==c)&&(l==='all'||Q[i].level===l));
-  qBegin(shuffle(ids).slice(0,+$('qcnt').value))};
+  const chosen=shuffle(ids).slice(0,+$('qcnt').value);const mode=window.ryMockExamMode?'mock-exam':'';window.ryMockExamMode=false;qBegin(chosen,mode)};
 $('ry-contest').onclick=()=>{ $('qtime').checked=true; $('qcnt').value='20'; const ids=shuffle(Q.map((_,i)=>i)).slice(0,20); qBegin(ids,'contest'); $('qfb').innerHTML='<div class="fb">مسابقه شروع شد: برای هر سؤال ۳۰ ثانیه فرصت داری. با کسب حداقل ۷۰٪، ۲۵ XP جایزه می‌گیری.</div>'; };
 $('qwrong').onclick=()=>qBegin(shuffle(S.get('wrong',[])).slice(0,+$('qcnt').value));
 function qShow(){
@@ -2613,6 +2653,70 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 
 
 
+
+
+<script>
+(()=>{
+ const $=id=>document.getElementById(id);
+ const start=$('mock-start');if(start){
+  start.addEventListener('click',()=>{
+   const count=$('mock-count').value,topic=$('mock-topic').value,level=$('mock-level').value;
+   const cat=$('qcat'),lev=$('qlevel'),cnt=$('qcnt'),timed=$('qtime');
+   if(!cat||!lev||!cnt||!timed){$('mock-message').textContent='بخش آزمون اصلی در دسترس نیست.';return}
+   cat.value=topic;lev.value=level;cnt.value=count;timed.checked=true;
+   window.ryMockExamMode=true;
+   $('mock-message').textContent='آزمون آماده شد؛ زمان هر سؤال ۳۰ ثانیه است.';
+   const quizTab=document.querySelector('#tabs [data-t="quiz"]');
+   if(quizTab)quizTab.click();
+   $('qgo').click();
+  });
+ }
+ const type=$('game-type'),level=$('game-level'),question=$('game-question'),instruction=$('game-instruction'),answer=$('game-answer'),feedback=$('game-feedback');
+ if(!type||!level||!question||!answer||!feedback)return;
+ const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[+d]);
+ const en=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫،]/g,'.').trim();
+ let expected=null,locked=true,score=0,streak=0;
+ let best=0;try{best=+(localStorage.getItem('ry_math_games_best')||0)}catch(e){}
+ const stats=()=>{$('game-score').textContent=fa(score);$('game-streak').textContent=fa(streak);$('game-best').textContent=fa(best)};
+ const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+ const next=()=>{
+  const t=type.value,l=level.value,scale=l==='easy'?10:l==='medium'?30:100;
+  let a,b,op;
+  if(t==='mental'){
+   a=rand(2,scale);b=rand(2,scale);op=['+','−','×'][rand(0,l==='easy'?1:2)];
+   expected=op==='+'?a+b:op==='−'?a-b:a*b;
+   question.textContent=fa(a)+' '+op+' '+fa(b)+' = ؟';
+   instruction.textContent='حاصل عبارت را حساب کن.';
+  }else if(t==='missing'){
+   a=rand(2,scale);b=rand(2,Math.max(3,Math.floor(scale/2)));op=rand(0,1)?'+':'×';
+   expected=op==='+'?a+b:a*b;
+   question.textContent=fa(a)+' '+op+' ؟ = '+fa(expected);
+   instruction.textContent='عدد گمشده را پیدا کن.';
+  }else{
+   a=rand(1,Math.max(3,Math.floor(scale/4)));b=rand(2,l==='easy'?5:l==='medium'?9:15);
+   const step=b;expected=a+step*3;
+   question.textContent=[a,a+step,a+2*step,'؟'].map(fa).join(' ، ');
+   instruction.textContent='الگوی عددی را پیدا کن و جملهٔ بعدی را بنویس.';
+  }
+  answer.value='';answer.disabled=false;locked=false;feedback.textContent='پاسخت را وارد کن و بررسی را بزن.';answer.focus();
+ };
+ const check=()=>{
+  if(locked)return;
+  const raw=en(answer.value),value=Number(raw);
+  if(raw===''||!Number.isFinite(value)){feedback.textContent='یک عدد معتبر وارد کن.';return}
+  locked=true;answer.disabled=true;
+  if(Math.abs(value-expected)<1e-9){score++;streak++;if(score>best){best=score;try{localStorage.setItem('ry_math_games_best',String(best))}catch(e){}}
+   feedback.textContent='آفرین! پاسخ درست است 🎉';feedback.className='fb ok';
+  }else{streak=0;feedback.textContent='این بار درست نبود؛ پاسخ درست '+fa(expected)+' بود. چالش بعدی را امتحان کن.';feedback.className='fb bad'}
+  stats();
+ };
+ $('game-next').addEventListener('click',next);$('game-check').addEventListener('click',check);
+ answer.addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+ type.addEventListener('change',()=>{score=0;streak=0;stats();next()});
+ level.addEventListener('change',next);
+ stats();next();
+})();
+</script>
 
 </body>
 </html>
