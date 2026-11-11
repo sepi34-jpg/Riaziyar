@@ -2687,7 +2687,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 (()=>{
  const input=document.getElementById('ft-number'),stage=document.getElementById('ft-stage'),out=document.getElementById('ft-factorization'),err=document.getElementById('ft-error'),show=document.getElementById('ft-show');
  if(!input||!stage||!out||!err||!show)return;
- const toFa=s=>String(s).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+ const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
  const primeFactors=n=>{const a=[];for(let p=2;p*p<=n;p++){while(n%p===0){a.push(p);n/=p}}if(n>1)a.push(n);return a};
  const makeTree=(n,delay=0)=>{
   const wrap=document.createElement('div');wrap.className='ft-node';wrap.style.setProperty('--delay',delay+'ms');
@@ -2716,7 +2716,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const x=Number(a.value),y=Number(b.value);error.textContent='';
   if(!Number.isSafeInteger(x)||!Number.isSafeInteger(y)||x<1||y<1||x>1000000||y>1000000){error.textContent='هر دو عدد باید صحیح و بین ۱ تا ۱٬۰۰۰٬۰۰۰ باشند.';return}
   let m=x,n=y;while(n){const r=m%n;m=n;n=r}const gcd=m,lcm=(x/gcd)*y;
-  const fa=v=>String(v).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+  const fa=v=>String(v).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
   output.innerHTML='<div class="gcf-results"><div class="gcf-result"><span>ب.م.م</span><strong>'+fa(gcd)+'</strong><small>'+fa(x)+' و '+fa(y)+'</small></div><div class="gcf-result"><span>ک.م.م</span><strong>'+fa(lcm)+'</strong><small>کوچک‌ترین مضرب مشترک</small></div></div><p class="mute">روش بررسی: ب.م.م با الگوریتم اقلیدس محاسبه شد؛ ک.م.م از حاصل‌ضرب دو عدد تقسیم بر ب.م.م به‌دست آمد.</p>';
  };
  document.getElementById('gcf-calc').addEventListener('click',calc);
