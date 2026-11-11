@@ -1043,7 +1043,7 @@ $('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;
 
 /* ======================= ماشین‌حساب ======================= */
 function calc(src){
-  const s=src.replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s+/g,'');
+  const s=src.replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/٫/g,'.').replace(/٬/g,'').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s+/g,'');
   if(!s)throw Error('عبارتی وارد نشده است');
   const t=s.match(/\d+\.?\d*|\.\d+|[+\-*\/^()√%]/g)||[];
   if(t.join('')!==s)throw Error('عبارت نامعتبر است (نویسه‌ی ناشناخته)');
@@ -1063,6 +1063,7 @@ function calc(src){
 }
 let hist=S.get('hist',[]),ans='0';
 if(!Array.isArray(hist))hist=[];
+hist=hist.filter(item=>Array.isArray(item)&&item.length>=2);
 function hRender(){
   const list=$('hist');list.replaceChildren();
   const safe=hist.filter(item=>Array.isArray(item)&&item.length>=2);
@@ -1226,7 +1227,7 @@ Q.forEach(o=>{
 });
 /* ======================= آزمون ======================= */
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const val=s=>{s=String(s).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/−/g,'-').replace(/[٫٬،,]/g,'.').trim();
+const val=s=>{s=String(s).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/−/g,'-').replace(/[٫،,]/g,'.').replace(/٬/g,'').trim();
   if(!/^-?\d*\.?\d+(\/\d*\.?\d+)?$|^-?\d+\.?$/.test(s))return NaN;
   if(s.includes('/')){const [a,b]=s.split('/');return +b===0?NaN:+a/+b}return +s};
 $('qcat').innerHTML=`<option value="all">همه موضوع‌ها (${Q.length})</option>`+cats.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join('');
@@ -2751,6 +2752,9 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 (()=> {
  const canvas=document.getElementById('ry-shape-canvas');if(!canvas)return;
  const select=document.getElementById('ry-shape-select'),info=document.getElementById('ry-shape-info'),net=document.getElementById('ry-shape-net'),netBtn=document.getElementById('ry-shape-net-toggle'),autoBtn=document.getElementById('ry-shape-auto');
+ const sectionObserver=canvas.closest('section');
+ if(sectionObserver){new MutationObserver(resumeDraw).observe(sectionObserver,{attributes:true,attributeFilter:['hidden']});}
+ document.addEventListener('visibilitychange',resumeDraw);
  let THREE=null,renderer=null,scene=null,camera=null,mesh=null,auto=true,drag=false,lastX=0,lastY=0,raf=0;
  const descriptions={
   cube:'۶ وجه مربع، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مربع تشکیل می‌شود.',
@@ -2787,12 +2791,15 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    default:return new T.BoxGeometry(2,2,2);
   }
  };
+ const section=canvas.closest('section');
  const draw=()=>{
   if(!renderer)return;
+  if(document.visibilityState==='hidden'||(section&&section.hidden)){raf=0;return;}
   raf=requestAnimationFrame(draw);
   if(auto&&mesh){mesh.rotation.y+=.006;mesh.rotation.x+=.0025}
   renderer.render(scene,camera);
  };
+ const resumeDraw=()=>{if(renderer&&!raf&&document.visibilityState!=='hidden'&&(!section||!section.hidden))draw();};
  const init=async()=>{
   try{
    const T=await loadThree();THREE=T;
