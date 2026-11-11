@@ -505,7 +505,9 @@ table{max-width:100%}
  .card{width:100%;padding:13px;margin-bottom:12px;border-radius:16px}
  .row{min-width:0;gap:8px}
  .row>*{min-width:0}
- .row>input,.row>select{flex:1 1 140px;width:100%;max-width:100%}
+ .row>input,.row>select{flex:1 1 140px;width:100%;max-width:100%;min-width:0!important}
+ .row>input[style*="min-width"],.row>select[style*="min-width"]{min-width:0!important}
+ #primeInput,#eqin,#nlinput,#bankquery,#ry-shape-select{min-width:0!important;width:100%;max-width:100%}
  .stat{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
  .tool-grid,.extra-grid,.badge-list,.geo-result,.geo-formula-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .cwrap,.geo-layout{grid-template-columns:minmax(0,1fr)}
@@ -526,7 +528,11 @@ table{max-width:100%}
  .ry-ggb-tabs{max-width:100%;overflow-x:auto}
  .ry-ggb-frame,.ry-ggb-scroll,.ry-ggb-content{max-width:100%;min-width:0}
  #bankresults{max-height:65vh;overflow:auto}
- #ry-menu-panel{position:fixed;left:8px;right:8px;width:auto;max-width:none;max-height:78dvh;overflow:auto;overscroll-behavior:contain}
+ #ry-menu-panel{position:fixed;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));width:auto;max-width:none;max-height:78dvh;overflow:auto;overscroll-behavior:contain}
+ #ry-virtual-keyboard{left:4px;right:4px;bottom:max(4px,env(safe-area-inset-bottom));max-height:48dvh;max-width:none;overflow-y:auto}
+ #nldrawing{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+ #geo-wonders .ry-ggb-frame{max-width:100%;overflow:auto;overscroll-behavior:contain}
+ #ry-admin-root .ad-table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
  #ry-auth-modal{padding:10px!important;align-items:flex-end!important}
  #ry-auth-modal>.card{width:100%!important;max-height:88dvh!important;overflow:auto}
  #ry-admin-root{padding:10px!important}
