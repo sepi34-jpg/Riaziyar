@@ -1311,10 +1311,22 @@ $('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map(
 $('ry-contest').onclick=()=>{ $('qtime').checked=true; $('qcnt').value='20'; const ids=shuffle(Q.map((_,i)=>i)).slice(0,20); qBegin(ids,'contest'); $('qfb').innerHTML='<div class="fb">مسابقه شروع شد: برای هر سؤال ۳۰ ثانیه فرصت داری. با کسب حداقل ۷۰٪، ۲۵ XP جایزه می‌گیری.</div>'; };
 $('qwrong').onclick=()=>{const saved=S.get('wrong',[]);const ids=Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&id>=0&&id<Q.length):[];S.set('wrong',ids);qBegin(shuffle(ids).slice(0,+$('qcnt').value));};
 function qShow(){
-  const o=Q[qz.ids[qz.i]];qz.locked=false;
+  const id=qz.ids[qz.i],o=Q[id];qz.locked=false;
   $('qn').textContent=`سوال ${qz.i+1} از ${qz.ids.length}`;$('qbar').style.width=(qz.i/qz.ids.length*100)+'%';
-  $('qcl').textContent=(ryChapters.find(ch=>ch.topic===o.c)?.title||cats[o.c]?.[0]||'مبحث ریاضی')+' • سطح '+({easy:'آسان',medium:'متوسط',hard:'سخت',olympiad:'تیزهوشانی'}[o.level]||'');$('qq').innerHTML=o.q||'<span class="fb bad">متن این سؤال بارگذاری نشد؛ سؤال بعدی را امتحان کن.</span>';$('qq').style.display='block';$('qq').style.visibility='visible';$('qh').innerHTML=o.h||'';
-  $('qin').value='';$('qin').disabled=false;$('qfb').innerHTML='';$('qsub').hidden=false;$('qnext').hidden=true;$('qin').focus();
+  const topic=o&&Number.isInteger(Number(o.c))?cats[Number(o.c)]?.[0]:'';
+  const levelName={easy:'آسان',medium:'متوسط',hard:'سخت',olympiad:'تیزهوشانی'};
+  const question=o&&typeof o.q==='string'?o.q.trim():'';
+  const qcl=$('qcl'),qq=$('qq'),qh=$('qh'),qplay=$('qplay');
+  qplay.hidden=false;qplay.style.display='block';qplay.style.visibility='visible';
+  qcl.textContent=(topic||'مبحث ریاضی')+(o&&levelName[o.level]?' • سطح '+levelName[o.level]:'');
+  qcl.hidden=false;qcl.style.cssText+=';display:block!important;visibility:visible!important;opacity:1!important;color:#aebbe0!important;min-height:24px';
+  if(question){qq.innerHTML=question;}
+  else{qq.textContent='متن این سؤال در بانک سؤال خالی است. لطفاً سؤال بعدی را انتخاب کن.';}
+  qq.hidden=false;qq.style.cssText+=';display:block!important;visibility:visible!important;opacity:1!important;color:#f4f7ff!important;background:transparent!important;min-height:56px;height:auto!important;max-height:none!important;overflow:visible!important;position:relative;z-index:5;font-size:1.15rem;line-height:1.9;white-space:normal;overflow-wrap:anywhere';
+  qh.textContent=o&&o.h?plainQ(o.h):'';qh.hidden=!qh.textContent;qh.style.cssText+=';display:block;visibility:visible;color:#aebbe0;white-space:normal';
+  $('qin').value='';$('qin').disabled=false;$('qfb').innerHTML='';$('qsub').hidden=false;$('qnext').hidden=true;
+  // روی موبایل فوکوس خودکار باعث بازشدن کیبورد و جابه‌جایی ناخواستهٔ صفحه می‌شود.
+  if(!matchMedia('(max-width:700px)').matches)$('qin').focus();
   clearInterval(qz.iv);$('qtimer').textContent='';
   if(qz.timed){qz.t=30;$('qtimer').textContent='⏱ 30';qz.iv=setInterval(()=>{qz.t--;$('qtimer').textContent='⏱ '+qz.t;if(qz.t<=0)qGrade('',true)},1000)}
 }
