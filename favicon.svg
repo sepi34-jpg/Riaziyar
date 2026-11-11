@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101a45"/><stop offset="1" stop-color="#25105a"/></linearGradient>
+  <linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#72e5ff"/><stop offset=".42" stop-color="#477bff"/><stop offset="1" stop-color="#a56bff"/></linearGradient>
+  <linearGradient id="side" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#273caa"/><stop offset="1" stop-color="#552caa"/></linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="4"/></filter>
+</defs>
+<rect width="128" height="128" rx="27" fill="url(#bg)"/>
+<g opacity=".18" fill="#b8caff" font-family="Arial,sans-serif" font-weight="700">
+ <text x="10" y="25" font-size="13">π</text><text x="101" y="32" font-size="12">√</text><text x="12" y="111" font-size="14">+</text><text x="105" y="108" font-size="13">×</text>
+</g>
+<path d="M25 37 L47 37 L65 68 L83 37 L104 37 L104 91 L84 91 L84 70 L65 99 L46 70 L46 91 L25 91 Z" transform="translate(5 7)" fill="#070d2d" opacity=".75" filter="url(#shadow)"/>
+<path d="M25 34 L47 34 L65 65 L83 34 L104 34 L104 88 L84 88 L84 67 L65 96 L46 67 L46 88 L25 88 Z" transform="translate(4 5)" fill="url(#side)"/>
+<path d="M25 29 L47 29 L65 60 L83 29 L104 29 L104 83 L84 83 L84 62 L65 91 L46 62 L46 83 L25 83 Z" fill="url(#front)" stroke="#c1f4ff" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M29 34 L44 34 L65 69 L86 34 L99 34" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+</svg>
