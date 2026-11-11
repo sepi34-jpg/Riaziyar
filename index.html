@@ -1618,7 +1618,7 @@ function ryPythUpdate(){
  let a=+$('ryPa').value,b=+$('ryPb').value,c=Math.sqrt(a*a+b*b);
  $('ryPaVal').textContent=a;$('ryPbVal').textContent=b;
  // سه مربعِ ساخته‌شده روی سه ضلع؛ مربع وتر بیرون از مثلث قرار می‌گیرد.
- let scale=Math.min(230/(a+b),90/Math.max(a,b),20),ox=110,oy=130,ax=ox+a*scale,by=oy-b*scale;
+ let scale=Math.min(130/(a+b),90/Math.max(a,b),20),ox=110,oy=150,ax=ox+a*scale,by=oy-b*scale;
  const hypX=ox-b*scale,hypY=oy-a*scale;
  let svg=`<svg viewBox="0 0 360 300" role="img" aria-label="قضیهٔ فیثاغورس با سه مربع روی سه ضلع مثلث قائم‌الزاویه" style="display:block;width:100%;height:auto;max-height:360px">
  <rect x="${ox}" y="${oy}" width="${a*scale}" height="${a*scale}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>
