@@ -312,26 +312,6 @@ body.landing #tabs-scroll-controls{display:none!important}
 #ry-virtual-keyboard .ry-vk-math-key:active{background:var(--accent);color:var(--on)}
 @media(max-width:600px){#ry-virtual-keyboard .ry-vk-math-key{min-width:36px;min-height:42px;padding:6px 8px}}
 
-/* دکمهٔ تغییر زبان */
-#ry-language-toggle{min-width:48px;font-weight:800;direction:ltr}
-html[lang="en"] #ry-language-toggle{font-family:Arial,sans-serif}
-/* پشتیبانی از زبان انگلیسی برای محیط سایت */
-html[lang="en"] body{font-family:Arial,Tahoma,sans-serif;direction:ltr}
-html[lang="en"] .top,html[lang="en"] .row{direction:ltr}
-html[lang="en"] #tabs{direction:ltr}
-html[lang="en"] .welcome-option{direction:ltr;text-align:left}
-html[lang="en"] .welcome-option .wo-arrow{transform:scaleX(-1)}
-html[lang="en"] .welcome-label,html[lang="en"] .welcome-hero{text-align:center}
-html[lang="en"] #ry-admin-root{direction:ltr!important}
-html[lang="en"] #ry-admin-root .ad-table th,html[lang="en"] #ry-admin-root .ad-table td{text-align:left}
-html[lang="en"] body{font-family:Arial,Tahoma,sans-serif;direction:ltr}
-html[lang="en"] .top,html[lang="en"] .row{direction:ltr}
-html[lang="en"] #tabs{direction:ltr}
-html[lang="en"] .welcome-option{direction:ltr;text-align:left}
-html[lang="en"] .welcome-option .wo-arrow{transform:scaleX(-1)}
-html[lang="en"] #ry-admin-root{direction:ltr!important}
-html[lang="en"] #ry-admin-root .ad-table th,html[lang="en"] #ry-admin-root .ad-table td{text-align:left}
-
 /* ===== ریاضی‌یار سپ | فضای سه‌بعدی صفحهٔ آغازین ===== */
 :root{--ry-night:#080d20;--ry-panel:#101a35;--ry-blue:#4d8dff;--ry-violet:#9a70ff;--ry-cyan:#42e7dc}
 body.landing{background:radial-gradient(ellipse at 78% 8%,#20245a 0%,#0b1230 35%,#070b19 78%);color:#f4f7ff;min-height:100vh}
@@ -469,7 +449,7 @@ body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
     <button class="btn" id="tabs-scroll-prev" type="button" aria-label="بخش قبلی" title="رفتن به بخش قبلی">▶</button>
   </div>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
-<button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button><button class="btn" id="ry-language-toggle" type="button" aria-label="Change language" title="Change language">EN</button></header>
+<button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
 <div id="ry-menu-panel" class="ry-menu-panel" hidden aria-label="ناوبری سریع">
  <div class="ry-menu-panel-head"><div><b>دسترسی سریع</b><small>همهٔ ابزارهای ریاضی‌یار در یک نگاه</small></div><button type="button" class="ry-menu-close" id="ry-menu-close" aria-label="بستن فهرست">✕</button></div>
  <div id="ry-menu-links" class="ry-menu-links"></div>
@@ -3000,85 +2980,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 </script>
 
 
-<script>
-(()=>{
- const toggle=document.getElementById('ry-language-toggle');
- if(!toggle)return;
- const translations={
-  'ریاضی‌یار':'Riaziyar','ریاضی\u200cیار':'Riaziyar','فهرست ابزارها':'Tools menu','دسترسی سریع':'Quick access','همهٔ ابزارهای ریاضی‌یار در یک نگاه':'All Riaziyar tools at a glance','بستن فهرست':'Close menu',
-  'صفحهٔ شروع':'Home','ماشین‌حساب':'Calculator','آزمون ۱۰۰۰ سوالی':'1,000-question quiz','غربال اراتستن':'Sieve of Eratosthenes','تشخیص عدد اول یا مرکب':'Prime or composite checker','حل‌کننده معادله':'Equation solver','فرمول‌نامه':'Formula sheet','آزمایشگاه‌های تعاملی':'Interactive labs','محور اعداد':'Number line','چالش روزانه':'Daily challenge','دفتر اشتباهات':'Mistake notebook','دستاوردها':'Achievements','آزمون‌ساز معلم':'Teacher exam builder','تحلیل پیشرفت':'Progress analysis','جزوه‌ساز':'Study-note maker','جست‌وجوی سؤال':'Question search','درس‌نامهٔ ریاضی هشتم':'Grade 8 lessons','تیزهوشانی':'Advanced practice','✨ عجایب هندسه':'✨ Geometry wonders','🪄 اشکال جادویی':'🪄 Magic shapes','🌳 درخت تجزیهٔ عدد':'🌳 Factor tree','➗ ب.م.م و ک.م.م':'➗ GCD & LCM','📝 یادداشت‌برداری':'📝 Notes','📝 آزمون شبیه‌ساز':'📝 Mock exam','🎮 بازی‌های ریاضی':'🎮 Math games',
-  'به آزمایشگاه ریاضی خوش آمدی':'Welcome to the Math Lab','فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.':'Explore formulas, interact with shapes, and move forward with every challenge.','شروع ماجراجویی':'Start exploring','یکی از قابلیت‌ها رو انتخاب کن':'Choose a feature','۹ مبحث آموزشی':'9 learning topics','آزمون و بازی':'Quizzes & games','آزمایشگاه سه‌بعدی':'3D lab','🎮 مسیر پیشرفت تو':'🎮 Your progress',
-  'ورود / ثبت‌نام':'Sign in / Sign up','حساب ریاضی‌یار':'Riaziyar account','یکی از بخش‌های زیر را انتخاب کن.':'Choose one of the options below.','ورود':'Sign in','ثبت‌نام':'Sign up','نام نمایشی':'Display name','ایمیل':'Email','رمز عبور':'Password','ساخت حساب':'Create account','خروج':'Sign out','بازگشت به سایت':'Back to site','مدیریت ریاضی‌یار':'Riaziyar Admin','پنل مدیریت امن · نسخهٔ اولیه':'Secure admin panel · Initial version','ورود مدیر':'Admin sign in','برای ورود، ابتدا از حساب کاربری مدیر استفاده کن.':'Sign in with the administrator account first.','باز کردن فرم ورود':'Open sign-in form','نمای کلی':'Overview','کاربران':'Users','بانک سؤال':'Question bank','آزمون‌ها':'Exams','تنظیمات سایت':'Site settings','دیدگاه‌ها':'Comments','گزارش‌ها':'Reports','گزارش فعالیت':'Activity log','خلاصهٔ سامانه':'System overview','آمار کلی کاربران و فعالیت‌ها در پایگاه داده.':'Database summary of users and activity.',
-  'مدیریت بانک سؤال':'Question bank management','مدیریت آزمون‌ها':'Exam management','مدیریت دیدگاه‌ها':'Comment moderation','گزارش دیدگاه‌ها':'Comment reports','گزارش فعالیت مدیر':'Admin activity log','تنظیمات هویتی سایت':'Site identity settings','ذخیرهٔ تنظیمات':'Save settings','بازگردانی پیش‌فرض‌ها':'Restore defaults','عنوان مرورگر و نام سایت':'Browser title and site name','نام نمایشی برند':'Brand display name','نماد لوگو (حرف یا ایموجی)':'Logo symbol (letter or emoji)','رنگ اصلی سایت':'Main site color','عنوان صفحهٔ شروع':'Home page heading','توضیح صفحهٔ شروع':'Home page description','توضیحات سایت برای موتورهای جست‌وجو':'Search engine description','نشانی تصویر نماد مرورگر (اختیاری؛ URL تصویر)':'Browser icon image URL (optional)',
-  'آزمون‌ساز امتحانی 📝':'Exam builder 📝','مبحث':'Topic','تعداد سؤال':'Number of questions','سطح':'Difficulty','همهٔ سطح‌ها':'All levels','آسان':'Easy','متوسط':'Medium','پیشرفته':'Advanced','نمایش پاسخ‌نامهٔ تشریحی':'Show worked answers','ساخت آزمون':'Generate exam','چاپ / ذخیره به PDF':'Print / Save as PDF','برگهٔ تمرین ریاضی':'Math practice sheet','نام و نام خانوادگی:':'Full name:','کلاس:':'Class:','تاریخ:':'Date:','پاسخ:':'Answer:','حل تشریحی مرحله‌به‌مرحله':'Step-by-step solution','فهم سؤال:':'Understand the question:','چرا این روش؟':'Why this method?','محاسبه:':'Calculation:','پاسخ نهایی:':'Final answer:','بررسی:':'Check:',
-  'فرمول‌نامهٔ ریاضی':'Math formula sheet','موضوع را انتخاب کن تا فرمول‌های مهم و مثال‌های کوتاه نمایش داده شوند.':'Choose a topic to view key formulas and short examples.','ماشین‌حساب':'Calculator','حل معادله':'Solve equation','پاک کردن':'Clear','ذخیرهٔ هدف':'Save goal','به‌روزرسانی تحلیل':'Refresh analysis','تمرین مبحث نیازمند تقویت':'Practice a topic to improve',
-  'درخت تجزیهٔ عدد':'Number factor tree','ب.م.م و ک.م.م':'GCD and LCM','عجایب هندسه':'Geometry wonders','اشکال جادویی':'Magic shapes','یادداشت‌برداری':'Notes','آزمون شبیه‌ساز':'Mock exam','بازی‌های ریاضی':'Math games',
-  'نمایش پاسخ':'Show answer','پنهان کردن پاسخ':'Hide answer','تأیید':'Approve','رد':'Reject','حذف':'Delete','انتشار':'Publish','لغو انتشار':'Unpublish','در حال بارگذاری…':'Loading…','در حال بررسی دسترسی…':'Checking access…','دسترسی مدیر تأیید شد.':'Administrator access confirmed.','تغییرات ذخیره شد.':'Changes saved.','ذخیره ناموفق بود':'Save failed','خطا:':'Error:','بازگشت':'Back'
- };
- const originalText=new WeakMap(),lastText=new WeakMap(),originalAttrs=new WeakMap(),lastAttrs=new WeakMap();
- const lang=()=>document.documentElement.lang==='en'?'en':'fa';
- const translateNode=node=>{
-  if(node.nodeType===Node.TEXT_NODE){
-   const last=lastText.get(node);
-   if(!originalText.has(node)||(last!==undefined&&node.data!==last))originalText.set(node,node.data);
-   const fa=originalText.get(node),key=fa.trim();
-   if(lang()==='en'&&translations[key]){node.data=fa.replace(key,translations[key]);lastText.set(node,node.data);}
-   else if(lang()==='fa'){node.data=fa;lastText.delete(node);}
-  }else if(node.nodeType===Node.ELEMENT_NODE){
-   for(const attr of ['placeholder','title','aria-label']){
-    if(node.hasAttribute(attr)){
-     let saved=originalAttrs.get(node);if(!saved){saved={};originalAttrs.set(node,saved);}
-     let last=lastAttrs.get(node);if(!last){last={};lastAttrs.set(node,last);}
-     const current=node.getAttribute(attr);
-     if(!(attr in saved)||(attr in last&&current!==last[attr]))saved[attr]=current;
-     const v=saved[attr],next=lang()==='en'?(translations[v]||v):v;
-     if(current!==next)node.setAttribute(attr,next);
-     last[attr]=next;
-    }
-   }
-  }
- };
- // Process the page in small batches so large interactive areas cannot freeze the browser.
- let translationRun=0;
- const translateTree=(root)=>{
-  const run=++translationRun;
-  const stack=[root];
-  const skip=el=>el.matches('script,style,noscript,iframe,canvas,svg,video,audio, .ggb-applet, .geogebra, [data-no-translate]');
-  const step=()=>{
-   if(run!==translationRun)return;
-   let count=0;
-   while(stack.length&&count<180){
-    const node=stack.pop();count++;
-    if(node.nodeType===Node.ELEMENT_NODE&&skip(node))continue;
-    translateNode(node);
-    if(node.childNodes&&node.childNodes.length){
-     for(let i=node.childNodes.length-1;i>=0;i--)stack.push(node.childNodes[i]);
-    }
-   }
-   if(stack.length)requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
- };
- const apply=language=>{
-  const wasEn=lang()==='en';
-  const en=language==='en';
-  document.documentElement.lang=en?'en':'fa';
-  document.documentElement.dir=en?'ltr':'rtl';
-  document.getElementById('ry-admin-root')?.setAttribute('dir',en?'ltr':'rtl');
-  toggle.textContent=en?'فارسی':'EN';
-  toggle.setAttribute('aria-label',en?'Switch to Persian':'Switch to English');
-  toggle.title=en?'Switch to Persian':'Switch to English';
-  // Translate in batches; never walk the entire page synchronously.
-  if(en||wasEn) translateTree(document.body);
-  try{localStorage.setItem('ry-language',en?'en':'fa');}catch(e){}
- };
- toggle.addEventListener('click',()=>apply(lang()==='en'?'fa':'en'));
- // Always start in Persian to prevent a previously saved English session from crashing startup.
- try{localStorage.setItem('ry-language','fa');}catch(e){}
- apply('fa');
- window.rySetLanguage=apply;
-})();
-</script>
+
 
 </body>
 </html>
