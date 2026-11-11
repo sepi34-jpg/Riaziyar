@@ -2962,6 +2962,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   }
  };
  const apply=language=>{
+  const wasEn=lang()==='en';
   const en=language==='en';
   document.documentElement.lang=en?'en':'fa';
   document.documentElement.dir=en?'ltr':'rtl';
@@ -2969,20 +2970,13 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   toggle.textContent=en?'فارسی':'EN';
   toggle.setAttribute('aria-label',en?'Switch to Persian':'Switch to English');
   toggle.title=en?'Switch to Persian':'Switch to English';
-  translateNode(document.body);
+  // Translate only on an actual language change; avoid continuously observing the DOM.
+  if(en||wasEn) translateNode(document.body);
   try{localStorage.setItem('ry-language',en?'en':'fa');}catch(e){}
  };
  toggle.addEventListener('click',()=>apply(lang()==='en'?'fa':'en'));
  let saved='fa';try{saved=localStorage.getItem('ry-language')||'fa';}catch(e){}
  apply(saved);
- const observer=new MutationObserver(records=>{
-  if(lang()!=='en')return;
-  for(const record of records){
-   if(record.type==='childList')record.addedNodes.forEach(translateNode);
-   else if(record.type==='characterData')translateNode(record.target);
-  }
- });
- observer.observe(document.body,{subtree:true,childList:true,characterData:true});
  window.rySetLanguage=apply;
 })();
 </script>
