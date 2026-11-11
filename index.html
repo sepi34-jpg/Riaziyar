@@ -458,7 +458,7 @@ html[lang="en"] #ry-admin-root .ad-table th,html[lang="en"] #ry-admin-root .ad-t
   <p class="mute">از بانک سؤال‌های موجود آزمون بساز. برای هر سؤال ۳۰ ثانیه زمان داری و در پایان پاسخ‌ها و توضیحات را می‌بینی.</p>
   <div class="row" style="margin:12px 0">
    <label>تعداد سؤال <select id="mock-count"><option value="10">۱۰ سؤال</option><option value="20" selected>۲۰ سؤال</option><option value="30">۳۰ سؤال</option><option value="50">۵۰ سؤال</option></select></label>
-   <label>مبحث <select id="mock-topic"><option value="all">همهٔ مباحث</option><option value="0">عددهای صحیح و گویا</option><option value="1">عددهای اول و بخش‌پذیری</option><option value="2">هندسه و زاویه</option><option value="3">جبر و معادله</option><option value="4">درصد و کاربردها</option><option value="5">بردار و مختصات</option><option value="6">توان و جذر</option><option value="7">آمار و احتمال</option><option value="8">دایره</option></select></label>
+   <label>مبحث <select id="mock-topic"><option value="all">همهٔ مباحث</option></select></label>
    <label>سطح <select id="mock-level"><option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">سخت</option></select></label>
   </div>
   <div class="fb">آزمون از بانک سؤال فعلی انتخاب می‌شود؛ نتیجه در کارنامه و دفتر اشتباهات اصلی ثبت خواهد شد.</div>
@@ -2658,6 +2658,8 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 <script>
 (()=>{
  const $=id=>document.getElementById(id);
+ const mockTopic=$('mock-topic'),quizCategory=$('qcat');
+ if(mockTopic&&quizCategory)mockTopic.innerHTML=quizCategory.innerHTML;
  const start=$('mock-start');if(start){
   start.addEventListener('click',()=>{
    const count=$('mock-count').value,topic=$('mock-topic').value,level=$('mock-level').value;
