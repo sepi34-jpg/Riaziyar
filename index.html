@@ -1607,8 +1607,8 @@ function ryFractionUpdate(){
  }
  if(units>visibleRows)rows+=`<div class="mute">به‌علاوهٔ ${fa(units-visibleRows)} واحد کامل دیگر…</div>`;
  $('ryFractionBar').innerHTML=rows||'<span class="mute">هنوز بخشی رنگی نشده است.</span>';
- const gcd=(x,y)=>y?gcd(y,x%y):x,common=gcd(n,d)||1;
- const simplified=n===0?'۰':(n/common===1?fa(d/common)=== '۱'?'۱':fa(n/common)+'/'+fa(d/common):fa(n/common)+'/'+fa(d/common));
+ const gcd=(x,y)=>y?gcd(y,x%y):x,common=gcd(n,d)||1,sn=n/common,sd=d/common;
+ const simplified=n===0?'۰':(sd===1?fa(sn):fa(sn)+'/'+fa(sd));
  const mixed=whole?(remainder?fa(whole)+' و '+fa(remainder)+'/'+fa(d):fa(whole)+' واحد کامل'):fa(n)+'/'+fa(d);
  $('ryFractionInfo').textContent=`کسر ${fa(n)}/${fa(d)} = ${simplified} = ${(n/d*100).toFixed(2).replace(/\d/g,digit=>'۰۱۲۳۴۵۶۷۸۹'[Number(digit)])}٪؛ نمایش به شکل عدد مخلوط: ${mixed}.`;
 }
