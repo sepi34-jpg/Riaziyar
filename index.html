@@ -479,6 +479,74 @@ body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
 #ry-admin-root .ad-item p{margin:7px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 #ry-admin-root .ad-hidden{display:none!important}#ry-admin-root .ad-note{padding:12px;border-radius:10px;background:#f0f3fa;color:#34405a}
 @media(max-width:640px){#ry-admin-root{padding:10px!important}#ry-admin-root .ad-table{font-size:.82rem}#ry-admin-root .ad-table th,#ry-admin-root .ad-table td{padding:7px}}
+
+/* ===== اصلاحات سراسری نمایش موبایل ===== */
+html{width:100%;max-width:100%;overflow-x:clip;scroll-padding-top:12px}
+body{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+img,svg,canvas,video,iframe{max-width:100%}
+main,header,section,.card,.tool-box,.extra-tile,.geo-stage,.ry-ggb-frame{min-width:0}
+button,a,select,input,textarea{max-width:100%;font-size:max(16px,1em)}
+input,select,textarea{min-width:0}
+button{white-space:normal;line-height:1.45}
+pre,code,.mono{max-width:100%;overflow-wrap:anywhere}
+table{max-width:100%}
+@media(max-width:700px){
+ body{font-size:15px}
+ main{width:100%;padding:12px 10px 30px}
+ .top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px 12px}
+ .top h1{grid-column:1;grid-row:1;width:auto;min-width:0;font-size:1rem;line-height:1.5;overflow-wrap:anywhere}
+ .ry-brand{min-width:0}
+ .ry-brand small{display:none}
+ .ry-menu-toggle{grid-column:2;grid-row:1;max-width:48vw;min-height:42px;padding:8px 10px;font-size:.82rem}
+ .top #tabs,.top #tabs-scroll-controls{display:none!important}
+ .top>.row{grid-column:1/-1;grid-row:2;display:flex;flex-wrap:wrap;gap:7px;width:100%;margin:0!important}
+ .top>.row .btn{flex:1 1 auto;min-width:0}
+ .top>#ry-auth-open{grid-column:1/-1;grid-row:3;width:100%;min-height:44px}
+ .card{width:100%;padding:13px;margin-bottom:12px;border-radius:16px}
+ .row{min-width:0;gap:8px}
+ .row>*{min-width:0}
+ .row>input,.row>select{flex:1 1 140px;width:100%;max-width:100%}
+ .stat{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .tool-grid,.extra-grid,.badge-list,.geo-result,.geo-formula-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .cwrap,.geo-layout{grid-template-columns:minmax(0,1fr)}
+ .qq{font-size:1.05rem;line-height:1.9;overflow-wrap:anywhere}
+ #qin{width:100%;min-width:0;max-width:100%;height:48px;font-size:16px;text-align:left;direction:ltr;unicode-bidi:plaintext}
+ .ry-quiz-answer-row{display:grid!important;grid-template-columns:minmax(0,1fr) 48px;gap:8px;width:100%;align-items:stretch}
+ .ry-quiz-answer-row #qin{grid-column:1;grid-row:1}
+ .ry-quiz-answer-row #qdecimal{grid-column:2;grid-row:1;min-width:48px;padding:6px}
+ .ry-quiz-answer-row #qsub,.ry-quiz-answer-row #qnext{grid-column:1/-1;grid-row:2;width:100%;min-height:46px}
+ .ry-quiz-answer-row #qfb{grid-column:1/-1}
+ .bar{width:100%}
+ #qplay .row:first-child{align-items:center;flex-wrap:nowrap}
+ #qplay #qn{min-width:0;overflow-wrap:anywhere}
+ .keys{gap:6px}
+ .keys button{min-height:48px;padding:9px 2px}
+ .geo-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .geo-stage{min-height:190px;padding:8px}
+ .ry-ggb-tabs{max-width:100%;overflow-x:auto}
+ .ry-ggb-frame,.ry-ggb-scroll,.ry-ggb-content{max-width:100%;min-width:0}
+ #bankresults{max-height:65vh;overflow:auto}
+ #ry-menu-panel{position:fixed;left:8px;right:8px;width:auto;max-width:none;max-height:78dvh;overflow:auto;overscroll-behavior:contain}
+ #ry-auth-modal{padding:10px!important;align-items:flex-end!important}
+ #ry-auth-modal>.card{width:100%!important;max-height:88dvh!important;overflow:auto}
+ #ry-admin-root{padding:10px!important}
+ #ry-admin-root .ad-card{padding:12px;min-width:0}
+ #ry-admin-root .ad-row{gap:8px;flex-wrap:wrap}
+}
+@media(max-width:420px){
+ .tool-grid,.extra-grid,.badge-list,.geo-result,.geo-formula-grid{grid-template-columns:minmax(0,1fr)}
+ .stat{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .top h1{font-size:.92rem}
+ .ry-menu-toggle{font-size:.76rem;padding:7px 8px}
+ .card{padding:11px}
+ .qq{font-size:1rem}
+ .geo-fields{grid-template-columns:minmax(0,1fr)}
+}
+@media(hover:none){
+ button:hover,.btn:hover,nav button:hover{transform:none}
+ button,.btn{-webkit-tap-highlight-color:transparent}
+}
+@supports(height:100dvh){#ry-menu-panel{max-height:78dvh}}
 </style>
 <div class="ad-wrap">
  <div class="ad-top"><div><div class="ad-brand">🛠️ مدیریت ریاضی‌یار</div><div class="ad-muted">پنل مدیریت امن · نسخهٔ اولیه</div></div><div class="ad-row"><span id="ry-ad-user" class="ad-muted"></span><button class="ad-btn" id="ry-ad-home">بازگشت به سایت</button><button class="ad-btn" id="ry-ad-logout" hidden>خروج</button></div></div>
@@ -650,8 +718,8 @@ body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
     <div class="mute" id="qcl"></div>
     <div class="qq" id="qq"></div>
     <div class="mute" id="qh"></div>
-    <div class="row" style="margin-top:10px">
-      <input type="text" id="qin" inputmode="decimal" autocomplete="off" placeholder="جواب شما" aria-label="جواب">
+    <div class="row ry-quiz-answer-row" style="margin-top:10px">
+      <input type="text" id="qin" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="جواب شما" aria-label="جواب">
       <button class="btn" id="qdecimal" type="button" aria-label="وارد کردن ممیز">٫</button>
       <button class="btn pri" id="qsub">ثبت پاسخ</button>
       <button class="btn pri" id="qnext" hidden>بعدی</button>
