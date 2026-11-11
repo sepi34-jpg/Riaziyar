@@ -1043,7 +1043,7 @@ $('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;
 
 /* ======================= ماشین‌حساب ======================= */
 function calc(src){
-  const s=src.replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/٫/g,'.').replace(/٬/g,'').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s+/g,'');
+  const s=src.replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/٫/g,'.').replace(/٬/g,'').replace(/٪/g,'%').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s+/g,'');
   if(!s)throw Error('عبارتی وارد نشده است');
   const t=s.match(/\d+\.?\d*|\.\d+|[+\-*\/^()√%]/g)||[];
   if(t.join('')!==s)throw Error('عبارت نامعتبر است (نویسه‌ی ناشناخته)');
