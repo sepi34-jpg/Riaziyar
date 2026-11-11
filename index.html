@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#4C6B58">
 <meta name="color-scheme" content="light dark">
 <title>ریاضی‌یار — مرحله ۱</title>
+<meta name="description" content="ریاضی‌یار؛ محیط تعاملی آموزش و تمرین ریاضی پایه هشتم.">
+<link id="ry-site-favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
 
 <style>
 :root{--bg:#FAF9F6;--card:#fff;--ink:#20241F;--mute:#5a6056;--accent:#4C6B58;--stone:#C7C0AF;--surface:#F1EEE5;--ok:#3E7B52;--bad:#A8473A;--on:#fff}
@@ -310,6 +312,9 @@ body.landing #tabs-scroll-controls{display:none!important}
 #ry-virtual-keyboard .ry-vk-math-key:active{background:var(--accent);color:var(--on)}
 @media(max-width:600px){#ry-virtual-keyboard .ry-vk-math-key{min-width:36px;min-height:42px;padding:6px 8px}}
 
+/* دکمهٔ تغییر زبان */
+#ry-language-toggle{min-width:48px;font-weight:800;direction:ltr}
+html[lang="en"] #ry-language-toggle{font-family:Arial,sans-serif}
 /* پشتیبانی از زبان انگلیسی برای محیط سایت */
 html[lang="en"] body{font-family:Arial,Tahoma,sans-serif;direction:ltr}
 html[lang="en"] .top,html[lang="en"] .row{direction:ltr}
@@ -384,7 +389,7 @@ body.landing .welcome-option{color:#fff}
 </head>
 <body>
 <header class="top">
-  <h1 class="ry-brand"><span class="ry-brand-mark">M</span><span>ریاضی‌یار <small lang="en" dir="ltr">Riaziyar</small></span></h1>
+  <h1 class="ry-brand"><span class="ry-brand-mark" id="ry-brand-symbol">M</span><span><span id="ry-brand-title">ریاضی‌یار</span> <small lang="en" dir="ltr">Riaziyar</small></span></h1>
   <button class="ry-menu-toggle" id="ry-menu-toggle" type="button" aria-expanded="false" aria-controls="ry-menu-panel"><span aria-hidden="true">☷</span> فهرست ابزارها</button>
   <nav id="tabs">
     <button data-t="welcome" class="on">🏠 صفحهٔ شروع</button>
@@ -418,7 +423,7 @@ body.landing .welcome-option{color:#fff}
     <button class="btn" id="tabs-scroll-prev" type="button" aria-label="بخش قبلی" title="رفتن به بخش قبلی">▶</button>
   </div>
   <div class="row" style="margin:0"><button class="btn" id="ry-home-back" type="button">🏠 صفحهٔ شروع</button><button class="btn" id="theme" aria-label="تغییر تم">🌓 تم</button></div>
-<button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button></header>
+<button class="btn" id="ry-auth-open" type="button">👤 ورود / ثبت‌نام</button><button class="btn" id="ry-language-toggle" type="button" aria-label="Change language" title="Change language">EN</button></header>
 <div id="ry-menu-panel" class="ry-menu-panel" hidden aria-label="ناوبری سریع">
  <div class="ry-menu-panel-head"><div><b>دسترسی سریع</b><small>همهٔ ابزارهای ریاضی‌یار در یک نگاه</small></div><button type="button" class="ry-menu-close" id="ry-menu-close" aria-label="بستن فهرست">✕</button></div>
  <div id="ry-menu-links" class="ry-menu-links"></div>
@@ -456,7 +461,7 @@ body.landing .welcome-option{color:#fff}
  <div id="ry-ad-panel" class="ad-hidden">
   <div class="ad-grid" id="ry-ad-stats"></div>
   <nav class="ad-tabs" id="ry-ad-tabs">
-   <button class="ad-btn active" data-ad-tab="overview">نمای کلی</button><button class="ad-btn" data-ad-tab="users">کاربران</button><button class="ad-btn" data-ad-tab="questions">بانک سؤال</button><button class="ad-btn" data-ad-tab="exams">آزمون‌ها</button><button class="ad-btn" data-ad-tab="suggestions">پیشنهادها</button><button class="ad-btn" data-ad-tab="comments">دیدگاه‌ها</button><button class="ad-btn" data-ad-tab="reports">گزارش‌ها</button><button class="ad-btn" data-ad-tab="logs">گزارش فعالیت</button>
+   <button class="ad-btn active" data-ad-tab="overview">نمای کلی</button><button class="ad-btn" data-ad-tab="users">کاربران</button><button class="ad-btn" data-ad-tab="questions">بانک سؤال</button><button class="ad-btn" data-ad-tab="exams">آزمون‌ها</button><button class="ad-btn" data-ad-tab="settings">تنظیمات سایت</button><button class="ad-btn" data-ad-tab="comments">دیدگاه‌ها</button><button class="ad-btn" data-ad-tab="reports">گزارش‌ها</button><button class="ad-btn" data-ad-tab="logs">گزارش فعالیت</button>
   </nav>
   <section class="ad-card" data-ad-view="overview"><h2>خلاصهٔ سامانه</h2><p class="ad-muted">آمار کلی کاربران و فعالیت‌ها در پایگاه داده.</p><div id="ry-ad-overview" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="users"><h2>کاربران</h2><p class="ad-muted">اطلاعات نمایشی و پیشرفت ثبت‌شده؛ اطلاعات ورود و رمزها در این بخش نمایش داده نمی‌شوند.</p><div id="ry-ad-users"></div></section>
@@ -464,7 +469,24 @@ body.landing .welcome-option{color:#fff}
    <form id="ry-ad-question-form"><div class="ad-field"><label>متن سؤال</label><textarea name="question_text" required></textarea></div><div class="ad-row"><div class="ad-field" style="flex:1"><label>فصل</label><input name="chapter" required></div><div class="ad-field" style="flex:1"><label>مبحث</label><input name="topic"></div><div class="ad-field" style="flex:1"><label>سطح</label><select name="difficulty"><option value="easy">آسان</option><option value="medium" selected>متوسط</option><option value="hard">سخت</option></select></div></div><div class="ad-field"><label>گزینه‌ها (JSON؛ برای نمونه: ["گزینه ۱","گزینه ۲"])</label><textarea name="options">["گزینه ۱","گزینه ۲","گزینه ۳","گزینه ۴"]</textarea></div><div class="ad-field"><label>پاسخ درست (JSON؛ مثلاً 2 یا "گزینه ۱")</label><input name="correct_answer" value="0" required></div><div class="ad-field"><label>توضیح پاسخ</label><textarea name="explanation"></textarea></div><div class="ad-row"><label><input type="checkbox" name="is_published" style="width:auto"> انتشار سؤال</label><button class="ad-btn primary" type="submit">افزودن سؤال</button></div></form><hr><div id="ry-ad-questions" class="ad-list"></div>
   </section>
   <section class="ad-card ad-hidden" data-ad-view="exams"><h2>مدیریت آزمون‌ها</h2><form id="ry-ad-exam-form"><div class="ad-field"><label>عنوان آزمون</label><input name="title" required></div><div class="ad-field"><label>توضیحات</label><textarea name="description"></textarea></div><div class="ad-row"><div class="ad-field" style="flex:1"><label>مدت (دقیقه)</label><input name="duration_minutes" type="number" min="1" value="30"></div><label><input type="checkbox" name="is_published" style="width:auto"> انتشار</label><button class="ad-btn primary" type="submit">ساخت آزمون</button></div></form><hr><div id="ry-ad-exams" class="ad-list"></div></section>
-  <section class="ad-card ad-hidden" data-ad-view="suggestions"><h2>پیشنهادها و خطاها</h2><div id="ry-ad-suggestions" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="settings">
+   <h2>تنظیمات هویتی سایت</h2>
+   <p class="ad-muted">این موارد پس از ذخیره در پایگاه داده، برای همهٔ بازدیدکنندگان نمایش داده می‌شوند.</p>
+   <form id="ry-ad-settings-form">
+    <div class="ad-field"><label for="ry-ad-site-title">عنوان مرورگر و نام سایت</label><input id="ry-ad-site-title" name="site_title" maxlength="80" required value="ریاضی‌یار"></div>
+    <div class="ad-field"><label for="ry-ad-brand-title">نام نمایشی برند</label><input id="ry-ad-brand-title" name="brand_title" maxlength="50" required value="ریاضی‌یار"></div>
+    <div class="ad-row">
+     <div class="ad-field" style="flex:1;min-width:140px"><label for="ry-ad-logo-symbol">نماد لوگو (حرف یا ایموجی)</label><input id="ry-ad-logo-symbol" name="logo_symbol" maxlength="4" value="M"></div>
+     <div class="ad-field" style="flex:1;min-width:140px"><label for="ry-ad-accent">رنگ اصلی سایت</label><input id="ry-ad-accent" name="accent_color" type="color" value="#4C6B58"></div>
+    </div>
+    <div class="ad-field"><label for="ry-ad-home-heading">عنوان صفحهٔ شروع</label><input id="ry-ad-home-heading" name="home_heading" maxlength="120" value="به آزمایشگاه ریاضی خوش آمدی"></div>
+    <div class="ad-field"><label for="ry-ad-home-description">توضیح صفحهٔ شروع</label><textarea id="ry-ad-home-description" name="home_description" maxlength="300">فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.</textarea></div>
+    <div class="ad-field"><label for="ry-ad-meta-description">توضیحات سایت برای موتورهای جست‌وجو</label><textarea id="ry-ad-meta-description" name="meta_description" maxlength="300">ریاضی‌یار؛ محیط تعاملی آموزش و تمرین ریاضی پایه هشتم.</textarea></div>
+    <div class="ad-field"><label for="ry-ad-favicon">نشانی تصویر نماد مرورگر (اختیاری؛ URL تصویر)</label><input id="ry-ad-favicon" name="favicon_url" type="url" placeholder="https://example.com/favicon.png" dir="ltr"></div>
+    <div class="ad-row"><button class="ad-btn primary" type="submit">ذخیرهٔ تنظیمات</button><button class="ad-btn" id="ry-ad-settings-reset" type="button">بازگردانی پیش‌فرض‌ها</button></div>
+   </form>
+   <p id="ry-ad-settings-status" class="ad-muted" role="status" aria-live="polite" style="margin-top:10px"></p>
+  </section>
   <section class="ad-card ad-hidden" data-ad-view="comments"><h2>مدیریت دیدگاه‌ها</h2><div id="ry-ad-comments" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="reports"><h2>گزارش دیدگاه‌ها</h2><div id="ry-ad-reports" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="logs"><h2>گزارش فعالیت مدیر</h2><div id="ry-ad-logs" class="ad-list"></div></section>
@@ -478,10 +500,10 @@ body.landing .welcome-option{color:#fff}
 <section id="welcome">
   <div class="welcome-hero">
     <div class="ry-hero-copy">
-      <div class="welcome-mark" aria-hidden="true">M</div>
+      <div class="welcome-mark" id="ry-welcome-mark" aria-hidden="true">M</div>
       <span class="ry-kicker">SPACE FOR DISCOVERY <span aria-hidden="true">●</span> Riaziyar</span>
-      <h2>به آزمایشگاه ریاضی خوش آمدی</h2>
-      <p>فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.</p>
+      <h2 id="ry-home-heading">به آزمایشگاه ریاضی خوش آمدی</h2>
+      <p id="ry-home-description">فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.</p>
       <button class="ry-hero-cta" type="button" data-ry-open="chapters">شروع ماجراجویی <span aria-hidden="true">←</span></button>
       <div class="ry-hero-meta"><span>۹ مبحث آموزشی</span><i></i><span>آزمون و بازی</span><i></i><span>آزمایشگاه سه‌بعدی</span></div>
     </div>
@@ -1182,16 +1204,18 @@ function qShow(){
 }
 function ryStepExplain(o){
   const key=String(o.c);
+  // شمارهٔ مبحث‌ها باید با ترتیب واقعی cats در بانک سؤال هماهنگ باشد.
   const reasons={
-    '0':'در عددهای صحیح و گویا، علامت‌ها و مخرج‌ها را بررسی می‌کنیم و سپس چهار عمل اصلی را انجام می‌دهیم.',
-    '1':'برای عددهای اول، شمارنده‌ها را بررسی می‌کنیم؛ برای ب.م.م و ک.م.م از تجزیه یا الگوریتم اقلیدس کمک می‌گیریم.',
-    '2':'مجموع زاویه‌های داخلی nضلعی برابر (n−۲)×۱۸۰ درجه و مجموع زاویه‌های خارجی ۳۶۰ درجه است.',
-    '3':'برای حل معادله، عبارت‌های هم‌نوع را جمع می‌کنیم و مجهول را با انجام عملیات یکسان در دو طرف جدا می‌کنیم.',
-    '4':'در بردارها، مؤلفه‌های افقی و عمودی را جداگانه جمع می‌کنیم؛ مختصات نقطه نیز به ترتیب x و y نوشته می‌شود.',
-    '5':'مجموع زاویه‌های مثلث ۱۸۰ درجه است؛ در مثلث قائم‌الزاویه از رابطهٔ فیثاغورس استفاده می‌کنیم.',
-    '6':'قوانین توان‌ها را رعایت می‌کنیم و جذر عدد مربع کامل را با پیدا کردن ریشهٔ مثبت به دست می‌آوریم.',
-    '7':'میانگین از تقسیم مجموع داده‌ها بر تعداد آن‌ها به دست می‌آید؛ احتمال برابر نسبت حالت‌های مطلوب به کل حالت‌هاست.',
-    '8':'محیط دایره ۲πr و مساحت آن πr² است؛ مقدار π را طبق صورت سؤال جای‌گذاری می‌کنیم.'
+    '0':'در جمع و تفریق عددهای صحیح، تفریق را به جمعِ قرینه تبدیل می‌کنیم و علامت‌ها را با دقت بررسی می‌کنیم.',
+    '1':'در ضرب و تقسیم عددهای صحیح، ابتدا قدرمطلق‌ها را محاسبه می‌کنیم؛ حاصلِ هم‌علامت‌ها مثبت و ناهم‌علامت‌ها منفی است.',
+    '2':'توان یعنی ضرب تکراری پایه در خودش؛ ابتدا توان‌ها را حساب می‌کنیم و سپس جمع یا تفریق را انجام می‌دهیم.',
+    '3':'جذر اصلی هر عدد نامنفی، عددی نامنفی است که مربع آن برابر عدد زیر رادیکال باشد.',
+    '4':'برای محاسبهٔ درصد، مقدار را در درصد ضرب و بر ۱۰۰ تقسیم می‌کنیم؛ در تخفیف، مقدار تخفیف را از قیمت اولیه کم می‌کنیم.',
+    '5':'برای حل معادله، با انجام یک عمل یکسان در دو طرف، مجهول را تنها می‌کنیم و در پایان جواب را بررسی می‌کنیم.',
+    '6':'مقدار x را در عبارت جای‌گذاری می‌کنیم و ترتیب انجام عملیات را رعایت می‌کنیم؛ توان پیش از ضرب و جمع محاسبه می‌شود.',
+    '7':'برای محیط، طول ضلع‌های مرزی را جمع می‌کنیم؛ برای مساحت، فرمول متناسب با شکل را به کار می‌بریم.',
+    '8':'در مثلث قائم‌الزاویه، مربع وتر برابر مجموع مربع‌های دو ضلع قائم است: a²+b²=c².',
+    '9':'در جمع کسرها ابتدا مخرج مشترک می‌گیریم؛ در محاسبهٔ اعشار، ممیزها را هم‌ستون می‌نویسیم.'
   };
   const why=reasons[key]||'روش حل را با داده‌ها و خواستهٔ سؤال هماهنگ می‌کنیم.';
   const calcStep=o.e&&String(o.e).trim()?o.e:'محاسبه را با قاعدهٔ مربوط به این مبحث انجام می‌دهیم.';
@@ -1466,7 +1490,7 @@ const formulaData={
   ['تقسیم توان‌های هم‌پایه','aᵐ÷aⁿ=aᵐ⁻ⁿ (a≠۰)','مثال: ۳⁴÷۳²=۳²=۹.'],
   ['توان صفر و یک','a⁰=۱ برای a≠۰؛ a¹=a','مثال: ۷⁰=۱ و ۷¹=۷.'],
   ['جذر مربع کامل','√(a²)=|a|؛ جذر اصلی نامنفی است','مثال: √۴۹=۷ و √(−۳)²=۳.'],
-  ['ضرب و تقسیم رادیکال‌ها','√a×√b=√(ab)؛ √a÷√b=√(a/b)','برای اعداد زیر رادیکال نامنفی و در تقسیم b>۰ باشد. مثال: √۲×√۸=۴.']
+  ['ضرب و تقسیم رادیکال‌ها','√a×√b=√(ab)؛ √a÷√b=√(a/b)','برای اعداد حقیقی باید a≥۰ و b≥۰ باشد؛ در تقسیم، b>۰. مثال: √۲×√۸=۴.']
  ],
  'فصل ۸: آمار و احتمال':[
   ['میانگین حسابی','میانگین = مجموع داده‌ها ÷ تعداد داده‌ها','مثال: (۴+۶+۸)÷۳=۶.'],
@@ -1618,13 +1642,17 @@ let ryTeacherAnswers=false;
 function ryMakeTeacher(){
  const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>(c==='all'||Q[i].c===+c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
  ryTeacherAnswers=$('tanswers').checked;
+ if(!ids.length){
+  $('teacherout').innerHTML='<div class="fb bad">برای این مبحث و سطح، سؤالی در بانک فعلی پیدا نشد. سطح را روی «همهٔ سطح‌ها» بگذار یا مبحث دیگری انتخاب کن.</div>';
+  $('teacherout').dataset.ids='[]';return;
+ }
  $('teacherout').innerHTML=`<div style="text-align:center;border-bottom:1px solid var(--stone);padding-bottom:12px;margin-bottom:12px"><h2>برگهٔ تمرین ریاضی</h2><div>نام و نام خانوادگی: .....................................　 کلاس: ............　 تاریخ: ............</div><div>مبحث: ${c==='all'?'ترکیبی':cats[+c][0]}　 |　 سطح: ${{all:'همهٔ سطح‌ها',easy:'آسان',medium:'متوسط',hard:'پیشرفته'}[l]}　 |　 تعداد سؤال: ${ids.length}</div></div>`+
  ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<div style="height:24px;border-bottom:1px dotted var(--stone);margin-top:8px"></div>${ryTeacherAnswers?`<div class="fb"><b>پاسخ:</b> ${Q[id].t}</div>${ryStepExplain(Q[id])}`:''}</div>`).join('');
  $('teacherout').dataset.ids=JSON.stringify(ids);
 }
 $('tmake').onclick=ryMakeTeacher;
 $('tanswers').onchange=()=>{if($('teacherout').dataset.ids)ryMakeTeacher()};
-$('tprint').onclick=()=>{if(!$('teacherout').innerHTML.trim())ryMakeTeacher();window.print()};
+$('tprint').onclick=()=>{ryMakeTeacher();window.print()};
 
 // به‌روزرسانی نشان استفاده از بخش‌ها
 const ryOldTabsClick=$('tabs').onclick;
@@ -2009,6 +2037,28 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};let currentAuthUser=null;const setUser=u=>{currentAuthUser=u||null;if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u){hide();setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');}};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',async()=>{if(!currentAuthUser){setMode('login');show();return;}const {data:role}=await client.from('user_roles').select('role').eq('user_id',currentAuthUser.id).eq('role','admin').maybeSingle();if(role){window.location.href='/admin';return;}if(window.ryShowAccount)window.ryShowAccount();else{setMode('login');show();}});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
+<script>
+(()=>{
+ const defaults={site_title:'ریاضی‌یار — مرحله ۱',brand_title:'ریاضی‌یار',logo_symbol:'M',home_heading:'به آزمایشگاه ریاضی خوش آمدی',home_description:'فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.',meta_description:'ریاضی‌یار؛ محیط تعاملی آموزش و تمرین ریاضی پایه هشتم.',accent_color:'#4C6B58',favicon_url:''};
+ window.ryApplySiteSettings=(raw)=>{
+  const v={...defaults,...(raw||{})};
+  if(v.site_title)document.title=v.site_title;
+  const meta=document.querySelector('meta[name="description"]');if(meta&&v.meta_description)meta.content=v.meta_description;
+  const brand=document.getElementById('ry-brand-title');if(brand&&v.brand_title)brand.textContent=v.brand_title;
+  const mark=document.getElementById('ry-brand-symbol');if(mark&&v.logo_symbol)mark.textContent=v.logo_symbol;
+  const homeMark=document.getElementById('ry-welcome-mark');if(homeMark&&v.logo_symbol)homeMark.textContent=v.logo_symbol;
+  const heading=document.getElementById('ry-home-heading');if(heading&&v.home_heading)heading.textContent=v.home_heading;
+  const description=document.getElementById('ry-home-description');if(description&&v.home_description)description.textContent=v.home_description;
+  if(/^#[0-9a-f]{6}$/i.test(v.accent_color||''))document.documentElement.style.setProperty('--accent',v.accent_color);
+  const theme=document.querySelector('meta[name="theme-color"]');if(theme&&/^#[0-9a-f]{6}$/i.test(v.accent_color||''))theme.content=v.accent_color;
+  const icon=document.getElementById('ry-site-favicon');
+  if(icon&&v.favicon_url){try{const u=new URL(v.favicon_url,location.href);if(['http:','https:'].includes(u.protocol))icon.href=u.href;}catch(e){}}
+ };
+ const client=window.riaziYarSupabase;
+ if(client)client.from('site_settings').select('settings').eq('id',1).maybeSingle().then(({data,error})=>{if(!error&&data?.settings)window.ryApplySiteSettings(data.settings);}).catch(()=>{});
+})();
+</script>
+
 
 <script>
 (()=>{
@@ -2101,11 +2151,61 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
  const listError=(el,e)=>{el.innerHTML='<p class="ad-muted">خطا در دریافت اطلاعات: '+esc(e.message||e)+'</p>'};
  let currentUser=null;
  async function refreshStats(){
-  const names=['profiles','questions','exams','attempts','suggestions','comments'];
+  const names=['profiles','questions','exams','attempts','comments'];
   const values=await Promise.all(names.map(count));
-  $('ry-ad-stats').innerHTML=names.map((n,i)=>card(({profiles:'کاربران',questions:'سؤال‌ها',exams:'آزمون‌ها',attempts:'تلاش‌ها',suggestions:'پیشنهادها',comments:'دیدگاه‌ها'})[n],values[i])).join('');
+  $('ry-ad-stats').innerHTML=names.map((n,i)=>card(({profiles:'کاربران',questions:'سؤال‌ها',exams:'آزمون‌ها',attempts:'تلاش‌ها',comments:'دیدگاه‌ها'})[n],values[i])).join('');
   $('ry-ad-overview').innerHTML='<div class="ad-item">تعداد کاربران ثبت‌شده: <b>'+values[0]+'</b></div><div class="ad-item">سؤال‌های بانک: <b>'+values[1]+'</b></div><div class="ad-item">آزمون‌های ساخته‌شده: <b>'+values[2]+'</b></div><div class="ad-item">تلاش‌های ثبت‌شده: <b>'+values[3]+'</b></div>';
  }
+ const defaultSiteSettings={
+  site_title:'ریاضی‌یار — مرحله ۱',brand_title:'ریاضی‌یار',logo_symbol:'M',
+  home_heading:'به آزمایشگاه ریاضی خوش آمدی',
+  home_description:'فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.',
+  meta_description:'ریاضی‌یار؛ محیط تعاملی آموزش و تمرین ریاضی پایه هشتم.',
+  accent_color:'#4C6B58',favicon_url:''
+ };
+ const readSettingsForm=()=>({
+  site_title:$('ry-ad-site-title').value.trim(),
+  brand_title:$('ry-ad-brand-title').value.trim(),
+  logo_symbol:$('ry-ad-logo-symbol').value.trim()||'M',
+  home_heading:$('ry-ad-home-heading').value.trim(),
+  home_description:$('ry-ad-home-description').value.trim(),
+  meta_description:$('ry-ad-meta-description').value.trim(),
+  accent_color:$('ry-ad-accent').value,
+  favicon_url:$('ry-ad-favicon').value.trim()
+ });
+ function fillSettingsForm(settings){
+  const v={...defaultSiteSettings,...(settings||{})};
+  $('ry-ad-site-title').value=v.site_title;
+  $('ry-ad-brand-title').value=v.brand_title;
+  $('ry-ad-logo-symbol').value=v.logo_symbol;
+  $('ry-ad-home-heading').value=v.home_heading;
+  $('ry-ad-home-description').value=v.home_description;
+  $('ry-ad-meta-description').value=v.meta_description;
+  $('ry-ad-accent').value=/^#[0-9a-f]{6}$/i.test(v.accent_color)?v.accent_color:'#4C6B58';
+  $('ry-ad-favicon').value=v.favicon_url||'';
+ }
+ async function loadSettings(){
+  $('ry-ad-settings-status').textContent='در حال دریافت تنظیمات ذخیره‌شده…';
+  const {data,error}=await client.from('site_settings').select('settings').eq('id',1).maybeSingle();
+  if(error){
+   $('ry-ad-settings-status').textContent='جدول تنظیمات هنوز آماده نیست. ابتدا فایل SQL همراه این نسخه را در SQL Editor پروژه اجرا کن. جزئیات: '+error.message;
+   fillSettingsForm(defaultSiteSettings);return;
+  }
+  fillSettingsForm(data?.settings||defaultSiteSettings);
+  $('ry-ad-settings-status').textContent=data?.settings?'تنظیمات ذخیره‌شده بارگذاری شد.':'هنوز تنظیمی ثبت نشده؛ مقادیر پیش‌فرض آماده‌اند.';
+ }
+ $('ry-ad-settings-form').onsubmit=async e=>{
+  e.preventDefault();
+  const settings=readSettingsForm();
+  if(!settings.site_title||!settings.brand_title)return $('ry-ad-settings-status').textContent='عنوان سایت و نام برند را وارد کن.';
+  if(settings.favicon_url&&!/^https?:\/\//i.test(settings.favicon_url))return $('ry-ad-settings-status').textContent='نشانی نماد مرورگر باید با https:// یا http:// شروع شود.';
+  $('ry-ad-settings-status').textContent='در حال ذخیره…';
+  const {error}=await client.from('site_settings').upsert({id:1,settings,updated_by:currentUser.id,updated_at:new Date().toISOString()},{onConflict:'id'});
+  if(error){$('ry-ad-settings-status').textContent='ذخیره ناموفق بود؛ بررسی کن SQL همراه نسخه اجرا شده باشد. '+error.message;return;}
+  await log('update_site_settings','site_settings',{fields:Object.keys(settings)});
+  $('ry-ad-settings-status').textContent='تنظیمات با موفقیت ذخیره شد و در بازدید بعدی برای همه اعمال می‌شود.';
+ };
+ $('ry-ad-settings-reset').onclick=()=>fillSettingsForm(defaultSiteSettings);
  async function loadUsers(){
   const el=$('ry-ad-users');el.textContent='در حال بارگذاری…';
   const [p,g,a]=await Promise.all([client.from('profiles').select('id,display_name,created_at').order('created_at',{ascending:false}).limit(200),client.from('user_progress').select('user_id,xp,level'),client.from('attempts').select('user_id,score')]);
@@ -2127,12 +2227,6 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
   if(error)return listError(el,error);
   el.innerHTML=(data||[]).map(q=>'<article class="ad-item"><div class="ad-row"><b>'+esc(q.title)+'</b><span class="ad-muted">'+esc(q.duration_minutes||0)+' دقیقه · '+(q.is_published?'منتشرشده':'پیش‌نویس')+'</span><span style="margin-inline-start:auto"></span><button class="ad-btn" data-e-toggle="'+q.id+'" data-pub="'+q.is_published+'">'+(q.is_published?'لغو انتشار':'انتشار')+'</button><button class="ad-btn danger" data-e-delete="'+q.id+'">حذف</button></div><p>'+esc(q.description||'')+'</p></article>').join('')||'<p class="ad-muted">هنوز آزمونی ساخته نشده است.</p>';
  }
- async function loadSuggestions(){
-  const el=$('ry-ad-suggestions');el.textContent='در حال بارگذاری…';
-  const {data,error}=await client.from('suggestions').select('id,category,message,status,created_at,user_id').order('created_at',{ascending:false}).limit(100);
-  if(error)return listError(el,error);
-  el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><div class="ad-row"><b>'+esc(x.category||'پیشنهاد')+'</b><span class="ad-muted">'+fmt(x.created_at)+' · '+esc(x.status||'جدید')+'</span></div><p>'+esc(x.message)+'</p><div class="ad-row"><button class="ad-btn" data-s-status="'+x.id+'" data-status="reviewed">در حال بررسی</button><button class="ad-btn primary" data-s-status="'+x.id+'" data-status="resolved">انجام شد</button></div></article>').join('')||'<p class="ad-muted">پیشنهادی ثبت نشده است.</p>';
- }
  async function loadComments(){
   const el=$('ry-ad-comments');el.textContent='در حال بارگذاری…';
   const {data,error}=await client.from('comments').select('id,author_name,body,status,created_at').order('created_at',{ascending:false}).limit(100);
@@ -2151,7 +2245,7 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
   if(error)return listError(el,error);
   el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><b>'+esc(x.action)+'</b> · '+esc(x.target)+'<div class="ad-muted">'+fmt(x.created_at)+'</div></article>').join('')||'<p class="ad-muted">هنوز فعالیتی ثبت نشده است.</p>';
  }
- const loaders={overview:refreshStats,users:loadUsers,questions:loadQuestions,exams:loadExams,suggestions:loadSuggestions,comments:loadComments,reports:loadReports,logs:loadLogs};
+ const loaders={overview:refreshStats,users:loadUsers,questions:loadQuestions,exams:loadExams,settings:loadSettings,comments:loadComments,reports:loadReports,logs:loadLogs};
  async function showTab(tab){
   document.querySelectorAll('#ry-ad-tabs [data-ad-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adTab===tab));
   document.querySelectorAll('#ry-admin-root [data-ad-view]').forEach(s=>s.classList.toggle('ad-hidden',s.dataset.adView!==tab));
@@ -2190,7 +2284,6 @@ ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
   else if(b.dataset.qDelete){if(!confirm('این سؤال حذف شود؟'))return;res=await client.from('questions').delete().eq('id',b.dataset.qDelete);action='delete_question';target=b.dataset.qDelete}
   else if(b.dataset.eToggle){res=await client.from('exams').update({is_published:b.dataset.pub!=='true'}).eq('id',b.dataset.eToggle);action='toggle_exam_publish';target=b.dataset.eToggle}
   else if(b.dataset.eDelete){if(!confirm('این آزمون حذف شود؟'))return;res=await client.from('exams').delete().eq('id',b.dataset.eDelete);action='delete_exam';target=b.dataset.eDelete}
-  else if(b.dataset.sStatus){res=await client.from('suggestions').update({status:b.dataset.status}).eq('id',b.dataset.sStatus);action='update_suggestion';target=b.dataset.sStatus}
   else if(b.dataset.cStatus){res=await client.from('comments').update({status:b.dataset.status}).eq('id',b.dataset.cStatus);action='moderate_comment';target=b.dataset.cStatus}
   else if(b.dataset.cDelete){if(!confirm('این دیدگاه حذف شود؟'))return;res=await client.from('comments').delete().eq('id',b.dataset.cDelete);action='delete_comment';target=b.dataset.cDelete}
   else if(b.dataset.rStatus){res=await client.from('comment_reports').update({status:b.dataset.status}).eq('id',b.dataset.rStatus);action='update_report';target=b.dataset.rStatus}
@@ -2826,6 +2919,71 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   card.addEventListener('pointerleave',()=>{card.style.transform='';card.style.removeProperty('--px');card.style.removeProperty('--py')});
   card.addEventListener('click',e=>{const r=card.getBoundingClientRect(),wave=document.createElement('span');wave.className='ry-ripple';wave.style.left=(e.clientX-r.left-7)+'px';wave.style.top=(e.clientY-r.top-7)+'px';card.appendChild(wave);setTimeout(()=>wave.remove(),650)});
  });
+})();
+</script>
+
+
+<script>
+(()=>{
+ const toggle=document.getElementById('ry-language-toggle');
+ if(!toggle)return;
+ const translations={
+  'ریاضی‌یار':'Riaziyar','ریاضی\u200cیار':'Riaziyar','فهرست ابزارها':'Tools menu','دسترسی سریع':'Quick access','همهٔ ابزارهای ریاضی‌یار در یک نگاه':'All Riaziyar tools at a glance','بستن فهرست':'Close menu',
+  'صفحهٔ شروع':'Home','ماشین‌حساب':'Calculator','آزمون ۱۰۰۰ سوالی':'1,000-question quiz','غربال اراتستن':'Sieve of Eratosthenes','تشخیص عدد اول یا مرکب':'Prime or composite checker','حل‌کننده معادله':'Equation solver','فرمول‌نامه':'Formula sheet','آزمایشگاه‌های تعاملی':'Interactive labs','محور اعداد':'Number line','چالش روزانه':'Daily challenge','دفتر اشتباهات':'Mistake notebook','دستاوردها':'Achievements','آزمون‌ساز معلم':'Teacher exam builder','تحلیل پیشرفت':'Progress analysis','جزوه‌ساز':'Study-note maker','جست‌وجوی سؤال':'Question search','درس‌نامهٔ ریاضی هشتم':'Grade 8 lessons','تیزهوشانی':'Advanced practice','✨ عجایب هندسه':'✨ Geometry wonders','🪄 اشکال جادویی':'🪄 Magic shapes','🌳 درخت تجزیهٔ عدد':'🌳 Factor tree','➗ ب.م.م و ک.م.م':'➗ GCD & LCM','📝 یادداشت‌برداری':'📝 Notes','📝 آزمون شبیه‌ساز':'📝 Mock exam','🎮 بازی‌های ریاضی':'🎮 Math games',
+  'به آزمایشگاه ریاضی خوش آمدی':'Welcome to the Math Lab','فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.':'Explore formulas, interact with shapes, and move forward with every challenge.','شروع ماجراجویی':'Start exploring','یکی از قابلیت‌ها رو انتخاب کن':'Choose a feature','۹ مبحث آموزشی':'9 learning topics','آزمون و بازی':'Quizzes & games','آزمایشگاه سه‌بعدی':'3D lab','🎮 مسیر پیشرفت تو':'🎮 Your progress',
+  'ورود / ثبت‌نام':'Sign in / Sign up','حساب ریاضی‌یار':'Riaziyar account','یکی از بخش‌های زیر را انتخاب کن.':'Choose one of the options below.','ورود':'Sign in','ثبت‌نام':'Sign up','نام نمایشی':'Display name','ایمیل':'Email','رمز عبور':'Password','ساخت حساب':'Create account','خروج':'Sign out','بازگشت به سایت':'Back to site','مدیریت ریاضی‌یار':'Riaziyar Admin','پنل مدیریت امن · نسخهٔ اولیه':'Secure admin panel · Initial version','ورود مدیر':'Admin sign in','برای ورود، ابتدا از حساب کاربری مدیر استفاده کن.':'Sign in with the administrator account first.','باز کردن فرم ورود':'Open sign-in form','نمای کلی':'Overview','کاربران':'Users','بانک سؤال':'Question bank','آزمون‌ها':'Exams','تنظیمات سایت':'Site settings','دیدگاه‌ها':'Comments','گزارش‌ها':'Reports','گزارش فعالیت':'Activity log','خلاصهٔ سامانه':'System overview','آمار کلی کاربران و فعالیت‌ها در پایگاه داده.':'Database summary of users and activity.',
+  'مدیریت بانک سؤال':'Question bank management','مدیریت آزمون‌ها':'Exam management','مدیریت دیدگاه‌ها':'Comment moderation','گزارش دیدگاه‌ها':'Comment reports','گزارش فعالیت مدیر':'Admin activity log','تنظیمات هویتی سایت':'Site identity settings','ذخیرهٔ تنظیمات':'Save settings','بازگردانی پیش‌فرض‌ها':'Restore defaults','عنوان مرورگر و نام سایت':'Browser title and site name','نام نمایشی برند':'Brand display name','نماد لوگو (حرف یا ایموجی)':'Logo symbol (letter or emoji)','رنگ اصلی سایت':'Main site color','عنوان صفحهٔ شروع':'Home page heading','توضیح صفحهٔ شروع':'Home page description','توضیحات سایت برای موتورهای جست‌وجو':'Search engine description','نشانی تصویر نماد مرورگر (اختیاری؛ URL تصویر)':'Browser icon image URL (optional)',
+  'آزمون‌ساز امتحانی 📝':'Exam builder 📝','مبحث':'Topic','تعداد سؤال':'Number of questions','سطح':'Difficulty','همهٔ سطح‌ها':'All levels','آسان':'Easy','متوسط':'Medium','پیشرفته':'Advanced','نمایش پاسخ‌نامهٔ تشریحی':'Show worked answers','ساخت آزمون':'Generate exam','چاپ / ذخیره به PDF':'Print / Save as PDF','برگهٔ تمرین ریاضی':'Math practice sheet','نام و نام خانوادگی:':'Full name:','کلاس:':'Class:','تاریخ:':'Date:','پاسخ:':'Answer:','حل تشریحی مرحله‌به‌مرحله':'Step-by-step solution','فهم سؤال:':'Understand the question:','چرا این روش؟':'Why this method?','محاسبه:':'Calculation:','پاسخ نهایی:':'Final answer:','بررسی:':'Check:',
+  'فرمول‌نامهٔ ریاضی':'Math formula sheet','موضوع را انتخاب کن تا فرمول‌های مهم و مثال‌های کوتاه نمایش داده شوند.':'Choose a topic to view key formulas and short examples.','ماشین‌حساب':'Calculator','حل معادله':'Solve equation','پاک کردن':'Clear','ذخیرهٔ هدف':'Save goal','به‌روزرسانی تحلیل':'Refresh analysis','تمرین مبحث نیازمند تقویت':'Practice a topic to improve',
+  'درخت تجزیهٔ عدد':'Number factor tree','ب.م.م و ک.م.م':'GCD and LCM','عجایب هندسه':'Geometry wonders','اشکال جادویی':'Magic shapes','یادداشت‌برداری':'Notes','آزمون شبیه‌ساز':'Mock exam','بازی‌های ریاضی':'Math games',
+  'نمایش پاسخ':'Show answer','پنهان کردن پاسخ':'Hide answer','تأیید':'Approve','رد':'Reject','حذف':'Delete','انتشار':'Publish','لغو انتشار':'Unpublish','در حال بارگذاری…':'Loading…','در حال بررسی دسترسی…':'Checking access…','دسترسی مدیر تأیید شد.':'Administrator access confirmed.','تغییرات ذخیره شد.':'Changes saved.','ذخیره ناموفق بود':'Save failed','خطا:':'Error:','بازگشت':'Back'
+ };
+ const originalText=new WeakMap(),lastText=new WeakMap(),originalAttrs=new WeakMap(),lastAttrs=new WeakMap();
+ const lang=()=>document.documentElement.lang==='en'?'en':'fa';
+ const translateNode=node=>{
+  if(node.nodeType===Node.TEXT_NODE){
+   const last=lastText.get(node);
+   if(!originalText.has(node)||(last!==undefined&&node.data!==last))originalText.set(node,node.data);
+   const fa=originalText.get(node),key=fa.trim();
+   if(lang()==='en'&&translations[key]){node.data=fa.replace(key,translations[key]);lastText.set(node,node.data);}
+   else if(lang()==='fa'){node.data=fa;lastText.delete(node);}
+  }else if(node.nodeType===Node.ELEMENT_NODE){
+   for(const attr of ['placeholder','title','aria-label']){
+    if(node.hasAttribute(attr)){
+     let saved=originalAttrs.get(node);if(!saved){saved={};originalAttrs.set(node,saved);}
+     let last=lastAttrs.get(node);if(!last){last={};lastAttrs.set(node,last);}
+     const current=node.getAttribute(attr);
+     if(!(attr in saved)||(attr in last&&current!==last[attr]))saved[attr]=current;
+     const v=saved[attr],next=lang()==='en'?(translations[v]||v):v;
+     node.setAttribute(attr,next);last[attr]=next;
+    }
+   }
+   node.childNodes.forEach(translateNode);
+  }
+ };
+ const apply=language=>{
+  const en=language==='en';
+  document.documentElement.lang=en?'en':'fa';
+  document.documentElement.dir=en?'ltr':'rtl';
+  document.getElementById('ry-admin-root')?.setAttribute('dir',en?'ltr':'rtl');
+  toggle.textContent=en?'فارسی':'EN';
+  toggle.setAttribute('aria-label',en?'Switch to Persian':'Switch to English');
+  toggle.title=en?'Switch to Persian':'Switch to English';
+  translateNode(document.body);
+  try{localStorage.setItem('ry-language',en?'en':'fa');}catch(e){}
+ };
+ toggle.addEventListener('click',()=>apply(lang()==='en'?'fa':'en'));
+ let saved='fa';try{saved=localStorage.getItem('ry-language')||'fa';}catch(e){}
+ apply(saved);
+ const observer=new MutationObserver(records=>{
+  if(lang()!=='en')return;
+  for(const record of records){
+   if(record.type==='childList')record.addedNodes.forEach(translateNode);
+   else if(record.type==='characterData')translateNode(record.target);
+  }
+ });
+ observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+ window.rySetLanguage=apply;
 })();
 </script>
 
