@@ -1391,8 +1391,6 @@ function eqParse(source){
     function atom(){
       const t=arr[i++];
       if(t===undefined)throw Error('عبارت ناقص است.');
-      if(t==='+')return atom();
-      if(t==='-')return trim(atom().map(v=>-v));
       if(t==='('){const v=expr();if(arr[i]!==')')throw Error('پرانتز باز مانده است یا جفت آن وجود ندارد.');i++;return v;}
       if(t==='x')return [0,1,0];
       if(/^\d/.test(t)||t.startsWith('.')){const n=Number(t);if(!Number.isFinite(n))throw Error('عدد معتبر نیست.');return [n,0,0];}
@@ -1412,7 +1410,12 @@ function eqParse(source){
       }
       return v;
     }
-    function factor(){return power();}
+    // علامت یکانی باید پس از توان اعمال شود: -x^2 یعنی -(x^2)، نه (-x)^2.
+    function factor(){
+      if(arr[i]==='+'){i++;return factor();}
+      if(arr[i]==='-'){i++;return trim(factor().map(v=>-v));}
+      return power();
+    }
     function term(){
       let v=factor();
       while(arr[i]==='*'||arr[i]==='/'){
