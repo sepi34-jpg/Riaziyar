@@ -385,6 +385,52 @@ body.landing .welcome-option{color:#fff}
 @media(prefers-reduced-motion:reduce){.ry-hero-stage *,.ry-particle,.ry-float-formula,.ry-math-sphere,.ry-rubik{animation:none!important;transition:none!important}#welcome-list>.welcome-option,.ry-menu-toggle,.ry-hero-cta{transition:none!important}}
 @media(hover:none){#welcome-list>.welcome-option:hover{transform:none}}
 
+
+/* ===== هماهنگی تم ابزارها با منوی سه‌بعدی ===== */
+:root{
+ --bg:#080d20;--card:#101a35;--ink:#f4f7ff;--mute:#aebbe0;
+ --accent:#718cff;--stone:#34436c;--surface:#172448;
+ --ok:#42e4d6;--bad:#ff8298;--on:#fff;
+ color-scheme:dark;
+}
+[data-theme=dark]{
+ --bg:#070b19;--card:#0e1730;--ink:#f4f7ff;--mute:#aebbe0;
+ --accent:#8b82ff;--stone:#34436c;--surface:#15213f;
+ --ok:#42e4d6;--bad:#ff8298;--on:#fff;
+ color-scheme:dark;
+}
+body:not(.landing){background:radial-gradient(ellipse at 85% 0%,#20245a 0%,#0b1230 38%,#070b19 82%);color:var(--ink)}
+body:not(.landing) .top{border-color:#829aff35}
+body:not(.landing) .card,
+body:not(.landing) .tool-box,
+body:not(.landing) .extra-tile,
+body:not(.landing) .geo-stage,
+body:not(.landing) .geo-result>div,
+body:not(.landing) .geo-formula,
+body:not(.landing) .ry-number-grid,
+body:not(.landing) .ry-ggb-tabs .btn{
+ background:linear-gradient(145deg,#172448,#101a35);
+ border-color:#829aff45;color:var(--ink);
+}
+body:not(.landing) input,body:not(.landing) select,body:not(.landing) textarea{
+ background:#0c1630!important;color:#f4f7ff!important;border-color:#536a9d!important;
+}
+body:not(.landing) input::placeholder,body:not(.landing) textarea::placeholder{color:#91a4d0}
+body:not(.landing) nav button,body:not(.landing) .btn{
+ background:#142142;color:#f4f7ff;border-color:#536a9d;
+}
+body:not(.landing) nav button.on,body:not(.landing) .btn.pri,
+body:not(.landing) .keys .eq,body:not(.landing) .ry-ggb-fullscreen{
+ background:linear-gradient(110deg,#4777ff,#9663f4);color:#fff;border-color:#718cff;
+}
+body:not(.landing) .keys button,body:not(.landing) .fb,
+body:not(.landing) .stat div,body:not(.landing) #grid span,
+body:not(.landing) .bar{background:#172448;color:#eaf0ff}
+body:not(.landing) .achievement{background:#101a35;border-color:#536a9d}
+body:not(.landing) .rv{border-color:#34436c}
+body:not(.landing) .mute,body:not(.landing) .ry-ggb-tabs .btn small{color:#aebbe0}
+body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
+
 </style>
 </head>
 <body>
