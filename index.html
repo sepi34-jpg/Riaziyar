@@ -2955,11 +2955,32 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
      const current=node.getAttribute(attr);
      if(!(attr in saved)||(attr in last&&current!==last[attr]))saved[attr]=current;
      const v=saved[attr],next=lang()==='en'?(translations[v]||v):v;
-     node.setAttribute(attr,next);last[attr]=next;
+     if(current!==next)node.setAttribute(attr,next);
+     last[attr]=next;
     }
    }
-   node.childNodes.forEach(translateNode);
   }
+ };
+ // Process the page in small batches so large interactive areas cannot freeze the browser.
+ let translationRun=0;
+ const translateTree=(root)=>{
+  const run=++translationRun;
+  const stack=[root];
+  const skip=el=>el.matches('script,style,noscript,iframe,canvas,svg,video,audio, .ggb-applet, .geogebra, [data-no-translate]');
+  const step=()=>{
+   if(run!==translationRun)return;
+   let count=0;
+   while(stack.length&&count<180){
+    const node=stack.pop();count++;
+    if(node.nodeType===Node.ELEMENT_NODE&&skip(node))continue;
+    translateNode(node);
+    if(node.childNodes&&node.childNodes.length){
+     for(let i=node.childNodes.length-1;i>=0;i--)stack.push(node.childNodes[i]);
+    }
+   }
+   if(stack.length)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
  };
  const apply=language=>{
   const wasEn=lang()==='en';
@@ -2970,8 +2991,8 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   toggle.textContent=en?'فارسی':'EN';
   toggle.setAttribute('aria-label',en?'Switch to Persian':'Switch to English');
   toggle.title=en?'Switch to Persian':'Switch to English';
-  // Translate only on an actual language change; avoid continuously observing the DOM.
-  if(en||wasEn) translateNode(document.body);
+  // Translate in batches; never walk the entire page synchronously.
+  if(en||wasEn) translateTree(document.body);
   try{localStorage.setItem('ry-language',en?'en':'fa');}catch(e){}
  };
  toggle.addEventListener('click',()=>apply(lang()==='en'?'fa':'en'));
