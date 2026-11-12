@@ -903,6 +903,7 @@ table{max-width:100%}
       <label>سطح <select id="tlevel"><option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">پیشرفته</option><option value="olympiad">تیزهوشانی</option></select></label>
       <label class="row"><input type="checkbox" id="tanswers"> نمایش پاسخ‌نامهٔ تشریحی</label>
     </div>
+    <div id="teacher-lesson-content" class="tool-box" style="margin-top:14px" aria-live="polite"></div>
     <div class="row no-print" style="margin-top:12px"><button class="btn pri" id="tmake">ساخت آزمون</button><button class="btn" id="tprint">چاپ / ذخیره به PDF</button></div>
     <div id="teacherout" style="margin-top:16px"></div>
   </div>
@@ -1313,14 +1314,14 @@ function qBegin(ids,mode=''){
   qz={ids,i:0,ans:[],mode,timed:$('qtime').checked,locked:false};
   $('qsetup').hidden=true;$('qres').hidden=true;$('qplay').hidden=false;qShow();
 }
-$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||(c.startsWith('formula-')?Q[i].formulaChapter===Number(c.slice(8)):Q[i].c==Number(c)))&&(l==='all'||Q[i].level===l));
+$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>ryQuestionMatchesFilter(Q[i],c)&&(l==='all'||Q[i].level===l));
   const chosen=shuffle(ids).slice(0,+$('qcnt').value);const mode=window.ryMockExamMode?'mock-exam':'';window.ryMockExamMode=false;qBegin(chosen,mode)};
 $('ry-contest').onclick=()=>{ $('qtime').checked=true; $('qcnt').value='20'; const ids=shuffle(Q.map((_,i)=>i)).slice(0,20); qBegin(ids,'contest'); $('qfb').innerHTML='<div class="fb">مسابقه شروع شد: برای هر سؤال ۳۰ ثانیه فرصت داری. با کسب حداقل ۷۰٪، ۲۵ XP جایزه می‌گیری.</div>'; };
 $('qwrong').onclick=()=>{const saved=S.get('wrong',[]);const ids=Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&id>=0&&id<Q.length):[];S.set('wrong',ids);qBegin(shuffle(ids).slice(0,+$('qcnt').value));};
 function qShow(){
   const id=qz.ids[qz.i],o=Q[id];qz.locked=false;
   $('qn').textContent=`سوال ${qz.i+1} از ${qz.ids.length}`;$('qbar').style.width=(qz.i/qz.ids.length*100)+'%';
-  const topic=o&&Number.isInteger(Number(o.c))?cats[Number(o.c)]?.[0]:'';
+  const topic=ryQuestionLabel(o);
   const levelName={easy:'آسان',medium:'متوسط',hard:'سخت',olympiad:'تیزهوشانی'};
   const question=o&&typeof o.q==='string'?o.q.trim():'';
   const qcl=$('qcl'),qq=$('qq'),qh=$('qh'),qplay=$('qplay');
@@ -1817,16 +1818,32 @@ function ryAchievementsRefresh(){
 }
 
 // آزمون‌ساز مستقل از آزمون عادی؛ برگه و پاسخ‌نامه را می‌سازد.
-$('tcat').innerHTML=`<option value="all">همهٔ فصل‌ها</option>`+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');
+$('tcat').innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');
+function ryTeacherLessonRender(){
+ const value=$('tcat').value,p=ryParseCategory(value),host=$('teacher-lesson-content');
+ if(!host)return;
+ const chapters=p.type==='all'?ryChapters.map((c,i)=>i):[p.chapter];
+ host.innerHTML=chapters.map(ci=>{
+  const chapter=ryChapters[ci];if(!chapter)return '';
+  const sections=p.type==='topic'?[chapter.sections[p.topic]]:chapter.sections;
+  const formulas=formulaData[Object.keys(formulaData)[ci]]||[];
+  return '<div class="rv"><h3>'+ryEscape(chapter.title)+'</h3>'+
+   (sections||[]).filter(Boolean).map(([heading,body])=>'<div class="rv"><b>'+ryEscape(heading)+'</b><p>'+ryEscape(body)+'</p></div>').join('')+
+   (p.type==='all'?'':'<div class="rv"><b>فرمول‌ها و نکته‌های مرتبط</b>'+formulas.map(([h,f,e])=>'<p><b>'+ryEscape(h)+'</b>: '+ryEscape(f)+'<br><span class="mute">'+ryEscape(e||'')+'</span></p>').join('')+'</div>')+
+   '</div>';
+ }).join('')||'<p class="mute">برای این انتخاب، درسنامه‌ای ثبت نشده است.</p>';
+}
+$('tcat').addEventListener('change',ryTeacherLessonRender);
+ryTeacherLessonRender();
 let ryTeacherAnswers=false;
 function ryMakeTeacher(){
- const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>(c==='all'||Q[i].chapter===+c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
+ const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>ryQuestionMatchesFilter(Q[i],c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
  ryTeacherAnswers=$('tanswers').checked;
  if(!ids.length){
   $('teacherout').innerHTML='<div class="fb bad">برای این مبحث و سطح، سؤالی در بانک فعلی پیدا نشد. سطح را روی «همهٔ سطح‌ها» بگذار یا مبحث دیگری انتخاب کن.</div>';
   $('teacherout').dataset.ids='[]';return;
  }
- $('teacherout').innerHTML=`<div style="text-align:center;border-bottom:1px solid var(--stone);padding-bottom:12px;margin-bottom:12px"><h2>برگهٔ تمرین ریاضی</h2><div>نام و نام خانوادگی: .....................................　 کلاس: ............　 تاریخ: ............</div><div>مبحث: ${c==='all'?'ترکیبی':ryEscape(ryChapters[+c]?.title||'')}　 |　 سطح: ${{all:'همهٔ سطح‌ها',easy:'آسان',medium:'متوسط',hard:'پیشرفته',olympiad:'تیزهوشانی'}[l]}　 |　 تعداد سؤال: ${ids.length}</div></div>`+
+ $('teacherout').innerHTML=`<div style="text-align:center;border-bottom:1px solid var(--stone);padding-bottom:12px;margin-bottom:12px"><h2>برگهٔ تمرین ریاضی</h2><div>نام و نام خانوادگی: .....................................　 کلاس: ............　 تاریخ: ............</div><div>مبحث: ${ryEscape(ryCategoryTitle(c))}　 |　 سطح: ${{all:'همهٔ سطح‌ها',easy:'آسان',medium:'متوسط',hard:'پیشرفته',olympiad:'تیزهوشانی'}[l]}　 |　 تعداد سؤال: ${ids.length}</div></div>`+
  ids.map((id,i)=>`<div class="rv"><b>${i+1}.</b> ${Q[id].q}<div style="height:24px;border-bottom:1px dotted var(--stone);margin-top:8px"></div>${ryTeacherAnswers?`<div class="fb"><b>پاسخ:</b> ${Q[id].t}</div>${ryStepExplain(Q[id])}`:''}</div>`).join('');
  $('teacherout').dataset.ids=JSON.stringify(ids);
 }
@@ -2031,7 +2048,7 @@ if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه 
 (()=>{
  const fa=n=>String(n).replace(/-/g,'−').replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[+d]);
  const levels=['easy','medium','hard','olympiad'];
- const make=(ch,level,q,a,e)=>({c:ch,chapter:ch,level,q,a,e,h:'پاسخ را به صورت عدد، اعشار یا کسر مثل ۳/۴ وارد کن.',t:fa(a)});
+ const make=(ch,level,q,a,e,k)=>({c:ch,chapter:ch,topicIndex:k%(ryChapters[ch]?.sections.length||1),level,q,a,e,h:'پاسخ را به صورت عدد، اعشار یا کسر مثل ۳/۴ وارد کن.',t:fa(a)});
  const gcd=(a,b)=>b?gcd(b,a%b):a;
  const gen=(ch,level,k)=>{
   const z=k+1;let q='',a=0,e='';
@@ -2091,23 +2108,62 @@ if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه 
     else{const r=z+1;q='اگر محیط دایره‌ای با π=۳ برابر '+fa(12*r)+' باشد، شعاع آن چند واحد است؟';a=2*r;e='۶r='+fa(12*r)+'؛ پس r='+fa(a)+'.';}
     break;
   }
-  return make(ch,level,q,a,e);
+  return make(ch,level,q,a,e,k);
  };
  const fresh=[];
  for(let ch=0;ch<9;ch++)for(const level of levels)for(let k=0;k<25;k++)fresh.push(gen(ch,level,k));
  for(let ch=0;ch<9;ch++){const extra=ch===0?12:11;for(let k=25;k<25+extra;k++)fresh.push(gen(ch,'olympiad',k));}
  Q.splice(0,Q.length,...fresh);
- const cat=$('qcat');if(cat)cat.innerHTML='<option value="all">همهٔ فصل‌ها (۱۰۰۰ سؤال)</option>'+ryChapters.map((x,i)=>'<option value="'+i+'">'+ryEscape(x.title)+'</option>').join('');
+ const cat=$('qcat');if(cat)cat.innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');
  const level=$('qlevel');if(level)level.innerHTML='<option value="all">همهٔ سطح‌ها</option><option value="easy">آسان</option><option value="medium">متوسط</option><option value="hard">سخت</option><option value="olympiad">تیزهوشانی</option>';
  const count=$('qcnt');if(count&&!Array.from(count.options).some(o=>o.value==='1000'))count.add(new Option('1000','1000'));
 })();
 
+function ryParseCategory(value){
+ const v=String(value??'all');
+ if(v==='all')return {type:'all'};
+ let m=v.match(/^chapter:(\\d+)$/);if(m)return {type:'chapter',chapter:+m[1]};
+ m=v.match(/^topic:(\\d+):(\\d+)$/);if(m)return {type:'topic',chapter:+m[1],topic:+m[2]};
+ if(/^\\d+$/.test(v))return {type:'chapter',chapter:+v};
+ if(v.startsWith('formula-'))return {type:'formula',chapter:+v.slice(8)};
+ return {type:'all'};
+}
+function ryQuestionMatchesFilter(question,value){
+ const p=ryParseCategory(value);
+ if(p.type==='all')return true;
+ if(p.type==='chapter')return Number(question.chapter)===p.chapter;
+ if(p.type==='topic')return Number(question.chapter)===p.chapter&&Number(question.topicIndex)===p.topic;
+ if(p.type==='formula')return Number(question.formulaChapter)===p.chapter;
+ return false;
+}
+function ryCategoryTitle(value){
+ const p=ryParseCategory(value);
+ if(p.type==='all')return 'مرور ترکیبی';
+ if(p.type==='chapter')return ryChapters[p.chapter]?.title||'فصل انتخاب‌شده';
+ if(p.type==='topic')return ryChapters[p.chapter]?.sections[p.topic]?.[0]||'مبحث انتخاب‌شده';
+ if(p.type==='formula')return Object.keys(formulaData)[p.chapter]||'مبحث فرمول‌نامه';
+ return 'مرور ترکیبی';
+}
+function ryQuestionLabel(question){
+ const ch=Number(question?.chapter),topic=Number(question?.topicIndex);
+ return ryChapters[ch]?.sections?.[topic]?.[0]||ryChapters[ch]?.title||'مبحث ریاضی';
+}
+function ryCategoryOptions(allLabel='همهٔ فصل‌ها و مباحث'){
+ let html='<option value="all">'+ryEscape(allLabel)+'</option>';
+ ryChapters.forEach((chapter,ci)=>{
+  html+='<option value="chapter:'+ci+'">'+ryEscape(chapter.title)+' · همهٔ مباحث فصل</option>';
+  chapter.sections.forEach((section,ti)=>{
+   html+='<option value="topic:'+ci+':'+ti+'">　↳ '+ryEscape(section[0])+'</option>';
+  });
+ });
+ return html;
+}
 function ryRenderChapter(markUsed=true){const i=+$('ry-chapter-select').value, c=ryChapters[i];if(!c)return; const formulaItems=formulaData[Object.keys(formulaData)[i]]||[]; $('ry-chapter-content').innerHTML=`<h2>${ryEscape(c.title)}</h2><div class="fb">سطح تمرین‌ها: متوسط رو به سخت. اول خودت حل کن، بعد روی «نمایش پاسخ تشریحی» بزن. هر تمرین چندمرحله‌ای طراحی شده تا فقط با یک محاسبهٔ ساده حل نشود.</div>`+c.sections.map((a,j)=>{const ex=(ryChapterExercises[i]||[])[j]||[];return `<div class="rv"><h3>${ryEscape(a[0])}</h3><p>${ryEscape(a[1])}</p><div class="tool-box"><b>تمرین‌های اختصاصی این مبحث</b>${ex.map((e,k)=>`<div class="rv"><b>تمرین ${k+1}.</b><p>${ryEscape(e[0])}</p><details><summary class="btn" style="display:inline-block;margin:5px 0;cursor:pointer">نمایش پاسخ تشریحی</summary><div class="fb"><b>پاسخ نهایی:</b> ${ryEscape(e[1])}<p><b>راه‌حل مرحله‌به‌مرحله:</b> ${ryEscape(e[2])}</p></div></details></div>`).join('')}</div></div>`}).join('')+`<div class="card"><h3>فرمول‌نامه و نکته‌های همین فصل</h3><p class="mute">موضوع‌ها و فرمول‌های این فصل از فرمول‌نامه در اینجا هم نمایش داده می‌شوند.</p>${formulaItems.map(([title,formula,example])=>`<div class="rv"><h3>${ryEscape(title)}</h3><p><b>${ryEscape(formula)}</b></p><p class="mute">${ryEscape(example||'')}</p></div>`).join('')}</div><div class="fb">نکته: بعد از یادگیری، مثال‌ها را بدون نگاه کردن دوباره حل کن و سپس پاسخ خود را بررسی کن.</div>`;S.set('chapterLast',i);if(markUsed)S.set('usedChapters',true);ryXPRefresh();}
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=()=>ryRenderChapter(true);$('ry-chapter-select').onchange=()=>ryRenderChapter(true);ryRenderChapter(false);
 $('ry-chapter-practice').onclick=()=>{
  const chapterIndex=+$('ry-chapter-select').value;
- const ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].formulaChapter===chapterIndex)).slice(0,10);
- $('qcat').value='formula-'+chapterIndex;$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
+ const ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].chapter===chapterIndex)).slice(0,10);
+ $('qcat').value='chapter:'+chapterIndex;$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
  ryOpenSection('quiz');qBegin(ids,'chapter');
  $('qfb').innerHTML='<div class="fb">تمرین درس‌نامه: '+ryEscape(ryChapters[chapterIndex].title)+'. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>';
 };
@@ -2126,9 +2182,11 @@ const studyWhy={
 };
 function ryStudyMake(){
  const c=$('studycat').value,answers=$('studyanswers').checked;
- let ids=shuffle(Q.map((q,i)=>i).filter(i=>c==='all'||Q[i].chapter===+c)).slice(0,8);
- const title=c==='all'?'مرور ترکیبی':(ryChapters[+c]?.title||'فصل انتخاب‌شده');
- let note=c==='all'?Object.keys(studyNotes).map(k=>ryChapters[+k].title+': '+studyNotes[k]).join('\\n\\n'):(studyNotes[c]||'صورت سؤال را با دقت بخوان، داده‌ها و خواسته را جدا کن، سپس از روش مناسب استفاده کن و در پایان جواب را بررسی کن.');
+ let ids=shuffle(Q.map((q,i)=>i).filter(i=>ryQuestionMatchesFilter(Q[i],c))).slice(0,8);
+ const title=ryCategoryTitle(c);
+ const parsed=ryParseCategory(c);
+ let note=parsed.type==='topic'?(ryChapters[parsed.chapter]?.sections[parsed.topic]?.join(': ')||''):(parsed.type==='chapter'?(studyNotes[parsed.chapter]||''):Object.keys(studyNotes).map(k=>ryChapters[+k].title+': '+studyNotes[k]).join('\\n\\n'));
+ if(!note)note='صورت سؤال را با دقت بخوان، داده‌ها و خواسته را جدا کن، سپس از روش مناسب استفاده کن و در پایان جواب را بررسی کن.';
  $('studyout').innerHTML=`<div style="text-align:center"><h2>جزوهٔ آموزشی: ${ryEscape(title)}</h2><p>ریاضی‌یار · تاریخ تهیه: ${new Date().toLocaleDateString('fa-IR')}</p></div><div class="tool-box"><b>نکته‌های درس و دلیل استفاده از روش</b><p style="white-space:pre-line">${ryEscape(note)}</p></div><h3>تمرین با توضیح تشریحی</h3>`+ids.map((id,i)=>{
   const q=Q[id],key=String(q.c),why=studyWhy[key]||'روش انتخاب‌شده با نوع داده‌ها و چیزی که سؤال خواسته هماهنگ است.';
   const explanation=q.e&&String(q.e).trim()?q.e:'ابتدا داده‌های سؤال را مشخص کن، سپس فرمول یا قاعدهٔ مربوط به این مبحث را به‌کار ببر و محاسبه را مرحله‌به‌مرحله انجام بده. در پایان جواب را با صورت سؤال مقایسه کن تا مطمئن شوی به همان چیزی پاسخ داده‌ای که خواسته شده است.';
@@ -2136,10 +2194,10 @@ function ryStudyMake(){
  }).join('');
  S.set('usedStudy',true);ryAchievementsRefresh()
 }
-$('studycat').innerHTML='<option value="all">همهٔ فصل‌ها</option>'+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('studymake').onclick=ryStudyMake;$('studyanswers').onchange=()=>{if($('studyout').innerHTML.trim())ryStudyMake()};$('studyprint').onclick=()=>{if(!$('studyout').innerHTML.trim())ryStudyMake();window.print()};
+$('studycat').innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');$('studymake').onclick=ryStudyMake;$('studyanswers').onchange=()=>{if($('studyout').innerHTML.trim())ryStudyMake()};$('studyprint').onclick=()=>{if(!$('studyout').innerHTML.trim())ryStudyMake();window.print()};
 
-$('bankcat').innerHTML='<option value="all">همهٔ فصل‌ها</option>'+ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');
-function ryBankSearch(){const q=$('bankquery').value.trim().toLocaleLowerCase(),cat=$('bankcat').value;const ids=Q.map((x,i)=>i).filter(i=>(cat==='all'||Q[i].chapter===+cat)&&(!q||(String(Q[i].q)+' '+(ryChapters[Q[i].chapter]?.title||'')).toLocaleLowerCase().includes(q))).slice(0,100);$('bankcount').textContent=`${ids.length} سؤال نمایش داده می‌شود (حداکثر ۱۰۰ نتیجه).`;$('bankresults').innerHTML=ids.length?ids.map(i=>`<div class="rv"><b>${ryEscape(ryChapters[Q[i].chapter]?.title||'فصل نامشخص')}</b><p>${Q[i].q}</p><button class="btn" data-bank-id="${i}">تمرین این سؤال</button></div>`).join(''):'<div class="fb">سؤالی پیدا نشد؛ واژهٔ دیگری امتحان کن.</div>';}
+$('bankcat').innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');
+function ryBankSearch(){const q=$('bankquery').value.trim().toLocaleLowerCase(),cat=$('bankcat').value;const ids=Q.map((x,i)=>i).filter(i=>ryQuestionMatchesFilter(Q[i],cat)&&(!q||(String(Q[i].q)+' '+ryQuestionLabel(Q[i])).toLocaleLowerCase().includes(q))).slice(0,100);$('bankcount').textContent=`${ids.length} سؤال نمایش داده می‌شود (حداکثر ۱۰۰ نتیجه).`;$('bankresults').innerHTML=ids.length?ids.map(i=>`<div class="rv"><b>${ryEscape(ryQuestionLabel(Q[i]))}</b><p>${Q[i].q}</p><button class="btn" data-bank-id="${i}">تمرین این سؤال</button></div>`).join(''):'<div class="fb">سؤالی پیدا نشد؛ واژهٔ دیگری امتحان کن.</div>'; }
 $('banksearch').onclick=ryBankSearch;$('bankquery').addEventListener('keydown',e=>{if(e.key==='Enter')ryBankSearch()});$('bankresults').onclick=e=>{const b=e.target.closest('[data-bank-id]');if(!b)return;qBegin([+b.dataset.bankId])};
 
 // تشخیص دقیق اول/مرکب برای عدد صحیح با اندازهٔ دلخواه (BigInt؛ بدون سقف ثابت).
