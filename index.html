@@ -3151,5 +3151,47 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  window.addEventListener('storage',e=>{if(e.key==='ry_total')render()});
 })();
 </script>
+
+<script>
+/* RY_GLOBAL_NAV_GUARD_V2
+   مستقل از اسکریپت اصلی: ناوبری خانه و ابزارها حتی در صورت خطای یک اسکریپت دیگر فعال می‌ماند. */
+(()=>{
+ const sections=()=>Array.from(document.querySelectorAll('main>section'));
+ const show=(id)=>{
+  const target=document.getElementById(id);
+  if(!target||!target.matches('main>section'))return false;
+  sections().forEach(s=>{s.hidden=s!==target;});
+  document.body.classList.toggle('landing',id==='welcome');
+  document.querySelectorAll('#tabs [data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  window.scrollTo({top:0,behavior:'instant'});
+  // اجرای تازه‌سازی‌های شناخته‌شده، بدون آنکه خطای یک ابزار مانع جابه‌جایی صفحه شود.
+  try{if(id==='chapters'&&typeof window.ryRenderChapter==='function')window.ryRenderChapter();}catch(err){console.warn('Chapter refresh:',err);}
+  try{if(id==='quiz'&&typeof window.qSetup==='function')window.qSetup();}catch(err){console.warn('Quiz refresh:',err);}
+  return true;
+ };
+ window.ryNavigateTo=show;
+ // دکمهٔ ثابت صفحهٔ شروع
+ document.getElementById('ry-home-back')?.addEventListener('click',e=>{e.preventDefault();show('welcome');});
+ // دکمهٔ خانه در همهٔ ابزارها؛ رویداد مستقیم است و به اسکریپت اصلی وابسته نیست.
+ sections().forEach(section=>{
+  if(section.id==='welcome')return;
+  let btn=section.querySelector(':scope > [data-ry-home]');
+  if(!btn){
+   btn=document.createElement('button');btn.type='button';btn.className='btn';btn.dataset.ryHome='1';
+   btn.textContent='🏠 صفحهٔ شروع';
+   btn.style.cssText='display:inline-flex;align-items:center;justify-content:center;margin:0 0 14px;min-height:44px;position:relative;z-index:2';
+   section.insertBefore(btn,section.firstChild);
+  }
+  btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();show('welcome');});
+ });
+ // ناوبری ابزارها و کارت‌های صفحهٔ آغازین؛ استفاده از closest برای لمس آیکون/متن داخلی.
+ document.addEventListener('click',e=>{
+  const tab=e.target.closest('#tabs [data-t]');
+  if(tab){e.preventDefault();show(tab.dataset.t);return;}
+  const open=e.target.closest('[data-ry-open]');
+  if(open){const id=open.dataset.ryOpen;if(show(id))e.preventDefault();}
+ },true);
+})();
+</script>
 </body>
 </html>
