@@ -1094,10 +1094,7 @@ const S={get(k,d){try{const v=localStorage.getItem('ry_'+k);return v===null?d:JS
 /* ---------- تم و زبانه‌ها ---------- */
 document.documentElement.dataset.theme=S.get('theme','light');
 $('theme').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;S.set('theme',t)};
-$('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;
-  document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==t);
-  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b===e.target));
-  if(t==='quiz')qSetup();};
+// رویداد ناوبری فقط یک‌بار و در تابع ryOpenSection ثبت می‌شود.
 
 /* ======================= ماشین‌حساب ======================= */
 function calc(src){
