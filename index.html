@@ -1663,7 +1663,7 @@ const ryFormulaExtraQuestions=[
 [8,7,'محیط دایره‌ای با شعاع ۵ و π≈۳ چند است؟','۳۰','۲×۳×۵=۳۰.'],
 [8,7,'مساحت دایره‌ای با شعاع ۴ و π≈۳ چند است؟','۴۸','۳×۴²=۴۸.']
 ];
-ryFormulaExtraQuestions.forEach(([chapter,c,q,a,e])=>Q.push({c,chapter,q,a:Number(a),e,h:'از فرمول همان فصل استفاده کن.',t:a,level:'medium',formulaChapter:chapter}));
+ryFormulaExtraQuestions.forEach(([chapter,c,q,a,e])=>Q.push({c,chapter,q,a:Number(String(a).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))),e,h:'از فرمول همان فصل استفاده کن.',t:a,level:'medium',formulaChapter:chapter}));
 Object.keys(formulaData).forEach((title,index)=>{const option=document.createElement('option');option.value='formula-'+index;option.textContent='فرمول‌نامه · '+title;$('qcat').appendChild(option);});
 
 $('fcat').innerHTML=Object.keys(formulaData).map(x=>`<option>${x}</option>`).join('');
