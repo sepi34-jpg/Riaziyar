@@ -1818,23 +1818,7 @@ function ryAchievementsRefresh(){
 }
 
 // آزمون‌ساز مستقل از آزمون عادی؛ برگه و پاسخ‌نامه را می‌سازد.
-$('tcat').innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');
-function ryTeacherLessonRender(){
- const value=$('tcat').value,p=ryParseCategory(value),host=$('teacher-lesson-content');
- if(!host)return;
- const chapters=p.type==='all'?ryChapters.map((c,i)=>i):[p.chapter];
- host.innerHTML=chapters.map(ci=>{
-  const chapter=ryChapters[ci];if(!chapter)return '';
-  const sections=p.type==='topic'?[chapter.sections[p.topic]]:chapter.sections;
-  const formulas=formulaData[Object.keys(formulaData)[ci]]||[];
-  return '<div class="rv"><h3>'+ryEscape(chapter.title)+'</h3>'+
-   (sections||[]).filter(Boolean).map(([heading,body])=>'<div class="rv"><b>'+ryEscape(heading)+'</b><p>'+ryEscape(body)+'</p></div>').join('')+
-   (p.type==='all'?'':'<div class="rv"><b>فرمول‌ها و نکته‌های مرتبط</b>'+formulas.map(([h,f,e])=>'<p><b>'+ryEscape(h)+'</b>: '+ryEscape(f)+'<br><span class="mute">'+ryEscape(e||'')+'</span></p>').join('')+'</div>')+
-   '</div>';
- }).join('')||'<p class="mute">برای این انتخاب، درسنامه‌ای ثبت نشده است.</p>';
-}
-$('tcat').addEventListener('change',ryTeacherLessonRender);
-ryTeacherLessonRender();
+
 let ryTeacherAnswers=false;
 function ryMakeTeacher(){
  const c=$('tcat').value,n=+$('tcnt').value,l=$('tlevel').value;let ids=Q.map((q,i)=>i).filter(i=>ryQuestionMatchesFilter(Q[i],c)&&(l==='all'||Q[i].level===l));ids=shuffle(ids).slice(0,Math.min(n,ids.length));
@@ -2158,6 +2142,24 @@ function ryCategoryOptions(allLabel='همهٔ فصل‌ها و مباحث'){
  });
  return html;
 }
+$('tcat').innerHTML=ryCategoryOptions('همهٔ فصل‌ها و مباحث');
+function ryTeacherLessonRender(){
+ const value=$('tcat').value,p=ryParseCategory(value),host=$('teacher-lesson-content');
+ if(!host)return;
+ const chapters=p.type==='all'?ryChapters.map((c,i)=>i):[p.chapter];
+ host.innerHTML=chapters.map(ci=>{
+  const chapter=ryChapters[ci];if(!chapter)return '';
+  const sections=p.type==='topic'?[chapter.sections[p.topic]]:chapter.sections;
+  const formulas=formulaData[Object.keys(formulaData)[ci]]||[];
+  return '<div class="rv"><h3>'+ryEscape(chapter.title)+'</h3>'+
+   (sections||[]).filter(Boolean).map(([heading,body])=>'<div class="rv"><b>'+ryEscape(heading)+'</b><p>'+ryEscape(body)+'</p></div>').join('')+
+   (p.type==='all'?'':'<div class="rv"><b>فرمول‌ها و نکته‌های مرتبط</b>'+formulas.map(([h,f,e])=>'<p><b>'+ryEscape(h)+'</b>: '+ryEscape(f)+'<br><span class="mute">'+ryEscape(e||'')+'</span></p>').join('')+'</div>')+
+   '</div>';
+ }).join('')||'<p class="mute">برای این انتخاب، درسنامه‌ای ثبت نشده است.</p>';
+}
+$('tcat').addEventListener('change',ryTeacherLessonRender);
+ryTeacherLessonRender();
+
 function ryRenderChapter(markUsed=true){const i=+$('ry-chapter-select').value, c=ryChapters[i];if(!c)return; const formulaItems=formulaData[Object.keys(formulaData)[i]]||[]; $('ry-chapter-content').innerHTML=`<h2>${ryEscape(c.title)}</h2><div class="fb">سطح تمرین‌ها: متوسط رو به سخت. اول خودت حل کن، بعد روی «نمایش پاسخ تشریحی» بزن. هر تمرین چندمرحله‌ای طراحی شده تا فقط با یک محاسبهٔ ساده حل نشود.</div>`+c.sections.map((a,j)=>{const ex=(ryChapterExercises[i]||[])[j]||[];return `<div class="rv"><h3>${ryEscape(a[0])}</h3><p>${ryEscape(a[1])}</p><div class="tool-box"><b>تمرین‌های اختصاصی این مبحث</b>${ex.map((e,k)=>`<div class="rv"><b>تمرین ${k+1}.</b><p>${ryEscape(e[0])}</p><details><summary class="btn" style="display:inline-block;margin:5px 0;cursor:pointer">نمایش پاسخ تشریحی</summary><div class="fb"><b>پاسخ نهایی:</b> ${ryEscape(e[1])}<p><b>راه‌حل مرحله‌به‌مرحله:</b> ${ryEscape(e[2])}</p></div></details></div>`).join('')}</div></div>`}).join('')+`<div class="card"><h3>فرمول‌نامه و نکته‌های همین فصل</h3><p class="mute">موضوع‌ها و فرمول‌های این فصل از فرمول‌نامه در اینجا هم نمایش داده می‌شوند.</p>${formulaItems.map(([title,formula,example])=>`<div class="rv"><h3>${ryEscape(title)}</h3><p><b>${ryEscape(formula)}</b></p><p class="mute">${ryEscape(example||'')}</p></div>`).join('')}</div><div class="fb">نکته: بعد از یادگیری، مثال‌ها را بدون نگاه کردن دوباره حل کن و سپس پاسخ خود را بررسی کن.</div>`;S.set('chapterLast',i);if(markUsed)S.set('usedChapters',true);ryXPRefresh();}
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=()=>ryRenderChapter(true);$('ry-chapter-select').onchange=()=>ryRenderChapter(true);ryRenderChapter(false);
 $('ry-chapter-practice').onclick=()=>{
