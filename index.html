@@ -1313,7 +1313,7 @@ function qBegin(ids,mode=''){
   qz={ids,i:0,ans:[],mode,timed:$('qtime').checked,locked:false};
   $('qsetup').hidden=true;$('qres').hidden=true;$('qplay').hidden=false;qShow();
 }
-$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||Q[i].c==Number(c))&&(l==='all'||Q[i].level===l));
+$('qgo').onclick=()=>{const c=$('qcat').value,l=$('qlevel').value;let ids=Q.map((_,i)=>i).filter(i=>(c==='all'||(c.startsWith('formula-')?Q[i].formulaChapter===Number(c.slice(8)):Q[i].c==Number(c)))&&(l==='all'||Q[i].level===l));
   const chosen=shuffle(ids).slice(0,+$('qcnt').value);const mode=window.ryMockExamMode?'mock-exam':'';window.ryMockExamMode=false;qBegin(chosen,mode)};
 $('ry-contest').onclick=()=>{ $('qtime').checked=true; $('qcnt').value='20'; const ids=shuffle(Q.map((_,i)=>i)).slice(0,20); qBegin(ids,'contest'); $('qfb').innerHTML='<div class="fb">مسابقه شروع شد: برای هر سؤال ۳۰ ثانیه فرصت داری. با کسب حداقل ۷۰٪، ۲۵ XP جایزه می‌گیری.</div>'; };
 $('qwrong').onclick=()=>{const saved=S.get('wrong',[]);const ids=Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&id>=0&&id<Q.length):[];S.set('wrong',ids);qBegin(shuffle(ids).slice(0,+$('qcnt').value));};
@@ -1647,6 +1647,25 @@ const formulaData={
   ['زاویهٔ محاطی روبه‌روی قطر','زاویهٔ محاطی که قطر را می‌بیند = ۹۰°','این رابطه برای هر مثلث محاطی که یک ضلعش قطر باشد کاربرد دارد.']
  ]
 };
+
+/* اتصال فصل‌های فرمول‌نامه به آزمون؛ شناسه‌های سؤال‌های قبلی تغییر نمی‌کنند. */
+const ryFormulaChapterMap={0:[0,1,9],1:[],2:[7],3:[5,6],4:[],5:[8],6:[2,3],7:[],8:[7]};
+Q.forEach(item=>{const key=Object.keys(ryFormulaChapterMap).find(k=>ryFormulaChapterMap[k].includes(item.c));if(key!==undefined)item.formulaChapter=Number(key);});
+const ryFormulaExtraQuestions=[
+[1,1,'عدد ۸۴ را به عامل‌های اول تجزیه کن. حاصل کدام است؟','۸۴=۲²×۳×۷','۸۴=۲×۴۲=۲²×۳×۷.'],
+[1,1,'ب.م.مِ ۲۴ و ۳۶ چند است؟','۱۲','۲۴=۲³×۳ و ۳۶=۲²×۳²؛ عامل‌های مشترک با توان کوچک‌تر: ۲²×۳=۱۲.'],
+[2,7,'مجموع زاویه‌های داخلی یک هفت‌ضلعی چند درجه است؟','۹۰۰','(۷−۲)×۱۸۰=۹۰۰ درجه.'],
+[2,7,'هر زاویهٔ خارجی یک ده‌ضلعی منتظم چند درجه است؟','۳۶','۳۶۰÷۱۰=۳۶ درجه.'],
+[4,6,'در نقطهٔ (۳،−۲)، مجموع فاصلهٔ افقی و عمودی از مبدأ چند واحد است؟','۵','۳+۲=۵ واحد.'],
+[4,6,'حاصل جمع بردارهای (۲،۱) و (۳،۴)، مجموع مؤلفه‌های بردار حاصل چند است؟','۱۰','(۲+۳،۱+۴)=(۵،۵) و ۵+۵=۱۰.'],
+[7,4,'میانگین عددهای ۴، ۶، ۸ و ۱۰ چند است؟','۷','(۴+۶+۸+۱۰)÷۴=۷.'],
+[7,4,'در پرتاب یک تاس سالم، احتمال آمدن عدد زوج چند درصد است؟','۵۰','۳ حالت از ۶ حالت: ۳÷۶×۱۰۰=۵۰ درصد.'],
+[8,7,'محیط دایره‌ای با شعاع ۵ و π≈۳ چند است؟','۳۰','۲×۳×۵=۳۰.'],
+[8,7,'مساحت دایره‌ای با شعاع ۴ و π≈۳ چند است؟','۴۸','۳×۴²=۴۸.']
+];
+ryFormulaExtraQuestions.forEach(([chapter,c,q,a,e])=>Q.push({c,chapter,q,a:Number(a),e,h:'از فرمول همان فصل استفاده کن.',t:a,level:'medium',formulaChapter:chapter}));
+Object.keys(formulaData).forEach((title,index)=>{const option=document.createElement('option');option.value='formula-'+index;option.textContent='فرمول‌نامه · '+title;$('qcat').appendChild(option);});
+
 $('fcat').innerHTML=Object.keys(formulaData).map(x=>`<option>${x}</option>`).join('');
 function drawFormulas(){const name=$('fcat').value;$('fcontent').innerHTML=formulaData[name].map(([title,formula,example])=>`<div class="card" style="margin-bottom:10px"><h2>${title}</h2><p><b>${formula}</b></p><p class="mute">${example||''}</p></div>`).join('')}
 $('fcat').onchange=drawFormulas;drawFormulas();
@@ -2083,7 +2102,7 @@ if($('qcat')&&$('qcat').options.length)$('qcat').options[0].textContent=`همه 
  const count=$('qcnt');if(count&&!Array.from(count.options).some(o=>o.value==='1000'))count.add(new Option('1000','1000'));
 })();
 
-function ryRenderChapter(markUsed=true){const i=+$('ry-chapter-select').value, c=ryChapters[i];if(!c)return; $('ry-chapter-content').innerHTML=`<h2>${ryEscape(c.title)}</h2><div class="fb">سطح تمرین‌ها: متوسط رو به سخت. اول خودت حل کن، بعد روی «نمایش پاسخ تشریحی» بزن. هر تمرین چندمرحله‌ای طراحی شده تا فقط با یک محاسبهٔ ساده حل نشود.</div>`+c.sections.map((a,j)=>{const ex=(ryChapterExercises[i]||[])[j]||[];return `<div class="rv"><h3>${ryEscape(a[0])}</h3><p>${ryEscape(a[1])}</p><div class="tool-box"><b>تمرین‌های اختصاصی این مبحث</b>${ex.map((e,k)=>`<div class="rv"><b>تمرین ${k+1}.</b><p>${ryEscape(e[0])}</p><details><summary class="btn" style="display:inline-block;margin:5px 0;cursor:pointer">نمایش پاسخ تشریحی</summary><div class="fb"><b>پاسخ نهایی:</b> ${ryEscape(e[1])}<p><b>راه‌حل مرحله‌به‌مرحله:</b> ${ryEscape(e[2])}</p></div></details></div>`).join('')}</div></div>`}).join('')+`<div class="fb">نکته: بعد از یادگیری، مثال‌ها را بدون نگاه کردن دوباره حل کن و سپس پاسخ خود را بررسی کن.</div>`;S.set('chapterLast',i);if(markUsed)S.set('usedChapters',true);ryXPRefresh();}
+function ryRenderChapter(markUsed=true){const i=+$('ry-chapter-select').value, c=ryChapters[i];if(!c)return; const formulaItems=formulaData[Object.keys(formulaData)[i]]||[]; $('ry-chapter-content').innerHTML=`<h2>${ryEscape(c.title)}</h2><div class="fb">سطح تمرین‌ها: متوسط رو به سخت. اول خودت حل کن، بعد روی «نمایش پاسخ تشریحی» بزن. هر تمرین چندمرحله‌ای طراحی شده تا فقط با یک محاسبهٔ ساده حل نشود.</div>`+c.sections.map((a,j)=>{const ex=(ryChapterExercises[i]||[])[j]||[];return `<div class="rv"><h3>${ryEscape(a[0])}</h3><p>${ryEscape(a[1])}</p><div class="tool-box"><b>تمرین‌های اختصاصی این مبحث</b>${ex.map((e,k)=>`<div class="rv"><b>تمرین ${k+1}.</b><p>${ryEscape(e[0])}</p><details><summary class="btn" style="display:inline-block;margin:5px 0;cursor:pointer">نمایش پاسخ تشریحی</summary><div class="fb"><b>پاسخ نهایی:</b> ${ryEscape(e[1])}<p><b>راه‌حل مرحله‌به‌مرحله:</b> ${ryEscape(e[2])}</p></div></details></div>`).join('')}</div></div>`}).join('')+`<div class="card"><h3>فرمول‌نامه و نکته‌های همین فصل</h3><p class="mute">موضوع‌ها و فرمول‌های این فصل از فرمول‌نامه در اینجا هم نمایش داده می‌شوند.</p>${formulaItems.map(([title,formula,example])=>`<div class="rv"><h3>${ryEscape(title)}</h3><p><b>${ryEscape(formula)}</b></p><p class="mute">${ryEscape(example||'')}</p></div>`).join('')}</div><div class="fb">نکته: بعد از یادگیری، مثال‌ها را بدون نگاه کردن دوباره حل کن و سپس پاسخ خود را بررسی کن.</div>`;S.set('chapterLast',i);if(markUsed)S.set('usedChapters',true);ryXPRefresh();}
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=()=>ryRenderChapter(true);$('ry-chapter-select').onchange=()=>ryRenderChapter(true);ryRenderChapter(false);
 $('ry-chapter-practice').onclick=()=>{
  const chapterIndex=+$('ry-chapter-select').value;
