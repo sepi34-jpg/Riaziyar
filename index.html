@@ -261,6 +261,17 @@ button,select,input{touch-action:manipulation;}
 #ry-virtual-keyboard button.ry-vk-special{background:var(--accent);color:var(--on)}
 #ry-virtual-keyboard button:active{transform:scale(.96)}
 @media(max-width:600px){#ry-virtual-keyboard{left:4px;right:4px;bottom:4px;padding:8px;border-radius:14px}#ry-virtual-keyboard .ry-vk-row{gap:3px}#ry-virtual-keyboard button{min-height:38px;font-size:.88rem;padding:6px 1px}}
+/* محاسبه‌گر محیط، مساحت و حجم در اشکال جادویی */
+#magic-shapes .ry-shape-measures{line-height:1.9}
+#magic-shapes .ry-shape-dimensions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:10px 0}
+#magic-shapes .ry-shape-dimensions label{display:flex;flex-direction:column;gap:5px;font-size:.84rem}
+#magic-shapes .ry-shape-dimensions input{width:100%;min-width:0;background:var(--card);border:1px solid var(--stone);border-radius:9px;padding:9px;direction:ltr;text-align:center}
+#magic-shapes .ry-shape-measure-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+#magic-shapes .ry-shape-measure-results>div{min-width:0;background:var(--card);border:1px solid var(--stone);border-radius:11px;padding:10px;text-align:center}
+#magic-shapes .ry-shape-measure-results span{display:block;color:var(--mute);font-size:.78rem;line-height:1.6}
+#magic-shapes .ry-shape-measure-results strong{display:block;overflow-wrap:anywhere;font-size:1.05rem;font-family:'IBM Plex Mono',monospace}
+#magic-shapes .ry-shape-net p{max-width:100%;text-align:center}
+@media(max-width:420px){#magic-shapes .ry-shape-measure-results{grid-template-columns:1fr}}
 /* اشکال جادویی سه‌بعدی */
 #magic-shapes .ry-shape-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);gap:14px}
 #magic-shapes .ry-shape-stage{position:relative;min-height:360px;background:var(--surface);border:1px solid var(--stone);border-radius:16px;overflow:hidden}
@@ -2979,22 +2990,55 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 <script>
 (()=> {
  const canvas=document.getElementById('ry-shape-canvas');if(!canvas)return;
- const select=document.getElementById('ry-shape-select'),info=document.getElementById('ry-shape-info'),net=document.getElementById('ry-shape-net'),netBtn=document.getElementById('ry-shape-net-toggle'),autoBtn=document.getElementById('ry-shape-auto');
+ const select=document.getElementById('ry-shape-select'),info=document.getElementById('ry-shape-info'),net=document.getElementById('ry-shape-net'),netBtn=document.getElementById('ry-shape-net-toggle'),autoBtn=document.getElementById('ry-shape-auto'),measures=document.getElementById('ry-shape-measures');
  let THREE=null,renderer=null,scene=null,camera=null,mesh=null,auto=true,drag=false,lastX=0,lastY=0,raf=0;
  const descriptions={
-  cube:'۶ وجه مربع، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مربع تشکیل می‌شود.',
-  cuboid:'۶ وجه مستطیلی، ۱۲ یال و ۸ رأس دارد. گستردهٔ آن از ۶ مستطیل ساخته می‌شود.',
-  triPrism:'۲ قاعدهٔ مثلثی و ۳ وجه مستطیلی دارد؛ در مجموع ۵ وجه، ۹ یال و ۶ رأس.',
-  pentPrism:'۲ قاعدهٔ پنج‌ضلعی و ۵ وجه مستطیلی دارد؛ در مجموع ۷ وجه، ۱۵ یال و ۱۰ رأس.',
-  squarePyramid:'یک قاعدهٔ مربع و ۴ وجه مثلثی دارد؛ در مجموع ۵ وجه، ۸ یال و ۵ رأس.',
-  cylinder:'دو قاعدهٔ دایره‌ای و یک سطح خمیده دارد. گستردهٔ جانبی آن مستطیل است.',
-  cone:'یک قاعدهٔ دایره‌ای و یک رأس دارد. گستردهٔ جانبی آن بخشی از یک دایره است.',
-  sphere:'کره سطح خمیدهٔ پیوسته دارد و گستردهٔ دقیق و بدون تغییر شکل روی صفحه ندارد.',
-  tetra:'چهاروجهی از ۴ وجه مثلثی تشکیل شده است.',
+  cube:'مکعب ۶ وجه مربع، ۱۲ یال و ۸ رأس دارد. همهٔ یال‌ها هم‌اندازه‌اند.',
+  cuboid:'مکعب‌مستطیل ۶ وجه مستطیلی، ۱۲ یال و ۸ رأس دارد؛ سه اندازهٔ طول، عرض و ارتفاع دارد.',
+  triPrism:'منشور سه‌گوش دو قاعدهٔ مثلثی و سه وجه جانبی مستطیلی دارد؛ در مجموع ۵ وجه، ۹ یال و ۶ رأس.',
+  pentPrism:'منشور پنج‌گوش دو قاعدهٔ پنج‌ضلعی و پنج وجه جانبی مستطیلی دارد؛ در مجموع ۷ وجه، ۱۵ یال و ۱۰ رأس.',
+  squarePyramid:'هرم مربعی یک قاعدهٔ مربع و چهار وجه جانبی مثلثی دارد؛ ارتفاع عمودی با ارتفاع مایل وجه فرق دارد.',
+  cylinder:'استوانه دو قاعدهٔ دایره‌ای و یک سطح جانبی خمیده دارد.',
+  cone:'مخروط یک قاعدهٔ دایره‌ای، یک رأس و یک سطح جانبی خمیده دارد.',
+  sphere:'کره سطح خمیدهٔ پیوسته دارد؛ گستردهٔ دقیق و بدون تغییر شکل برای آن وجود ندارد.',
+  tetra:'چهاروجهی منتظم ۴ وجه مثلثی، ۶ یال و ۴ رأس دارد.',
   octa:'هشت‌وجهی منتظم ۸ وجه مثلثی، ۱۲ یال و ۶ رأس دارد.',
-  dodeca:'دوازده‌وجهی منتظم ۱۲ وجه پنج‌ضلعی دارد.',
-  icosa:'بیست‌وجهی منتظم ۲۰ وجه مثلثی دارد.'
+  dodeca:'دوازده‌وجهی منتظم ۱۲ وجه پنج‌ضلعی، ۳۰ یال و ۲۰ رأس دارد.',
+  icosa:'بیست‌وجهی منتظم ۲۰ وجه مثلثی، ۳۰ یال و ۱۲ رأس دارد.'
  };
+ const shapeDefs={
+  cube:{fields:[['a','طول ضلع a',2]],perimeterLabel:'محیط قاعدهٔ مربع',formula:'محیط قاعده = ۴a؛ مساحت کل سطح = ۶a²؛ حجم = a³',calc:v=>({p:4*v.a,A:6*v.a*v.a,V:v.a**3})},
+  cuboid:{fields:[['l','طول l',2.7],['w','عرض w',1.7],['h','ارتفاع h',1.25]],perimeterLabel:'محیط قاعدهٔ مستطیل',formula:'محیط قاعده = ۲(l+w)؛ مساحت کل سطح = ۲(lw+lh+wh)؛ حجم = lwh',calc:v=>({p:2*(v.l+v.w),A:2*(v.l*v.w+v.l*v.h+v.w*v.h),V:v.l*v.w*v.h})},
+  triPrism:{fields:[['a','ضلع قاعدهٔ مثلث متساوی‌الاضلاع a',1.73],['h','طول منشور h',2]],perimeterLabel:'محیط قاعدهٔ مثلثی',formula:'مساحت قاعده = √۳a²÷۴؛ مساحت کل = ۲×مساحت قاعده + ۳ah؛ حجم = مساحت قاعده × h',calc:v=>{const b=Math.sqrt(3)*v.a*v.a/4;return {p:3*v.a,A:2*b+3*v.a*v.h,V:b*v.h}}},
+  pentPrism:{fields:[['a','ضلع قاعدهٔ پنج‌ضلعی a',1.18],['h','طول منشور h',2]],perimeterLabel:'محیط قاعدهٔ پنج‌ضلعی',formula:'مساحت قاعده = ۵a² ÷ (۴tan۳۶°)؛ مساحت کل = ۲B+۵ah؛ حجم = Bh',calc:v=>{const b=5*v.a*v.a/(4*Math.tan(Math.PI/5));return {p:5*v.a,A:2*b+5*v.a*v.h,V:b*v.h}}},
+  squarePyramid:{fields:[['a','ضلع قاعده a',1.77],['h','ارتفاع عمودی h',1.9]],perimeterLabel:'محیط قاعدهٔ مربع',formula:'ارتفاع مایل l = √(h²+(a÷۲)²)؛ مساحت کل = a²+۲al؛ حجم = a²h÷۳',calc:v=>{const l=Math.sqrt(v.h*v.h+v.a*v.a/4);return {p:4*v.a,A:v.a*v.a+2*v.a*l,V:v.a*v.a*v.h/3}}},
+  cylinder:{fields:[['r','شعاع قاعده r',1],['h','ارتفاع h',2]],perimeterLabel:'محیط دایرهٔ قاعده',formula:'محیط قاعده = ۲πr؛ مساحت کل سطح = ۲πr(r+h)؛ حجم = πr²h',calc:v=>({p:2*Math.PI*v.r,A:2*Math.PI*v.r*(v.r+v.h),V:Math.PI*v.r*v.r*v.h})},
+  cone:{fields:[['r','شعاع قاعده r',1.1],['h','ارتفاع عمودی h',2.1]],perimeterLabel:'محیط دایرهٔ قاعده',formula:'ارتفاع مایل l = √(r²+h²)؛ مساحت کل سطح = πr(r+l)؛ حجم = πr²h÷۳',calc:v=>{const l=Math.sqrt(v.r*v.r+v.h*v.h);return {p:2*Math.PI*v.r,A:Math.PI*v.r*(v.r+l),V:Math.PI*v.r*v.h/3}}},
+  sphere:{fields:[['r','شعاع کره r',1.25]],perimeterLabel:'محیط دایرهٔ عظیمه (نه محیط سطح کره)',formula:'محیط دایرهٔ عظیمه = ۲πr؛ مساحت سطح = ۴πr²؛ حجم = ۴πr³÷۳',calc:v=>({p:2*Math.PI*v.r,A:4*Math.PI*v.r*v.r,V:4*Math.PI*v.r*v.r*v.r/3})},
+  tetra:{fields:[['a','طول یال a',2]],perimeterLabel:'محیط یک وجه مثلثی',formula:'محیط یک وجه = ۳a؛ مساحت کل سطح = √۳a²؛ حجم = a³÷(۶√۲)',calc:v=>({p:3*v.a,A:Math.sqrt(3)*v.a*v.a,V:v.a**3/(6*Math.sqrt(2))})},
+  octa:{fields:[['a','طول یال a',2]],perimeterLabel:'محیط یک وجه مثلثی',formula:'محیط یک وجه = ۳a؛ مساحت کل سطح = ۲√۳a²؛ حجم = √۲a³÷۳',calc:v=>({p:3*v.a,A:2*Math.sqrt(3)*v.a*v.a,V:Math.sqrt(2)*v.a**3/3})},
+  dodeca:{fields:[['a','طول یال a',1]],perimeterLabel:'محیط یک وجه پنج‌ضلعی',formula:'محیط یک وجه = ۵a؛ مساحت کل سطح = ۳√(۲۵+۱۰√۵)a²؛ حجم = (۱۵+۷√۵)a³÷۴',calc:v=>({p:5*v.a,A:3*Math.sqrt(25+10*Math.sqrt(5))*v.a*v.a,V:(15+7*Math.sqrt(5))*v.a**3/4})},
+  icosa:{fields:[['a','طول یال a',1.4]],perimeterLabel:'محیط یک وجه مثلثی',formula:'محیط یک وجه = ۳a؛ مساحت کل سطح = ۵√۳a²؛ حجم = ۵(۳+√۵)a³÷۱۲',calc:v=>({p:3*v.a,A:5*Math.sqrt(3)*v.a*v.a,V:5*(3+Math.sqrt(5))*v.a**3/12})}
+ };
+ const fmt=n=>Number.isFinite(n)?n.toLocaleString('fa-IR',{maximumFractionDigits:4}):'—';
+ function renderMeasures(key){
+  if(!measures)return;
+  const def=shapeDefs[key];if(!def){measures.textContent='فرمول‌های این شکل در دسترس نیست.';return}
+  measures.innerHTML='<h3>محیط، مساحت و حجم این شکل</h3>'+
+   '<div class="ry-shape-dimensions">'+def.fields.map(([id,label,value])=>'<label>'+label+'<input type="number" min="0.000001" step="any" value="'+value+'" data-shape-dim="'+id+'"></label>').join('')+'</div>'+
+   '<div class="ry-shape-measure-results"><div><span>'+def.perimeterLabel+'</span><strong id="ry-shape-perimeter">—</strong></div><div><span>مساحت کل سطح</span><strong id="ry-shape-area">—</strong></div><div><span>حجم</span><strong id="ry-shape-volume">—</strong></div></div>'+
+   '<p class="mute">'+def.formula+'</p><p class="mute">واحد محیط با واحد طول، و واحد مساحت و حجم به‌ترتیب با واحد مربع و مکعبِ همان اندازه‌هاست. برای اجسام سه‌بعدی، «محیط» در اینجا محیط قاعده یا یک وجه مشخص‌شده است.</p>';
+  const calculate=()=>{
+   const values={};let valid=true;
+   def.fields.forEach(([id])=>{const el=measures.querySelector('[data-shape-dim="'+id+'"]');values[id]=Number(el?.value);if(!Number.isFinite(values[id])||values[id]<=0)valid=false});
+   const result=valid?def.calc(values):null;
+   const p=measures.querySelector('#ry-shape-perimeter'),a=measures.querySelector('#ry-shape-area'),v=measures.querySelector('#ry-shape-volume');
+   if(!result){p.textContent=a.textContent=v.textContent='مقدار نامعتبر';return}
+   p.textContent=fmt(result.p);a.textContent=fmt(result.A);v.textContent=fmt(result.V);
+  };
+  measures.querySelectorAll('[data-shape-dim]').forEach(el=>el.addEventListener('input',calculate));
+  calculate();
+ }
  const loadThree=()=>new Promise((resolve,reject)=>{
   if(window.THREE){resolve(window.THREE);return}
   const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';sc.onload=()=>window.THREE?resolve(window.THREE):reject();sc.onerror=reject;document.head.appendChild(sc);
@@ -3016,6 +3060,71 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    default:return new T.BoxGeometry(2,2,2);
   }
  };
+ function polyhedronNetMarkup(key){
+  const geometry=buildGeometry(THREE,key).toNonIndexed(),pos=geometry.attributes.position,groups=new Map(),vkey=v=>[v.x,v.y,v.z].map(n=>n.toFixed(4)).join(',');
+  for(let i=0;i<pos.count;i+=3){
+   const a=new THREE.Vector3().fromBufferAttribute(pos,i),b=new THREE.Vector3().fromBufferAttribute(pos,i+1),c=new THREE.Vector3().fromBufferAttribute(pos,i+2);
+   const normal=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a)).normalize(),distance=normal.dot(a);
+   const plane=[normal.x,normal.y,normal.z,distance].map(n=>n.toFixed(3)).join('|');
+   if(!groups.has(plane))groups.set(plane,{normal,vertices:new Map()});
+   const group=groups.get(plane);[a,b,c].forEach(v=>group.vertices.set(vkey(v),v));
+  }
+  geometry.dispose();
+  const faces=[];
+  for(const group of groups.values()){
+   const verts=[...group.vertices.entries()];if(verts.length<3)continue;
+   const center=verts.reduce((sum,item)=>sum.add(item[1]),new THREE.Vector3()).multiplyScalar(1/verts.length);
+   const axis=new THREE.Vector3().subVectors(verts[0][1],center).normalize(),axisY=new THREE.Vector3().crossVectors(group.normal,axis).normalize();
+   verts.sort((x,y)=>{
+    const dx=new THREE.Vector3().subVectors(x[1],center),dy=new THREE.Vector3().subVectors(y[1],center);
+    return Math.atan2(dx.dot(axisY),dx.dot(axis))-Math.atan2(dy.dot(axisY),dy.dot(axis));
+   });
+   faces.push({verts:verts.map(x=>x[0]),points:verts.map(x=>x[1]),normal:group.normal});
+  }
+  if(!faces.length)return '<p class="mute">نمایش گستردهٔ این جسم بارگذاری نشد.</p>';
+  const edgeMap=new Map(),edgeKey=(a,b)=>a<b?a+'~'+b:b+'~'+a;
+  faces.forEach((face,fi)=>face.verts.forEach((a,i)=>{
+   const b=face.verts[(i+1)%face.verts.length],key=edgeKey(a,b);
+   if(!edgeMap.has(key))edgeMap.set(key,[]);edgeMap.get(key).push({face:fi,a,b});
+  }));
+  const coords=new Map(),visited=new Set([0]),queue=[0],root=faces[0],n=root.verts.length,side=root.points[0].distanceTo(root.points[1]),radius=side/(2*Math.sin(Math.PI/n));
+  root.verts.forEach((id,i)=>coords.set(id,{x:radius*Math.cos(-Math.PI/2+2*Math.PI*i/n),y:radius*Math.sin(-Math.PI/2+2*Math.PI*i/n)}));
+  while(queue.length){
+   const parentIndex=queue.shift(),parent=faces[parentIndex];
+   for(let i=0;i<parent.verts.length;i++){
+    const a=parent.verts[i],b=parent.verts[(i+1)%parent.verts.length],adjacent=edgeMap.get(edgeKey(a,b))||[];
+    const link=adjacent.find(item=>item.face!==parentIndex&&!visited.has(item.face));if(!link)continue;
+    const child=faces[link.face],count=child.verts.length,ia=child.verts.indexOf(a);
+    let order=null;
+    if(child.verts[(ia+1)%count]===b)order=Array.from({length:count},(_,j)=>child.verts[(ia+j)%count]);
+    else if(child.verts[(ia-1+count)%count]===b)order=Array.from({length:count},(_,j)=>child.verts[(ia-j+count*2)%count]);
+    if(!order)continue;
+    const p0=coords.get(a),p1=coords.get(b),length=p0&&p1?Math.hypot(p1.x-p0.x,p1.y-p0.y):0;
+    if(!length)continue;
+    let angle=Math.atan2(p1.y-p0.y,p1.x-p0.x),x=p1.x,y=p1.y;
+    for(let j=2;j<count;j++){
+     angle-=2*Math.PI/count;x+=length*Math.cos(angle);y+=length*Math.sin(angle);coords.set(order[j],{x,y});
+    }
+    visited.add(link.face);queue.push(link.face);
+   }
+  }
+  if(visited.size!==faces.length){
+   // در صورت تفاوت جزئی مختصاتِ رأس‌ها، همهٔ وجه‌ها را به شکل منظم و جدا از هم نمایش می‌دهیم.
+   const columns=Math.ceil(Math.sqrt(faces.length)),cell=90,pad=12;
+   const paths=faces.map((face,i)=>{
+    const row=Math.floor(i/columns),col=i%columns,cx=pad+col*cell+cell/2,cy=pad+row*cell+cell/2,rr=cell*.34,nn=face.verts.length;
+    const points=Array.from({length:nn},(_,j)=>(cx+rr*Math.cos(-Math.PI/2+2*Math.PI*j/nn))+','+(cy+rr*Math.sin(-Math.PI/2+2*Math.PI*j/nn))).join(' ');
+    return '<polygon points="'+points+'" fill="#8dbda6" fill-opacity=".55" stroke="#386d58" stroke-width="2"/>';
+   }).join('');
+   return '<svg viewBox="0 0 '+(columns*cell+pad*2)+' '+(Math.ceil(faces.length/columns)*cell+pad*2)+'" role="img" aria-label="نمایش همهٔ وجه‌های چندوجهی">'+paths+'</svg><p class="mute">نمایش همهٔ وجه‌ها به‌صورت شماتیک؛ این چیدمان، گستردهٔ پیوستهٔ قابل تا زدن نیست.</p>';
+  }
+  const all=[...coords.values()],minX=Math.min(...all.map(p=>p.x)),maxX=Math.max(...all.map(p=>p.x)),minY=Math.min(...all.map(p=>p.y)),maxY=Math.max(...all.map(p=>p.y)),pad=side*.35;
+  const paths=faces.map((face,i)=>{
+   const points=face.verts.map(id=>{const p=coords.get(id);return (p.x-minX+pad)+','+(maxY-p.y+pad)}).join(' ');
+   return '<polygon points="'+points+'" fill="#8dbda6" fill-opacity=".56" stroke="#386d58" stroke-width="'+(side*.035)+'"/>';
+  }).join('');
+  return '<svg viewBox="0 0 '+(maxX-minX+pad*2)+' '+(maxY-minY+pad*2)+'" role="img" aria-label="گستردهٔ چندوجهی">'+paths+'</svg><p class="mute">گستردهٔ چندوجهی با بازکردن وجه‌های متصل؛ خط‌های مرزی محل تا زدن هستند.</p>';
+ }
  const section=canvas.closest('section');
  const draw=()=>{
   if(!renderer)return;
@@ -3035,8 +3144,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    scene.add(new T.HemisphereLight(0xffffff,0x667788,2));
    const light=new T.DirectionalLight(0xffffff,2.2);light.position.set(4,6,5);scene.add(light);
    const resize=()=>{const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};
-   new ResizeObserver(resize).observe(canvas);resize();
-   setShape();draw();
+   new ResizeObserver(resize).observe(canvas);resize();setShape();draw();
   }catch(e){info.textContent='مدل سه‌بعدی بارگذاری نشد. برای نمایش مدل، اتصال اینترنت و پشتیبانی مرورگر از WebGL لازم است.'}
  };
  function setShape(){
@@ -3046,7 +3154,16 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   mesh.rotation.set(.38,-.55,0);scene.add(mesh);
   info.textContent=descriptions[key]||'مدل سه‌بعدی قابل چرخاندن است.';
   net.hidden=true;netBtn.setAttribute('aria-expanded','false');netBtn.textContent='▱ دیدن گستردهٔ شکل';
-  net.innerHTML=netMarkup(key);
+  if(key==='sphere'){
+   const gores=Array.from({length:8},(_,i)=>{
+    const x=34+i*41;
+    return '<path d="M'+x+' 35 C'+(x-18)+' 78 '+(x-21)+' 172 '+(x+6)+' 220 C'+(x+32)+' 172 '+(x+30)+' 78 '+x+' 35 Z" fill="#8dbda6" fill-opacity=".58" stroke="#386d58" stroke-width="1.8"/>';
+   }).join('');
+   net.innerHTML='<svg viewBox="0 0 360 250" role="img" aria-label="نوارهای خمیدهٔ تقریبی برای نمایش سطح کره">'+gores+'</svg><p class="mute">کره گستردهٔ دقیق و بدون کشیدگی ندارد؛ این نوارهای خمیده فقط نمایش تقریبیِ بخش‌های سطح کره‌اند.</p>';
+  }else if(['tetra','octa','dodeca','icosa'].includes(key)){
+   net.innerHTML=polyhedronNetMarkup(key);
+  }else net.innerHTML=netMarkup(key);
+  renderMeasures(key);
  }
  function netMarkup(key){
   const svg=(inside)=>'<svg viewBox="0 0 360 260" role="img" aria-label="گستردهٔ مسطح شکل">'+inside+'</svg>';
