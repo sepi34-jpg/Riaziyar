@@ -2106,8 +2106,8 @@ function ryRenderChapter(markUsed=true){const i=+$('ry-chapter-select').value, c
 $('ry-chapter-select').innerHTML=ryChapters.map((c,i)=>`<option value="${i}">${ryEscape(c.title)}</option>`).join('');$('ry-chapter-select').value=String(S.get('chapterLast',0));$('ry-chapter-open').onclick=()=>ryRenderChapter(true);$('ry-chapter-select').onchange=()=>ryRenderChapter(true);ryRenderChapter(false);
 $('ry-chapter-practice').onclick=()=>{
  const chapterIndex=+$('ry-chapter-select').value;
- const ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].chapter===chapterIndex)).slice(0,10);
- $('qcat').value=String(chapterIndex);$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
+ const ids=shuffle(Q.map((q,i)=>i).filter(i=>Q[i].formulaChapter===chapterIndex)).slice(0,10);
+ $('qcat').value='formula-'+chapterIndex;$('qlevel').value='all';$('qcnt').value=String(Math.max(10,ids.length));$('qtime').checked=false;
  ryOpenSection('quiz');qBegin(ids,'chapter');
  $('qfb').innerHTML='<div class="fb">تمرین درس‌نامه: '+ryEscape(ryChapters[chapterIndex].title)+'. پاسخ‌ها را وارد کن و در پایان نتیجه‌ات را ببین.</div>';
 };
