@@ -565,7 +565,7 @@ table{max-width:100%}
  <div id="ry-ad-panel" class="ad-hidden">
   <div class="ad-grid" id="ry-ad-stats"></div>
   <nav class="ad-tabs" id="ry-ad-tabs">
-   <button class="ad-btn active" data-ad-tab="overview">نمای کلی</button><button class="ad-btn" data-ad-tab="users">کاربران</button><button class="ad-btn" data-ad-tab="questions">بانک سؤال</button><button class="ad-btn" data-ad-tab="exams">آزمون‌ها</button><button class="ad-btn" data-ad-tab="settings">تنظیمات سایت</button><button class="ad-btn" data-ad-tab="comments">دیدگاه‌ها</button><button class="ad-btn" data-ad-tab="reports">گزارش‌ها</button><button class="ad-btn" data-ad-tab="logs">گزارش فعالیت</button>
+   <button class="ad-btn active" data-ad-tab="overview">نمای کلی</button><button class="ad-btn" data-ad-tab="users">کاربران</button><button class="ad-btn" data-ad-tab="questions">بانک سؤال</button><button class="ad-btn" data-ad-tab="exams">آزمون‌ها</button><button class="ad-btn" data-ad-tab="settings">تنظیمات سایت</button><button class="ad-btn" data-ad-tab="comments">دیدگاه‌ها</button><button class="ad-btn" data-ad-tab="reports">گزارش‌ها</button><button class="ad-btn" data-ad-tab="logs">گزارش فعالیت</button><button class="ad-btn" data-ad-tab="source">مشاهده کدنویسی</button>
   </nav>
   <section class="ad-card" data-ad-view="overview"><h2>خلاصهٔ سامانه</h2><p class="ad-muted">آمار کلی کاربران و فعالیت‌ها در پایگاه داده.</p><div id="ry-ad-overview" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="users"><h2>کاربران</h2><p class="ad-muted">اطلاعات نمایشی و پیشرفت ثبت‌شده؛ اطلاعات ورود و رمزها در این بخش نمایش داده نمی‌شوند.</p><div id="ry-ad-users"></div></section>
@@ -594,6 +594,16 @@ table{max-width:100%}
   <section class="ad-card ad-hidden" data-ad-view="comments"><h2>مدیریت دیدگاه‌ها</h2><div id="ry-ad-comments" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="reports"><h2>گزارش دیدگاه‌ها</h2><div id="ry-ad-reports" class="ad-list"></div></section>
   <section class="ad-card ad-hidden" data-ad-view="logs"><h2>گزارش فعالیت مدیر</h2><div id="ry-ad-logs" class="ad-list"></div></section>
+  <section class="ad-card ad-hidden" data-ad-view="source">
+   <h2>مرورگر کدهای ریاضی‌یار</h2>
+   <p class="ad-muted">نسخهٔ خواندنی کدهای ثبت‌شده در شاخهٔ اصلی GitHub. کدها فقط نمایش داده می‌شوند و از این بخش قابل ویرایش نیستند.</p>
+   <div class="ad-row" style="margin:12px 0">
+    <label class="ad-field" style="flex:1;min-width:220px"><span>بخش کد</span><select id="ry-ad-source-select"><option value="">در حال دریافت فهرست…</option></select></label>
+    <label class="ad-field" style="flex:2;min-width:220px"><span>جست‌وجو در کد</span><input id="ry-ad-source-search" type="search" placeholder="نام تابع، شناسه، متن یا عبارت…"></label>
+   </div>
+   <p id="ry-ad-source-status" class="ad-muted" role="status" aria-live="polite">برای دریافت کدها، این زبانه را باز کن.</p>
+   <pre id="ry-ad-source-code" dir="ltr" style="display:block;max-height:65vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;text-align:left;direction:ltr;background:#111827;color:#e5e7eb;border-radius:12px;padding:14px;font:12px/1.7 ui-monospace,Consolas,monospace;user-select:text">هنوز کدی بارگذاری نشده است.</pre>
+  </section>
  </div>
 </div>
 
@@ -2186,7 +2196,7 @@ document.addEventListener('click',event=>{
 });
 ;
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};let currentAuthUser=null;const setUser=u=>{currentAuthUser=u||null;if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u){hide();setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');}};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',async()=>{if(!currentAuthUser){setMode('login');show();return;}const {data:role}=await client.from('user_roles').select('role').eq('user_id',currentAuthUser.id).eq('role','admin').maybeSingle();if(role){window.location.href='/admin';return;}if(window.ryShowAccount)window.ryShowAccount();else{setMode('login');show();}});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};let currentAuthUser=null;const setUser=u=>{currentAuthUser=u||null;if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u){hide();setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');}};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',async()=>{if(!currentAuthUser){setMode('login');show();return;}const {data:role}=await client.from('user_roles').select('role').eq('user_id',currentAuthUser.id).eq('role','admin').maybeSingle();if(role){window.location.href='/admin';return;}if(window.ryShowAccount)window.ryShowAccount();else{setMode('login');show();}});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name},emailRedirectTo:window.location.origin+'/'}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session&&data.user?.email_confirmed_at){setUser(data.user);setStatus('حساب ساخته شد و ایمیل تأیید شده است.');}else{if(data.session)await client.auth.signOut();setStatus('حساب ساخته شد؛ لینک تأیید به ایمیلت فرستاده شد. صندوق ورودی و پوشهٔ هرزنامه را بررسی کن. تا تأیید ایمیل امکان ورود نداری.');}});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);if(!data.user?.email_confirmed_at){await client.auth.signOut();return setStatus('ایمیل این حساب هنوز تأیید نشده است. ابتدا لینک ارسال‌شده به ایمیلت را باز کن.',true);}setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
 <script>
 (()=>{
  const defaults={site_title:'ریاضی‌یار — مرحله ۱',brand_title:'ریاضی‌یار',logo_symbol:'M',home_heading:'به آزمایشگاه ریاضی خوش آمدی',home_description:'فرمول‌ها را کشف کن، شکل‌ها را لمس کن و با هر چالش یک قدم جلوتر برو.',meta_description:'ریاضی‌یار؛ محیط تعاملی آموزش و تمرین ریاضی پایه هشتم.',accent_color:'#4C6B58',favicon_url:''};
@@ -2395,7 +2405,58 @@ document.addEventListener('click',event=>{
   if(error)return listError(el,error);
   el.innerHTML=(data||[]).map(x=>'<article class="ad-item"><b>'+esc(x.action)+'</b> · '+esc(x.target)+'<div class="ad-muted">'+fmt(x.created_at)+'</div></article>').join('')||'<p class="ad-muted">هنوز فعالیتی ثبت نشده است.</p>';
  }
- const loaders={overview:refreshStats,users:loadUsers,questions:loadQuestions,exams:loadExams,settings:loadSettings,comments:loadComments,reports:loadReports,logs:loadLogs};
+ let sourceParts=null,sourceLoaded=false;
+ async function loadSource(){
+  const status=$('ry-ad-source-status'),select=$('ry-ad-source-select'),output=$('ry-ad-source-code'),search=$('ry-ad-source-search');
+  if(!status||!select||!output)return;
+  if(!sourceLoaded){
+   status.textContent='در حال دریافت نسخهٔ اصلی کد از GitHub…';
+   try{
+    const response=await fetch('https://raw.githubusercontent.com/sepi34-jpg/Riaziyar/main/index.html',{cache:'no-store'});
+    if(!response.ok)throw new Error('دریافت فایل از GitHub ناموفق بود ('+response.status+').');
+    const source=await response.text();
+    const parts=[];
+    const add=(name,code)=>{if(code&&code.trim())parts.push({name,code:code.trim()});};
+    const styleRe=/<style\\b[^>]*>([\\s\\S]*?)<\\/style>/gi;
+    const scriptRe=/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi;
+    let m,n=0;
+    while((m=styleRe.exec(source)))add('CSS · بلوک '+(++n),m[1]);
+    n=0;
+    while((m=scriptRe.exec(source))){
+     const attrs=m[1]||'',code=m[2]||'';
+     if(!code.trim())continue;
+     const lower=code.toLowerCase();
+     let label='JavaScript · بخش '+(++n);
+     if(lower.includes('supabase')||lower.includes('signUp'.toLowerCase()))label='JavaScript · ورود و حساب کاربری '+n;
+     else if(lower.includes('ry-ad-')||lower.includes('data-ad-tab'))label='JavaScript · پنل مدیریت '+n;
+     else if(lower.includes('question')||lower.includes('exam'))label='JavaScript · آزمون و سؤال '+n;
+     else if(lower.includes('geo')||lower.includes('ggb'))label='JavaScript · ابزارهای هندسه '+n;
+     else if(lower.includes('welcome')||lower.includes('ryopensection'))label='JavaScript · صفحه‌ها و ناوبری '+n;
+     if(attrs.includes('src='))label+=' (دارای منبع خارجی)';
+     add(label,code);
+    }
+    const markup=source.replace(styleRe,'').replace(scriptRe,'').replace(/<!--[\\s\\S]*?-->/g,'').trim();
+    add('HTML · ساختار و محتوای صفحه',markup);
+    sourceParts=parts;sourceLoaded=true;
+    select.replaceChildren();
+    parts.forEach((part,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=part.name;select.appendChild(option);});
+    status.textContent='کدها دریافت شدند: '+parts.length+' بخش. نسخهٔ نمایش‌داده‌شده از شاخهٔ main است.';
+   }catch(error){status.textContent='بارگذاری کدها ناموفق بود: '+(error.message||error);output.textContent='کد در دسترس نیست. اتصال اینترنت و دسترسی GitHub را بررسی کن.';return;}
+  }
+  const render=()=>{
+   if(!sourceParts?.length)return;
+   const selected=sourceParts[Number(select.value)||0];
+   const term=(search?.value||'').trim().toLowerCase();
+   if(!term){output.textContent=selected.code;return;}
+   const lines=selected.code.split('\\n');
+   const hits=lines.map((line,index)=>line.toLowerCase().includes(term)?index:-1).filter(index=>index>=0);
+   output.textContent=hits.length?hits.slice(0,250).map(index=>(index+1)+': '+lines[index]).join('\\n'):'عبارتی پیدا نشد.';
+   status.textContent=hits.length+' خط شامل عبارت پیدا شد'+(hits.length>250?'؛ حداکثر ۲۵۰ نتیجه نمایش داده می‌شود.':'.');
+  };
+  if(!select.dataset.bound){select.addEventListener('change',render);search?.addEventListener('input',render);select.dataset.bound='1';}
+  render();
+ }
+ const loaders={overview:refreshStats,users:loadUsers,questions:loadQuestions,exams:loadExams,settings:loadSettings,comments:loadComments,reports:loadReports,logs:loadLogs,source:loadSource};
  async function showTab(tab){
   document.querySelectorAll('#ry-ad-tabs [data-ad-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adTab===tab));
   document.querySelectorAll('#ry-admin-root [data-ad-view]').forEach(s=>s.classList.toggle('ad-hidden',s.dataset.adView!==tab));
