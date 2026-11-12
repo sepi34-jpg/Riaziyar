@@ -1003,7 +1003,7 @@ table{max-width:100%}
  <div class="card">
   <h2>🌳 درخت تجزیهٔ عدد به عامل‌های اول</h2>
   <p class="mute">یک عدد صحیح بزرگ‌تر از ۱ وارد کن و دکمهٔ نمایش را بزن. عدد مرحله‌به‌مرحله به عامل‌های کوچک‌تر تقسیم می‌شود تا فقط عددهای اول باقی بمانند.</p>
-  <div class="row"><input id="ft-number" class="ft-input" type="number" min="2" max="999999" value="22" step="1" aria-label="عدد برای تجزیه"><button id="ft-show" class="btn pri" type="button">▶ نمایش انیمیشنی</button></div>
+  <div class="row"><input id="ft-number" class="ft-input" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="22" aria-label="عدد صحیح مثبت برای تجزیه"><button id="ft-show" class="btn pri" type="button">▶ نمایش انیمیشنی</button></div>
   <div id="ft-error" class="mute" role="alert"></div>
   <div class="ft-stage" id="ft-stage" aria-live="polite"><div class="ft-tree"><div class="ft-value">۲۲</div><div class="ft-note">برای شروع روی نمایش انیمیشنی بزن</div></div></div>
   <div id="ft-factorization" class="ft-result" aria-live="polite"></div>
@@ -1090,6 +1090,7 @@ table{max-width:100%}
    <div>
     <div class="ry-shape-net" id="ry-shape-net" hidden></div>
     <div class="tool-box ry-shape-info" id="ry-shape-info">مدل سه‌بعدی در حال آماده‌سازی است…</div>
+    <div class="tool-box ry-shape-measures" id="ry-shape-measures" aria-live="polite"></div>
    </div>
   </div>
  </div>
@@ -3076,25 +3077,107 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const input=document.getElementById('ft-number'),stage=document.getElementById('ft-stage'),out=document.getElementById('ft-factorization'),err=document.getElementById('ft-error'),show=document.getElementById('ft-show');
  if(!input||!stage||!out||!err||!show)return;
  const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
- const primeFactors=n=>{const a=[];for(let p=2;p*p<=n;p++){while(n%p===0){a.push(p);n/=p}}if(n>1)a.push(n);return a};
- const makeTree=(n,delay=0)=>{
-  const wrap=document.createElement('div');wrap.className='ft-node';wrap.style.setProperty('--delay',delay+'ms');
-  const value=document.createElement('div');value.className='ft-value';value.textContent=toFa(n);wrap.appendChild(value);
-  let divisor=0;for(let p=2;p*p<=n;p++){if(n%p===0){divisor=p;break}}
-  if(!divisor){value.classList.add('prime');const note=document.createElement('span');note.className='ft-note';note.textContent='عدد اول';wrap.appendChild(note);return wrap}
-  const other=n/divisor,children=[divisor,other].sort((a,b)=>b-a),branches=document.createElement('div');branches.className='ft-branches';
-  children.forEach((v,i)=>{const child=document.createElement('div');child.className='ft-child';child.appendChild(makeTree(v,delay+180+(i*100)));branches.appendChild(child)});
-  wrap.appendChild(branches);return wrap;
+ const normalize=s=>String(s).replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[٬,\s_]/g,'');
+ const gcd=(a,b)=>{while(b){const t=a%b;a=b;b=t}return a};
+ const modPow=(a,e,m)=>{let r=1n;a%=m;while(e>0n){if(e&1n)r=r*a%m;e>>=1n;a=a*a%m}return r};
+ const randomBelow=n=>{let x=0n;for(let i=0;i<4;i++)x=(x<<32n)|BigInt(Math.floor(Math.random()*4294967296));return x%n};
+ const smallPrimes=[2n,3n,5n,7n,11n,13n,17n,19n,23n,29n,31n,37n,41n,43n,47n];
+ const mr64Bases=[2n,325n,9375n,28178n,450775n,9780504n,1795265022n];
+ const limit64=18446744073709551616n;
+ function isProbablePrime(n){
+  if(n<2n)return false;
+  for(const p of smallPrimes){if(n===p)return true;if(n%p===0n)return false}
+  let d=n-1n,r=0;while((d&1n)===0n){d>>=1n;r++}
+  const bases=n<limit64?mr64Bases:Array.from({length:24},()=>2n+randomBelow(n-3n));
+  for(let a of bases){
+   a%=n;if(a<2n)a+=2n;
+   let x=modPow(a,d,n);
+   if(x===1n||x===n-1n)continue;
+   let witness=true;
+   for(let i=1;i<r;i++){x=x*x%n;if(x===n-1n){witness=false;break}}
+   if(witness)return false;
+  }
+  return true;
+ }
+ const yieldUI=()=>new Promise(resolve=>setTimeout(resolve,0));
+ async function pollardRho(n){
+  if(n%2n===0n)return 2n;
+  if(n%3n===0n)return 3n;
+  for(let attempt=0;attempt<28;attempt++){
+   const c=1n+randomBelow(n-1n),f=x=>(x*x+c)%n;
+   let x=2n+randomBelow(n-3n),y=x,d=1n;
+   for(let i=0;i<65000&&d===1n;i++){
+    x=f(x);y=f(f(y));const diff=x>y?x-y:y-x;d=gcd(diff,n);
+    if(i%1800===0)await yieldUI();
+   }
+   if(d>1n&&d<n)return d;
+  }
+  throw new Error('این عدد برای تجزیهٔ خودکار بسیار دشوار است. عدد را دوباره امتحان کن یا آن را به چند عامل کوچک‌تر تقسیم کن.');
+ }
+ async function factorInteger(n){
+  const pending=[n],factors=[];let checked=0;
+  while(pending.length){
+   const current=pending.pop();if(current===1n)continue;
+   if(isProbablePrime(current)){factors.push(current);checked++;continue}
+   const divisor=await pollardRho(current);
+   pending.push(divisor,current/divisor);checked++;
+   err.textContent='در حال تجزیهٔ عددهای بزرگ… '+toFa(checked)+' مرحله بررسی شد.';
+   await yieldUI();
+  }
+  return factors.sort((a,b)=>a<b?-1:a>b?1:0);
+ }
+ const product=a=>a.reduce((v,x)=>v*x,1n);
+ const createNode=(value,prime=false,note='')=>{
+  const wrap=document.createElement('div');wrap.className='ft-node';
+  const box=document.createElement('div');box.className='ft-value'+(prime?' prime':'');box.textContent=toFa(value.toString());wrap.appendChild(box);
+  if(note){const n=document.createElement('span');n.className='ft-note';n.textContent=note;wrap.appendChild(n)}
+  return wrap;
  };
- const render=()=>{
-  const n=Number(input.value);out.textContent='';err.textContent='';
-  if(!Number.isSafeInteger(n)||n<2||n>999999){err.textContent='لطفاً عدد صحیحی بین ۲ تا ۹۹۹٬۹۹۹ وارد کن.';return}
-  stage.replaceChildren(makeTree(n));
-  const factors=primeFactors(n),counts={};factors.forEach(p=>counts[p]=(counts[p]||0)+1);
-  const product=Object.entries(counts).map(([p,k])=>k===1?toFa(p):toFa(p)+'^'+toFa(k)).join(' × ');
-  out.textContent='تجزیهٔ نهایی: '+toFa(n)+' = '+product;
- };
- show.addEventListener('click',render);input.addEventListener('keydown',e=>{if(e.key==='Enter')render()});render();
+ function makeBalancedTree(factors,delay=0){
+  if(factors.length===1)return createNode(factors[0],true,'عدد اول');
+  const mid=Math.floor(factors.length/2),left=factors.slice(0,mid),right=factors.slice(mid);
+  const node=createNode(product(factors),false);
+  node.style.setProperty('--delay',delay+'ms');
+  const branches=document.createElement('div');branches.className='ft-branches';
+  [left,right].forEach((part,i)=>{const child=document.createElement('div');child.className='ft-child';child.appendChild(makeBalancedTree(part,delay+120+i*70));branches.appendChild(child)});
+  node.appendChild(branches);return node;
+ }
+ function renderCompactTree(n,factors,groups){
+  const root=createNode(n,false,'نمایش فشرده برای درخت‌های بسیار بزرگ');
+  const branches=document.createElement('div');branches.className='ft-branches';
+  groups.forEach(([p,count])=>{
+   const child=document.createElement('div');child.className='ft-child';
+   child.appendChild(createNode(count===1?p:p+' ^ '+count,count===1,'عامل اول '+toFa(p.toString())+' با تکرار '+toFa(count)+' بار'));
+   branches.appendChild(child);
+  });
+  root.appendChild(branches);stage.replaceChildren(root);
+ }
+ function summarize(factors){
+  const groups=[];for(const p of factors){const last=groups[groups.length-1];if(last&&last[0]===p)last[1]++;else groups.push([p,1])}
+  return groups;
+ }
+ let runId=0;
+ async function render(){
+  const current=++runId;show.disabled=true;out.textContent='';err.textContent='';
+  const raw=normalize(input.value);
+  if(!/^\d+$/.test(raw)){err.textContent='فقط عدد صحیح مثبت وارد کن؛ از اعشار و علامت منفی استفاده نکن.';show.disabled=false;return}
+  let n;try{n=BigInt(raw)}catch(e){err.textContent='عدد واردشده قابل خواندن نیست.';show.disabled=false;return}
+  if(n<2n){err.textContent='عدد باید بزرگ‌تر از ۱ باشد.';show.disabled=false;return}
+  stage.replaceChildren();const loading=document.createElement('div');loading.className='ft-note';loading.textContent='در حال پیدا کردن عامل‌های اول…';stage.appendChild(loading);
+  try{
+   const factors=await factorInteger(n);if(current!==runId)return;
+   const groups=summarize(factors);stage.replaceChildren();
+   if(factors.length<=64)stage.appendChild(makeBalancedTree(factors));
+   else renderCompactTree(n,factors,groups);
+   const terms=groups.map(([p,k])=>k===1?toFa(p.toString()):toFa(p.toString())+'^'+toFa(k)).join(' × ');
+   out.textContent='تجزیهٔ نهایی: '+toFa(n.toString())+' = '+terms+'  |  تعداد عامل‌های اول با تکرار: '+toFa(factors.length);
+   err.textContent='تجزیه با محاسبات عدد صحیح بزرگ انجام شد. برای اعداد بسیار بزرگ و دشوار، زمان محاسبه به سختیِ عامل‌ها بستگی دارد.';
+  }catch(e){if(current===runId){stage.replaceChildren();err.textContent=e.message||'تجزیه انجام نشد؛ دوباره تلاش کن.'}}
+  finally{if(current===runId)show.disabled=false}
+ }
+ show.addEventListener('click',render);
+ input.addEventListener('keydown',e=>{if(e.key==='Enter')render()});
+ render();
 })();
 </script>
 <script>
