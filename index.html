@@ -1852,6 +1852,8 @@ function ryXPRefresh(){
  const bar=$('ry-xp-home-bar');if(bar)bar.style.width=within+'%';
  const next=$('ry-xp-home-next');if(next)next.textContent=`${within} از ۱۰۰ XP سطح ${level+1} را به دست آورده‌ای. هر پاسخ درست ۱۰ XP می‌دهد.`;
 }
+// مقداردهی مسیر پیشرفت بلافاصله پس از تعریف تابع، مستقل از آماده‌سازی سایر ابزارها.
+try{ryXPRefresh()}catch(e){console.warn('نمایش مسیر پیشرفت ناموفق بود:',e)}
 
 // درس‌نامه‌های خلاصه و ساختاریافته برای ۹ فصل ریاضی هشتم.
 const ryChapters=[
