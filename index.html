@@ -2182,51 +2182,24 @@ document.body.classList.add('landing');document.querySelectorAll('main>section')
 ryAnalysisRefresh();ryBankSearch();ryXPRefresh();
 
 
-/* RY_TOOL_NAV_RECOVERY_V1: بازیابی ناوبری ابزارها و دسترسی مستقیم به درس‌نامه */
-(()=>{
- const home=()=>{if(typeof ryOpenSection==='function')ryOpenSection('welcome');};
- // دکمهٔ خانهٔ ثابت و دکمه‌های خانهٔ داخل هر ابزار، همگی یک مسیر واحد دارند.
- document.getElementById('ry-home-back')?.addEventListener('click',home);
- document.querySelectorAll('main>section').forEach(section=>{
-  if(section.id==='welcome'||section.querySelector('[data-ry-home]'))return;
-  const btn=document.createElement('button');
-  btn.type='button';btn.className='btn';btn.dataset.ryHome='1';
-  btn.textContent='🏠 صفحهٔ شروع';
-  btn.style.cssText='display:inline-flex;margin:0 0 12px;min-height:42px';
-  section.insertBefore(btn,section.firstChild);
- });
- document.addEventListener('click',e=>{
-  const homeBtn=e.target.closest('[data-ry-home]');
-  if(homeBtn){e.preventDefault();home();return;}
-  const openBtn=e.target.closest('[data-ry-open]');
-  if(openBtn){const target=openBtn.dataset.ryOpen;if(target&&document.getElementById(target)){e.preventDefault();ryOpenSection(target);}return;}
-  const tab=e.target.closest('#tabs [data-t]');
-  if(tab){e.preventDefault();ryOpenSection(tab.dataset.t);}
- },true);
- // درس‌نامه هشتم دوباره در ابتدای فهرست ابزارهای صفحهٔ شروع قرار می‌گیرد.
- const list=document.getElementById('welcome-list');
- if(list){
-  let lesson=list.querySelector('[data-ry-open="chapters"]');
-  if(!lesson){
-   lesson=document.createElement('button');lesson.type='button';lesson.className='welcome-option';lesson.dataset.ryOpen='chapters';
-   lesson.innerHTML='<span class="wo-icon" aria-hidden="true">📚</span><span class="wo-text"><strong>درس‌نامهٔ ریاضی هشتم</strong><small>آموزش، مثال و تمرین تشریحی هر ۹ فصل کتاب</small></span><span class="wo-arrow" aria-hidden="true">←</span>';
-  }else{
-   const title=lesson.querySelector('strong'),desc=lesson.querySelector('small');
-   if(title)title.textContent='درس‌نامهٔ ریاضی هشتم';
-   if(desc)desc.textContent='آموزش، مثال و تمرین تشریحی هر ۹ فصل کتاب';
-  }
-  list.prepend(lesson);
- }
- // اطمینان از اینکه بخش درس‌نامه و فهرست فصل‌ها آماده‌اند.
- if(typeof ryChapters!=='undefined'&&ryChapters.length===9){
-  const select=document.getElementById('ry-chapter-select');
-  if(select&&select.options.length!==9){
-   const saved=Math.max(0,Math.min(8,Number(S.get('chapterLast',0))||0));
-   select.innerHTML=ryChapters.map((chapter,index)=>'<option value="'+index+'">'+ryEscape(chapter.title)+'</option>').join('');
-   select.value=String(saved);
-  }
- }
-})();
+// ناوبری یکتا برای دکمه‌های بازگشت داخل ابزارها؛ مسیر اصلی ryOpenSection مرجع نمایش بخش‌هاست.
+document.querySelectorAll('main > section:not(#welcome)').forEach(section=>{
+ if(section.querySelector('[data-ry-home]')) return;
+ const button=document.createElement('button');
+ button.type='button';
+ button.className='btn';
+ button.dataset.ryHome='1';
+ button.textContent='🏠 صفحهٔ شروع';
+ button.style.cssText='display:inline-flex;margin:0 0 12px;min-height:42px';
+ section.insertBefore(button,section.firstChild);
+});
+document.addEventListener('click',event=>{
+ const target=event.target instanceof Element ? event.target.closest('[data-ry-home]') : null;
+ if(!target) return;
+ event.preventDefault();
+ ryOpenSection('welcome');
+});
+;
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(()=>{const SUPABASE_URL='https://obaxwpbeiukulchxnopl.supabase.co';const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jSmHLR3fC9b-L4bARL5c1g_F_53zFPe';const statusEl=document.getElementById('ry-auth-status'),modalEl=document.getElementById('ry-auth-modal'),openBtn=document.getElementById('ry-auth-open'),closeBtn=document.getElementById('ry-auth-close'),signInBtn=document.getElementById('ry-auth-signin'),signUpBtn=document.getElementById('ry-auth-signup'),signOutBtn=document.getElementById('ry-auth-signout'),nameEl=document.getElementById('ry-auth-name'),emailEl=document.getElementById('ry-auth-email'),passwordEl=document.getElementById('ry-auth-password'),passwordToggle=document.getElementById('ry-auth-password-toggle');passwordToggle?.addEventListener('click',()=>{const reveal=passwordEl.type==='password';passwordEl.type=reveal?'text':'password';passwordToggle.textContent=reveal?'🙈':'👁';passwordToggle.setAttribute('aria-label',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('title',reveal?'پنهان کردن رمز عبور':'نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed',String(reveal));});if(!window.supabase?.createClient){openBtn.disabled=true;openBtn.textContent='اتصال حساب موقتاً در دسترس نیست';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const setStatus=(m,e=false)=>{statusEl.textContent=m;statusEl.style.color=e?'var(--bad)':'var(--ok)';};const show=()=>{modalEl.hidden=false;modalEl.style.display='flex';};const hide=()=>{modalEl.hidden=true;modalEl.style.display='none';};const loginTab=document.getElementById('ry-auth-tab-login'),registerTab=document.getElementById('ry-auth-tab-register'),registerName=document.getElementById('ry-auth-register-name');let authMode='login';const setMode=mode=>{authMode=mode;const registering=mode==='register';loginTab.classList.toggle('pri',!registering);registerTab.classList.toggle('pri',registering);loginTab.setAttribute('aria-pressed',String(!registering));registerTab.setAttribute('aria-pressed',String(registering));registerName.hidden=!registering;nameEl.disabled=!registering;signInBtn.hidden=registering;signUpBtn.hidden=!registering;};let currentAuthUser=null;const setUser=u=>{currentAuthUser=u||null;if(!u)setMode('login');openBtn.textContent=u?'👤 '+(u.user_metadata?.display_name||u.email||'حساب من'):'👤 ورود / ثبت‌نام';loginTab.hidden=!!u;registerTab.hidden=!!u;registerName.hidden=true;signInBtn.hidden=!!u;signUpBtn.hidden=!!u;signOutBtn.hidden=!u;nameEl.disabled=!!u;passwordEl.value='';if(passwordToggle){passwordEl.type='password';passwordToggle.textContent='👁';passwordToggle.setAttribute('aria-label','نمایش رمز عبور');passwordToggle.setAttribute('title','نمایش رمز عبور');passwordToggle.setAttribute('aria-pressed','false');}if(u){hide();setStatus('وارد حساب شدی. اتصال حساب کاربری برقرار است.');}};loginTab.addEventListener('click',()=>setMode('login'));registerTab.addEventListener('click',()=>setMode('register'));setMode('login');openBtn.addEventListener('click',async()=>{if(!currentAuthUser){setMode('login');show();return;}const {data:role}=await client.from('user_roles').select('role').eq('user_id',currentAuthUser.id).eq('role','admin').maybeSingle();if(role){window.location.href='/admin';return;}if(window.ryShowAccount)window.ryShowAccount();else{setMode('login');show();}});closeBtn.addEventListener('click',hide);modalEl.addEventListener('click',e=>{if(e.target===modalEl)hide();});signUpBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value,display_name=nameEl.value.trim();if(!email||password.length<6)return setStatus('ایمیل را وارد کن و رمز عبور را دست‌کم ۶ نویسه بگذار.',true);signUpBtn.disabled=true;setStatus('در حال ساخت حساب…');const{data,error}=await client.auth.signUp({email,password,options:{data:{display_name}}});signUpBtn.disabled=false;if(error)return setStatus(error.message,true);if(data.session){setUser(data.user);setStatus('حساب ساخته شد و وارد شدی.');}else setStatus('حساب ساخته شد. اگر تأیید ایمیل فعال باشد، ایمیلت را برای لینک تأیید بررسی کن.');});signInBtn.addEventListener('click',async()=>{const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password)return setStatus('ایمیل و رمز عبور را وارد کن.',true);signInBtn.disabled=true;setStatus('در حال ورود…');const{data,error}=await client.auth.signInWithPassword({email,password});signInBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(data.user);setStatus('با موفقیت وارد شدی.');});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;const{error}=await client.auth.signOut();signOutBtn.disabled=false;if(error)return setStatus(error.message,true);setUser(null);setStatus('از حساب خارج شدی.');});client.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));client.auth.getUser().then(({data,error})=>setUser(error?null:data.user));window.riaziYarSupabase=client;})();</script>
 <script>
@@ -3123,105 +3096,10 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 
 
 
-<script>
-// RY_XP_HOME_RECOVERY_V1: نمایش مستقل مسیر پیشرفت در صفحهٔ آغازین
-(()=>{
- const render=()=>{
-  const stats=document.getElementById('ry-xp-home-stats');
-  const bar=document.getElementById('ry-xp-home-bar');
-  const next=document.getElementById('ry-xp-home-next');
-  if(!stats||!bar||!next)return;
-  let xp=0;
-  try{
-   const raw=localStorage.getItem('ry_total');
-   const parsed=raw===null?0:JSON.parse(raw);
-   xp=Math.max(0,Number(parsed)||0);
-  }catch(_){xp=0}
-  const level=1+Math.floor(xp/100),within=xp%100;
-  const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
-  stats.innerHTML='<div>سطح فعلی<b>'+fa(level)+'</b></div><div>XP کل<b>'+fa(xp)+'</b></div><div>تا سطح بعدی<b>'+fa(100-within)+' XP</b></div>';
-  bar.style.width=within+'%';
-  next.textContent=fa(within)+' از ۱۰۰ XP سطح '+fa(level+1)+' را به دست آورده‌ای. هر پاسخ درست ۱۰ XP می‌دهد.';
- };
- // جایگزینی تابع سراسری باعث می‌شود به‌روزرسانی‌های پس از آزمون نیز همین نمایش امن را اجرا کنند.
- window.ryXPRefresh=render;
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});
- else render();
- window.addEventListener('pageshow',render);
- window.addEventListener('storage',e=>{if(e.key==='ry_total')render()});
-})();
-</script>
 
-<script>
-/* RY_GLOBAL_NAV_GUARD_V2
-   مستقل از اسکریپت اصلی: ناوبری خانه و ابزارها حتی در صورت خطای یک اسکریپت دیگر فعال می‌ماند. */
-(()=>{
- const sections=()=>Array.from(document.querySelectorAll('main>section'));
- const show=(id)=>{
-  const target=document.getElementById(id);
-  if(!target||!target.matches('main>section'))return false;
-  sections().forEach(s=>{s.hidden=s!==target;});
-  document.body.classList.toggle('landing',id==='welcome');
-  document.querySelectorAll('#tabs [data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
-  window.scrollTo({top:0,behavior:'instant'});
-  // اجرای تازه‌سازی‌های شناخته‌شده، بدون آنکه خطای یک ابزار مانع جابه‌جایی صفحه شود.
-  try{if(id==='chapters'&&typeof window.ryRenderChapter==='function')window.ryRenderChapter();}catch(err){console.warn('Chapter refresh:',err);}
-  try{if(id==='quiz'&&typeof window.qSetup==='function')window.qSetup();}catch(err){console.warn('Quiz refresh:',err);}
-  return true;
- };
- window.ryNavigateTo=show;
- // دکمهٔ ثابت صفحهٔ شروع
- document.getElementById('ry-home-back')?.addEventListener('click',e=>{e.preventDefault();show('welcome');});
- // دکمهٔ خانه در همهٔ ابزارها؛ رویداد مستقیم است و به اسکریپت اصلی وابسته نیست.
- sections().forEach(section=>{
-  if(section.id==='welcome')return;
-  let btn=section.querySelector(':scope > [data-ry-home]');
-  if(!btn){
-   btn=document.createElement('button');btn.type='button';btn.className='btn';btn.dataset.ryHome='1';
-   btn.textContent='🏠 صفحهٔ شروع';
-   btn.style.cssText='display:inline-flex;align-items:center;justify-content:center;margin:0 0 14px;min-height:44px;position:relative;z-index:2';
-   section.insertBefore(btn,section.firstChild);
-  }
-  btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();show('welcome');});
- });
- // ناوبری ابزارها و کارت‌های صفحهٔ آغازین؛ استفاده از closest برای لمس آیکون/متن داخلی.
- document.addEventListener('click',e=>{
-  const tab=e.target.closest('#tabs [data-t]');
-  if(tab){e.preventDefault();show(tab.dataset.t);return;}
-  const open=e.target.closest('[data-ry-open]');
-  if(open){const id=open.dataset.ryOpen;if(show(id))e.preventDefault();}
- },true);
-})();
-</script>
 
-<script>
-/* RY_HOME_CLICK_CAPTURE_V3: کنترل بازگشت از مرحلهٔ capture برای جلوگیری از تداخل رویدادها */
-(()=>{
- const goHome=()=>{
-  const all=Array.from(document.querySelectorAll('main > section'));
-  const home=document.getElementById('welcome');
-  if(!home)return;
-  for(const section of all){
-   const active=section===home;
-   section.hidden=!active;
-   section.style.display=active?'':'none';
-   section.setAttribute('aria-hidden',active?'false':'true');
-  }
-  document.body.classList.add('landing');
-  window.scrollTo(0,0);
- };
- window.addEventListener('click',event=>{
-  const node=event.target instanceof Element?event.target:null;
-  if(!node)return;
-  const button=node.closest('[data-ry-home],#ry-home-back');
-  if(!button)return;
-  event.preventDefault();
-  event.stopPropagation();
-  if(typeof event.stopImmediatePropagation==='function')event.stopImmediatePropagation();
-  goHome();
- },true);
- window.ryForceHome=goHome;
-})();
-</script>
+
+
+
 </body>
 </html>
