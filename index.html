@@ -1807,19 +1807,7 @@ $('tprint').onclick=()=>{ryMakeTeacher();window.print()};
 
 // به‌روزرسانی نشان استفاده از بخش‌ها
 const ryOldTabsClick=$('tabs').onclick;
-$('tabs').onclick=e=>{
- const t=e.target.dataset.t;if(!t)return;
- document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==t);
- document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b===e.target));
- if(t==='quiz')qSetup();
- if(t==='chapters')ryRenderChapter();
- if(t==='daily')ryDailyRefresh();
- if(t==='mistakes')ryMistakesRefresh();
- if(t==='achievements')ryAchievementsRefresh();
- ryXPRefresh();
- if(t==='geometry'){S.set('usedGeometry',true)}
- if(t==='numberline'){S.set('usedNumberline',true)}
-};
+// ناوبری در ادامه، پس از تعریف ryOpenSection، یک‌بار ثبت می‌شود.
 
 
 
