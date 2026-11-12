@@ -2417,8 +2417,8 @@ document.addEventListener('click',event=>{
     const source=await response.text();
     const parts=[];
     const add=(name,code)=>{if(code&&code.trim())parts.push({name,code:code.trim()});};
-    const styleRe=/<style\b[^>]*>([\s\S]*?)<\\/style>/gi;
-    const scriptRe=/<script\b([^>]*)>([\s\S]*?)<\\/script>/gi;
+    const styleRe=/<style\b[^>]*>([\s\S]*?)<\/style>/gi;
+    const scriptRe=/<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
     let m,n=0;
     while((m=styleRe.exec(source)))add('CSS · بلوک '+(++n),m[1]);
     n=0;
