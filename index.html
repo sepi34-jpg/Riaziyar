@@ -3076,5 +3076,34 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 
 
 
+
+<script>
+// RY_XP_HOME_RECOVERY_V1: نمایش مستقل مسیر پیشرفت در صفحهٔ آغازین
+(()=>{
+ const render=()=>{
+  const stats=document.getElementById('ry-xp-home-stats');
+  const bar=document.getElementById('ry-xp-home-bar');
+  const next=document.getElementById('ry-xp-home-next');
+  if(!stats||!bar||!next)return;
+  let xp=0;
+  try{
+   const raw=localStorage.getItem('ry_total');
+   const parsed=raw===null?0:JSON.parse(raw);
+   xp=Math.max(0,Number(parsed)||0);
+  }catch(_){xp=0}
+  const level=1+Math.floor(xp/100),within=xp%100;
+  const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+  stats.innerHTML='<div>سطح فعلی<b>'+fa(level)+'</b></div><div>XP کل<b>'+fa(xp)+'</b></div><div>تا سطح بعدی<b>'+fa(100-within)+' XP</b></div>';
+  bar.style.width=within+'%';
+  next.textContent=fa(within)+' از ۱۰۰ XP سطح '+fa(level+1)+' را به دست آورده‌ای. هر پاسخ درست ۱۰ XP می‌دهد.';
+ };
+ // جایگزینی تابع سراسری باعث می‌شود به‌روزرسانی‌های پس از آزمون نیز همین نمایش امن را اجرا کنند.
+ window.ryXPRefresh=render;
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});
+ else render();
+ window.addEventListener('pageshow',render);
+ window.addEventListener('storage',e=>{if(e.key==='ry_total')render()});
+})();
+</script>
 </body>
 </html>
