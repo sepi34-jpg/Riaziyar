@@ -2417,8 +2417,8 @@ document.addEventListener('click',event=>{
     const source=await response.text();
     const parts=[];
     const add=(name,code)=>{if(code&&code.trim())parts.push({name,code:code.trim()});};
-    const styleRe=/<style\\b[^>]*>([\\s\\S]*?)<\\/style>/gi;
-    const scriptRe=/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi;
+    const styleRe=/<style\b[^>]*>([\s\S]*?)<\\/style>/gi;
+    const scriptRe=/<script\b([^>]*)>([\s\S]*?)<\\/script>/gi;
     let m,n=0;
     while((m=styleRe.exec(source)))add('CSS · بلوک '+(++n),m[1]);
     n=0;
@@ -2435,7 +2435,7 @@ document.addEventListener('click',event=>{
      if(attrs.includes('src='))label+=' (دارای منبع خارجی)';
      add(label,code);
     }
-    const markup=source.replace(styleRe,'').replace(scriptRe,'').replace(/<!--[\\s\\S]*?-->/g,'').trim();
+    const markup=source.replace(styleRe,'').replace(scriptRe,'').replace(/<!--[\s\S]*?-->/g,'').trim();
     add('HTML · ساختار و محتوای صفحه',markup);
     sourceParts=parts;sourceLoaded=true;
     select.replaceChildren();
@@ -2448,9 +2448,9 @@ document.addEventListener('click',event=>{
    const selected=sourceParts[Number(select.value)||0];
    const term=(search?.value||'').trim().toLowerCase();
    if(!term){output.textContent=selected.code;return;}
-   const lines=selected.code.split('\\n');
+   const lines=selected.code.split('\n');
    const hits=lines.map((line,index)=>line.toLowerCase().includes(term)?index:-1).filter(index=>index>=0);
-   output.textContent=hits.length?hits.slice(0,250).map(index=>(index+1)+': '+lines[index]).join('\\n'):'عبارتی پیدا نشد.';
+   output.textContent=hits.length?hits.slice(0,250).map(index=>(index+1)+': '+lines[index]).join('\n'):'عبارتی پیدا نشد.';
    status.textContent=hits.length+' خط شامل عبارت پیدا شد'+(hits.length>250?'؛ حداکثر ۲۵۰ نتیجه نمایش داده می‌شود.':'.');
   };
   if(!select.dataset.bound){select.addEventListener('change',render);search?.addEventListener('input',render);select.dataset.bound='1';}
