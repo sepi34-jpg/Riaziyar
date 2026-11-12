@@ -3086,5 +3086,31 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
 
 
 
+<script id="ry-independent-home-navigation-v1">
+(()=>{
+ if(window.__ryIndependentHomeNavigationV1)return;
+ window.__ryIndependentHomeNavigationV1=true;
+ const goHome=()=>{
+  const sections=document.querySelectorAll('main>section');
+  const home=document.getElementById('welcome');
+  if(!home)return;
+  sections.forEach(section=>{section.hidden=section!==home;});
+  document.body.classList.add('landing');
+  const panel=document.getElementById('ry-menu-panel');
+  const toggle=document.getElementById('ry-menu-toggle');
+  if(panel)panel.hidden=true;
+  if(toggle)toggle.setAttribute('aria-expanded','false');
+  window.scrollTo({top:0,left:0,behavior:'auto'});
+ };
+ document.addEventListener('click',event=>{
+  const target=event.target instanceof Element?event.target.closest('#ry-home-back,[data-ry-home],#tabs [data-t="welcome"]'):null;
+  if(!target)return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  goHome();
+ },true);
+})();
+</script>
+
 </body>
 </html>
