@@ -3193,5 +3193,35 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  },true);
 })();
 </script>
+
+<script>
+/* RY_HOME_CLICK_CAPTURE_V3: کنترل بازگشت از مرحلهٔ capture برای جلوگیری از تداخل رویدادها */
+(()=>{
+ const goHome=()=>{
+  const all=Array.from(document.querySelectorAll('main > section'));
+  const home=document.getElementById('welcome');
+  if(!home)return;
+  for(const section of all){
+   const active=section===home;
+   section.hidden=!active;
+   section.style.display=active?'':'none';
+   section.setAttribute('aria-hidden',active?'false':'true');
+  }
+  document.body.classList.add('landing');
+  window.scrollTo(0,0);
+ };
+ window.addEventListener('click',event=>{
+  const node=event.target instanceof Element?event.target:null;
+  if(!node)return;
+  const button=node.closest('[data-ry-home],#ry-home-back');
+  if(!button)return;
+  event.preventDefault();
+  event.stopPropagation();
+  if(typeof event.stopImmediatePropagation==='function')event.stopImmediatePropagation();
+  goHome();
+ },true);
+ window.ryForceHome=goHome;
+})();
+</script>
 </body>
 </html>
