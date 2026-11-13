@@ -422,6 +422,14 @@ body:not(.landing) .rv{border-color:#34436c}
 body:not(.landing) .mute,body:not(.landing) .ry-ggb-tabs .btn small{color:#aebbe0}
 body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
 
+
+/* جایگاه رزروشدهٔ تبلیغات — بدون بارگذاری تبلیغ یا اسکریپت شخص ثالث */
+.ry-ad-placement{display:block;width:min(100% - 32px,1100px);margin:26px auto 30px;direction:rtl}
+.ry-ad-placeholder{min-height:112px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:18px;border:1px dashed var(--stone);border-radius:16px;background:color-mix(in srgb,var(--surface) 55%,transparent);text-align:center}
+.ry-ad-label{font-size:.9rem;font-weight:800;color:var(--mute)}
+.ry-ad-note{font-size:.78rem;color:var(--mute);opacity:.85}
+@media(max-width:600px){.ry-ad-placement{width:calc(100% - 24px);margin:18px auto 24px}.ry-ad-placeholder{min-height:92px;padding:14px}}
+
 </style>
 </head>
 <body>
@@ -671,6 +679,12 @@ table{max-width:100%}
   <button type="button" class="welcome-option" data-ry-open="mock-exam"><span class="wo-icon">📝</span><span class="wo-text"><strong>آزمون شبیه‌ساز</strong><small>آزمون زمان‌دار از بانک سؤال‌های ریاضی هشتم</small></span><span class="wo-arrow">←</span></button>
   <button type="button" class="welcome-option" data-ry-open="math-games"><span class="wo-icon">🎮</span><span class="wo-text"><strong>بازی‌های ریاضی</strong><small>محاسبهٔ سریع، عدد گمشده و کشف الگو</small></span><span class="wo-arrow">←</span></button>
   </div>
+  <aside class="ry-ad-placement" id="ry-ad-slot-home" data-ad-slot="home-bottom" aria-label="جایگاه رزروشدهٔ تبلیغات">
+    <div class="ry-ad-placeholder">
+      <span class="ry-ad-label">جایگاه تبلیغات</span>
+      <span class="ry-ad-note">این فضا برای تبلیغات آینده رزرو شده است.</span>
+    </div>
+  </aside>
 </section>
 <!-- ================= آزمون شبیه‌ساز ================= -->
 <section id="mock-exam" hidden>
