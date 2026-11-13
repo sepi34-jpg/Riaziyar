@@ -430,6 +430,13 @@ body:not(.landing) .ry-ggb-frame{border-color:#536a9d}
 .ry-ad-note{font-size:.78rem;color:var(--mute);opacity:.85}
 @media(max-width:600px){.ry-ad-placement{width:calc(100% - 24px);margin:18px auto 24px}.ry-ad-placeholder{min-height:92px;padding:14px}}
 
+/* جایگاه تبلیغاتی قابل توسعهٔ ریاضی‌یار */
+.ry-ad-slot{width:min(100% - 32px,900px);margin:14px auto 4px;padding:10px 14px;border:1px dashed var(--stone);border-radius:16px;background:var(--card);color:var(--mute)}
+.ry-ad-slot-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:76px;text-align:center}
+.ry-ad-slot-label{font-size:.72rem;font-weight:800;letter-spacing:.02em;color:var(--mute)}
+.ry-ad-content{width:100%;min-height:42px;display:flex;align-items:center;justify-content:center}
+.ry-ad-placeholder{font-size:.82rem;opacity:.78}
+@media(max-width:600px){.ry-ad-slot{width:calc(100% - 24px);margin:10px auto 2px;padding:9px 10px}.ry-ad-slot-inner{min-height:68px}}
 </style>
 </head>
 <body>
@@ -627,6 +634,16 @@ table{max-width:100%}
 </div>
 
 </div>
+
+<!-- جایگاه رزروشدهٔ تبلیغات؛ در آینده محتوای تبلیغ درون ry-ad-content قرار می‌گیرد. فعلاً هیچ شبکه یا اسکریپت تبلیغاتی بارگذاری نمی‌شود. -->
+<aside id="ry-ad-slot" class="ry-ad-slot" data-ad-slot="site-wide-banner" data-ad-status="empty" aria-label="جایگاه تبلیغات">
+ <div class="ry-ad-slot-inner">
+  <span class="ry-ad-slot-label">جایگاه تبلیغات</span>
+  <div id="ry-ad-content" class="ry-ad-content" aria-live="off">
+   <span class="ry-ad-placeholder">فضای رزروشده برای تبلیغ در آینده</span>
+  </div>
+ </div>
+</aside>
 
 <main>
 <div class="math-orbit" aria-hidden="true"><span>π</span><span>√x</span><span>∑</span><span>÷</span><span>∞</span><span>∫</span></div>
