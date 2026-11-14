@@ -3649,7 +3649,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   $('ryt-start').disabled=false;
   if(error){setMsg(error.message,true);return}
   if(data.status==='completed'){finishSession(data);return}
-  st.sessionId=data.session_id;st.questionStartedAt=data.question_started_at;renderQuestion(data.question);renderClock();
+  st.sessionId=data.session_id;st.questionStartedAt=data.question_started_at;renderQuestion(data.question);renderClock();loadLeaderboard();loadMyScore();
  };
  const submitAnswer=async()=>{
   if(!st.sessionId||!st.question)return;
