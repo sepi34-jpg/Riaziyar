@@ -3596,13 +3596,13 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const renderTournamentHeader=()=>{
   const t=st.current;if(!t){$('ryt-status').textContent='بدون مسابقه';$('ryt-state').textContent='برنامه‌ای ثبت نشده';$('ryt-clock').textContent='—';$('ryt-count').textContent='—';$('ryt-dates').textContent='';$('ryt-start').disabled=true;return}
   const info=statusInfo(t);$('ryt-status').textContent=info[0];$('ryt-status').className='ry-tourn-status '+info[1];$('ryt-state').textContent=info[0];$('ryt-count').textContent=fa(t.question_count)+' سؤال';$('ryt-dates').textContent=dateFmt(t.starts_at)+' تا '+dateFmt(t.ends_at);
-  $('ryt-start').disabled=info[1]!=='active'||!st.user;
+  $('ryt-start').disabled=!st.user||t.status!=='scheduled';
   $('ryt-start').textContent=st.user?'ورود به مسابقه':'برای شرکت وارد حساب شو';
  };
  const renderClock=()=>{
   const t=st.current;if(!t){$('ryt-clock').textContent='—';return}
   const now=Date.now(),start=Date.parse(t.starts_at),end=Date.parse(t.ends_at);
-  if(now>=end&&st.question){$('ryt-submit').disabled=true;setMsg('مهلت مسابقه به پایان رسیده است؛ دیگر پاسخی پذیرفته نمی‌شود.',true)}let diff=now<start?start-now:end-now;
+  if(now>=end&&st.question){setMsg('مهلت مسابقه به پایان رسیده است؛ سرور دیگر پاسخی نمی‌پذیرد.',true)}let diff=now<start?start-now:end-now;
   if(statusInfo(t)[1]==='paused'){$('ryt-clock').textContent='متوقف';return}
   if(diff<=0){$('ryt-clock').textContent=statusInfo(t)[1]==='ended'?'پایان مسابقه':'در حال برگزاری';return}
   const total=Math.floor(diff/1000),d=Math.floor(total/86400),h=Math.floor(total%86400/3600),m=Math.floor(total%3600/60),s=total%60;
@@ -3686,7 +3686,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   st.current=t;st.sessionId=null;st.question=null;$('ryt-rank').textContent='—';$('ryt-play').hidden=true;$('ryt-finish').hidden=true;$('ryt-review').hidden=true;
   renderTournamentHeader();renderClock();
   if(t){await loadLeaderboard();if(statusInfo(t)[1]==='ended')await loadReview();
-   if(st.user&&statusInfo(t)[1]==='active'){
+   if(st.user&&t.status==='scheduled'){
     const {data:s}=await client.from('tournament_sessions').select('id,status').eq('tournament_id',t.id).maybeSingle();
     if(s?.status==='active')await startContest();
     else if(s?.status==='completed'){
@@ -3713,6 +3713,21 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   renderTournamentHeader();
  };
  const tehranDefaults=()=>{const d=nextFriday();$('ryt-new-start').value=d[0];$('ryt-new-end').value=d[1]};
+ const saveSettingsBtn=document.createElement('button');saveSettingsBtn.type='button';saveSettingsBtn.id='ryt-save-settings';saveSettingsBtn.className='btn';saveSettingsBtn.textContent='ذخیره تنظیمات مسابقه';
+ $('ryt-create').parentNode.appendChild(saveSettingsBtn);
+ saveSettingsBtn.addEventListener('click',async()=>{
+  if(!st.adminTournament)return adminMsg('ابتدا مسابقه‌ای را انتخاب کن.');
+  try{
+   const update={title:$('ryt-new-title').value.trim()||'تورنومنت هفتگی ریاضی‌یار',
+    starts_at:toISO($('ryt-new-start').value),ends_at:toISO($('ryt-new-end').value),
+    question_count:Number($('ryt-new-count').value),seconds_per_question:Number($('ryt-new-seconds').value),
+    base_points:Number($('ryt-new-base').value),max_speed_bonus:Number($('ryt-new-speed').value)};
+   const {error}=await client.from('tournaments').update(update).eq('id',st.adminTournament.id);
+   if(error){adminMsg(error.message);return}
+   adminMsg('تنظیمات مسابقه ذخیره شد. اگر تعداد سؤال را تغییر دادی، باید بانک سؤال را هم هماهنگ کنی.');
+   await loadAdminTournaments(st.adminTournament.id);await loadPublic();
+  }catch(e){adminMsg('زمان واردشده معتبر نیست.')}
+ });
  const adminMsg=m=>{$('ryt-admin-status').textContent=m||''};
  const loadAdminTournaments=async(chooseId)=>{
   if(!st.isAdmin)return;
@@ -3731,6 +3746,12 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   if(!st.adminTournament){$('ryt-admin-questions').innerHTML='<p class="mute">یک مسابقه را انتخاب کن یا مسابقه جدید بساز.</p>';return}
   const t=st.adminTournament;
   adminMsg('وضعیت: '+stateText(t)+' | شروع: '+dateFmt(t.starts_at)+' | پایان: '+dateFmt(t.ends_at));
+  $('ryt-new-title').value=t.title||'تورنومنت هفتگی ریاضی‌یار';
+  $('ryt-new-start').value=dateInput(new Date(Date.parse(t.starts_at)+210*60000));
+  $('ryt-new-end').value=dateInput(new Date(Date.parse(t.ends_at)+210*60000));
+  $('ryt-new-count').value=t.question_count;$('ryt-new-seconds').value=t.seconds_per_question;
+  $('ryt-new-base').value=t.base_points;$('ryt-new-speed').value=t.max_speed_bonus;
+  $('ryt-extend-end').value=dateInput(new Date(Date.parse(t.ends_at)+210*60000));
   const {data,error}=await client.from('tournament_questions').select('*').eq('tournament_id',t.id).order('position');
   if(error){$('ryt-admin-questions').textContent=error.message;return}
   st.adminQuestions=data||[];
