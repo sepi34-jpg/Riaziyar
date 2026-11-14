@@ -240,8 +240,8 @@ button,select,input{touch-action:manipulation;}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar{width:12px;height:12px}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar-track{background:var(--stone);border-radius:10px}
 #geo-wonders .ry-ggb-frame::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-#geo-wonders .ry-ggb-scale{width:1500px;min-width:1500px;height:1000px;min-height:1000px;overflow:visible}
-#geo-wonders .ry-ggb-scale iframe{display:block;width:1500px;height:1000px;min-width:1500px;min-height:1000px;border:0}
+#geo-wonders .ry-ggb-scale{width:100%;min-width:0;height:100%;min-height:0;overflow:visible}
+#geo-wonders .ry-ggb-scale iframe{display:block;width:100%;height:100%;min-width:0;min-height:0;border:0}
 #geo-wonders:fullscreen{position:fixed;inset:0;z-index:99999;overflow:auto;background:var(--bg);padding:16px;box-sizing:border-box}
 #geo-wonders:fullscreen .card{max-width:none;margin:0 auto}
 #geo-wonders:fullscreen .ry-ggb-frame{height:calc(100vh - 300px);min-height:360px}
@@ -2655,52 +2655,80 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const section=document.getElementById('geo-wonders');
  const prevBtn=document.getElementById('ry-ggb-prev');
  const nextBtn=document.getElementById('ry-ggb-next');
- if(!host||!tabs||!status||!retry||!fullBtn||!section||!prevBtn||!nextBtn)return;
- let loader=null,currentApp=null,loading=false,lastApp='suite';
+ const frame=section?.querySelector('.ry-ggb-frame');
+ if(!host||!tabs||!status||!retry||!fullBtn||!section||!prevBtn||!nextBtn||!frame)return;
+ let loader=null,currentApp=null,loading=false,lastApp='suite',requestId=0,loadTimer=null;
+ const setBusy=busy=>{
+  tabs.querySelectorAll('[data-ggb-app]').forEach(b=>{b.disabled=busy;b.setAttribute('aria-busy',String(busy))});
+  prevBtn.disabled=busy;nextBtn.disabled=busy;
+ };
+ const clearLoadTimer=()=>{if(loadTimer!==null){clearTimeout(loadTimer);loadTimer=null}};
+ const failLoad=(token,message)=>{
+  if(token!==requestId)return;
+  clearLoadTimer();loading=false;currentApp=null;host.replaceChildren();
+  status.textContent=message||'بارگذاری ابزار کامل نشد. اتصال اینترنت را بررسی کن و دوباره تلاش کن.';
+  retry.hidden=false;setBusy(false);
+ };
  const loadLibrary=()=>{
   if(window.GGBApplet)return Promise.resolve();
   if(loader)return loader;
   loader=new Promise((resolve,reject)=>{
    const script=document.createElement('script');
    script.src='https://www.geogebra.org/apps/deployggb.js';
-   script.async=true;
-   script.onload=()=>window.GGBApplet?resolve():reject(new Error('کتابخانهٔ GeoGebra بارگذاری نشد.'));
-   script.onerror=()=>reject(new Error('اتصال به سرور GeoGebra برقرار نشد.'));
+   script.async=true;script.crossOrigin='anonymous';
+   script.onload=()=>window.GGBApplet?resolve():reject(new Error('کتابخانهٔ GeoGebra بارگذاری شد اما آماده نیست.'));
+   script.onerror=()=>reject(new Error('اتصال به کتابخانهٔ رسمی GeoGebra برقرار نشد.'));
    document.head.appendChild(script);
-  }).catch(err=>{loader=null;throw err;});
+  }).catch(err=>{loader=null;throw err});
   return loader;
  };
- const setBusy=busy=>tabs.querySelectorAll('[data-ggb-app]').forEach(b=>{b.disabled=busy;b.setAttribute('aria-busy',String(busy));});
  const selectApp=async(app,force=false)=>{
   if(loading)return;
   if(currentApp===app&&!force)return;
+  const token=++requestId;
   loading=true;lastApp=app;setBusy(true);retry.hidden=true;
   tabs.querySelectorAll('[data-ggb-app]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ggbApp===app)));
-  status.textContent='⏳ در حال بازکردن ابزار… ممکن است چند لحظه طول بکشد.';
+  status.textContent='⏳ در حال بارگذاری ابزار… اگر اتصال کند باشد ممکن است کمی زمان ببرد.';
   host.replaceChildren();currentApp=app;
+  loadTimer=setTimeout(()=>{
+   if(token!==requestId)return;
+   requestId++;
+   clearLoadTimer();loading=false;currentApp=null;loader=null;host.replaceChildren();
+   status.textContent='بارگذاری بیش از ۴۵ ثانیه طول کشید. اتصال اینترنت یا محدودیت دسترسی به GeoGebra را بررسی کن و دوباره تلاش کن.';
+   retry.hidden=false;setBusy(false);
+  },45000);
   try{
    await loadLibrary();
+   if(token!==requestId)return;
    const params={
-    appName:app,width:1500,height:1000,scaleContainerClass:'ry-ggb-frame',autoHeight:false,
-    language:'fa',showMenuBar:true,showToolBar:true,showToolBarHelp:true,
+    id:'ryGeoGebraApplet',
+    appName:app,
+    width:1200,height:760,
+    scaleContainerClass:'ry-ggb-frame',
+    autoHeight:false,
+    language:'fa',
+    showMenuBar:true,showToolBar:true,showToolBarHelp:true,
     showAlgebraInput:true,showResetIcon:true,showFullscreenButton:true,
     allowStyleBar:true,enable3d:true,enableCAS:true,enableRightClick:true,
     enableShiftDragZoom:true,showZoomButtons:true,
-    appletOnLoad:()=>{status.textContent='✅ ابزار آماده است؛ حالا می‌توانی از آن استفاده کنی.';retry.hidden=true;}
+    preventFocus:true,
+    appletOnLoad:()=>{
+     if(token!==requestId)return;
+     clearLoadTimer();loading=false;
+     status.textContent='✅ ابزار آماده است؛ می‌توانی رسم و محاسبه را شروع کنی.';
+     retry.hidden=true;setBusy(false);
+    }
    };
    const applet=new window.GGBApplet(params,true);
-   applet.inject('ry-ggb-scale');
+   applet.inject(host);
   }catch(err){
-   currentApp=null;host.replaceChildren();
-   status.textContent='بارگذاری انجام نشد. اتصال اینترنت را بررسی کن و دوباره تلاش کن.';
-   retry.hidden=false;
-  }finally{loading=false;setBusy(false);}
+   failLoad(token,err?.message||'بارگذاری انجام نشد. اتصال اینترنت را بررسی کن و دوباره تلاش کن.');
+  }
  };
  tabs.addEventListener('click',e=>{
   const b=e.target.closest('[data-ggb-app]');
   if(b&&!b.disabled)selectApp(b.dataset.ggbApp);
  });
- // فلش‌ها با ابزار انتخاب‌شده حرکت می‌کنند؛ وابسته به scrollLeft و جهت RTL نیستند.
  const moveToolCard=direction=>{
   const cards=Array.from(tabs.querySelectorAll('[data-ggb-app]'));
   if(!cards.length||loading)return;
@@ -2709,7 +2737,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const targetIndex=Math.max(0,Math.min(cards.length-1,current+direction));
   if(targetIndex===current)return;
   const target=cards[targetIndex];
-  target.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});
   selectApp(target.dataset.ggbApp);
  };
  prevBtn.addEventListener('click',()=>moveToolCard(-1));
@@ -2722,10 +2750,11 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  };
  fullBtn.addEventListener('click',async()=>{
   try{
-   if(document.fullscreenElement){await document.exitFullscreen();}
-   else if(section.requestFullscreen){await section.requestFullscreen();}
-   else{status.textContent='تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.';}
-  }catch(e){status.textContent='مرورگر اجازهٔ تمام‌صفحه‌کردن نداد؛ از دکمهٔ تمام‌صفحه داخل GeoGebra استفاده کن.';}
+   if(document.fullscreenElement===section)await document.exitFullscreen();
+   else if(!document.fullscreenElement&&section.requestFullscreen)await section.requestFullscreen();
+   else if(document.fullscreenElement)status.textContent='ابتدا از حالت تمام‌صفحهٔ فعلی خارج شو.';
+   else status.textContent='تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.';
+  }catch(e){status.textContent='مرورگر اجازهٔ تمام‌صفحه‌کردن نداد؛ می‌توانی از دکمهٔ تمام‌صفحه داخل GeoGebra استفاده کنی.'}
   syncFullscreen();
  });
  document.addEventListener('fullscreenchange',syncFullscreen);
