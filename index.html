@@ -3682,7 +3682,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   (data||[]).forEach(q=>{const host=$('ryt-review-list').querySelector('[data-review-svg="'+q.question_number+'"]');if(host)renderSvg(host,q.figure_svg)});
  };
  const selectTournament=async t=>{
-  st.current=t;st.sessionId=null;st.question=null;$('ryt-play').hidden=true;$('ryt-finish').hidden=true;$('ryt-review').hidden=true;
+  st.current=t;st.sessionId=null;st.question=null;$('ryt-rank').textContent='—';$('ryt-play').hidden=true;$('ryt-finish').hidden=true;$('ryt-review').hidden=true;
   renderTournamentHeader();renderClock();
   if(t){await loadLeaderboard();if(statusInfo(t)[1]==='ended')await loadReview();
    if(st.user&&statusInfo(t)[1]==='active'){
@@ -3731,6 +3731,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   adminMsg('وضعیت: '+stateText(t)+' | شروع: '+dateFmt(t.starts_at)+' | پایان: '+dateFmt(t.ends_at));
   const {data,error}=await client.from('tournament_questions').select('*').eq('tournament_id',t.id).order('position');
   if(error){$('ryt-admin-questions').textContent=error.message;return}
+  st.adminQuestions=data||[];
   $('ryt-admin-questions').innerHTML=(data||[]).map(q=>'<div class="ry-tourn-item"><span><b>'+fa(q.position)+'. '+esc(q.topic)+'</b><small class="ry-tourn-muted"> '+esc(q.difficulty)+' • '+(q.is_multistep?'چندمرحله‌ای':'تک‌مرحله‌ای')+' • '+(q.is_reviewed&&q.solution_verified&&q.originality_checked?'بررسی‌شده':'نیازمند بررسی')+'</small></span><span><button type="button" class="btn" data-edit-question="'+q.id+'">ویرایش</button> <button type="button" class="btn" data-delete-question="'+q.id+'">حذف</button></span></div>').join('')||'<p class="mute">برای این مسابقه هنوز سؤالی ثبت نشده است.</p>';
   $('ryt-admin-questions').querySelectorAll('[data-edit-question]').forEach(b=>b.addEventListener('click',()=>editQuestion(b.dataset.editQuestion)));
   $('ryt-admin-questions').querySelectorAll('[data-delete-question]').forEach(b=>b.addEventListener('click',()=>deleteQuestion(b.dataset.deleteQuestion)));
@@ -3865,7 +3866,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
    if(error){adminMsg(error.message);return}adminMsg('زمان پایان تمدید شد.');await loadAdminTournaments(st.adminTournament.id);await loadPublic();
   }catch(e){adminMsg('زمان جدید معتبر نیست.')}
  });
- client.auth.onAuthStateChange(()=>{checkAdmin()});
+ client.auth.onAuthStateChange(()=>{setTimeout(()=>checkAdmin(),0)});
  tehranDefaults();loadPublic().then(checkAdmin);
  st.timer=setInterval(()=>{renderClock();renderTournamentHeader()},1000);
 })();
