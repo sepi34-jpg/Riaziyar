@@ -3571,10 +3571,10 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  const statusInfo=t=>{
   const now=Date.now(),start=Date.parse(t.starts_at),end=Date.parse(t.ends_at);
   if(t.status==='cancelled')return ['لغو شده','cancelled'];
+  if(now>=end)return ['پایان‌یافته','ended'];
   if(t.status==='paused')return ['متوقف موقت','paused'];
   if(now<start)return ['در انتظار شروع','upcoming'];
-  if(now<end)return ['در حال برگزاری','active'];
-  return ['پایان‌یافته','ended'];
+  return ['در حال برگزاری','active'];
  };
  const renderSvg=(host,raw)=>{
   host.replaceChildren();if(!raw)return false;
