@@ -3601,7 +3601,8 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
  };
  const renderClock=()=>{
   const t=st.current;if(!t){$('ryt-clock').textContent='—';return}
-  const now=Date.now(),start=Date.parse(t.starts_at),end=Date.parse(t.ends_at);let diff=now<start?start-now:end-now;
+  const now=Date.now(),start=Date.parse(t.starts_at),end=Date.parse(t.ends_at);
+  if(now>=end&&st.question){$('ryt-submit').disabled=true;setMsg('مهلت مسابقه به پایان رسیده است؛ دیگر پاسخی پذیرفته نمی‌شود.',true)}let diff=now<start?start-now:end-now;
   if(statusInfo(t)[1]==='paused'){$('ryt-clock').textContent='متوقف';return}
   if(diff<=0){$('ryt-clock').textContent=statusInfo(t)[1]==='ended'?'پایان مسابقه':'در حال برگزاری';return}
   const total=Math.floor(diff/1000),d=Math.floor(total/86400),h=Math.floor(total%86400/3600),m=Math.floor(total%3600/60),s=total%60;
@@ -3699,6 +3700,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const {data,error}=await client.from('tournaments').select('*').order('starts_at',{ascending:false});
   if(error){setMsg('دریافت برنامه مسابقه ناموفق بود: '+error.message,true);return}
   st.tournaments=data||[];
+  if(!st.tournaments.length)setMsg('هنوز مسابقه‌ای منتشر نشده است؛ مدیر می‌تواند مسابقه جمعه آینده را از همین بخش آماده کند.',false);
   const now=Date.now();
   const candidates=st.tournaments.filter(t=>t.status==='scheduled'||t.status==='paused');
   let chosen=candidates.find(t=>Date.parse(t.starts_at)<=now&&Date.parse(t.ends_at)>now)||
@@ -3814,7 +3816,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   const names=new Map((profiles||[]).map(p=>[p.id,p.display_name||'شرکت‌کننده']));
   const answerMap=new Map();(answers||[]).forEach(a=>{if(!answerMap.has(a.session_id))answerMap.set(a.session_id,[]);answerMap.get(a.session_id).push(a)});
   $('ryt-admin-participants').innerHTML='<table class="ry-tourn-table"><thead><tr><th>شرکت‌کننده</th><th>امتیاز</th><th>صحیح</th><th>وضعیت</th><th>پاسخ‌ها</th></tr></thead><tbody>'+sessions.map(s=>{
-   const detail=(answerMap.get(s.id)||[]).map(a=>'سؤال '+fa((st.adminQuestions||[]).find(q=>q.id===a.question_id)?.position||'؟')+': '+esc(a.answer_text)+' ('+(a.is_correct?'درست':'نادرست')+', '+fa(a.points)+' امتیاز)').join('<br>');
+   const detail=(answerMap.get(s.id)||[]).map(a=>'سؤال '+fa((st.adminQuestions||[]).find(q=>q.id===a.question_id)?.position||'؟')+': '+esc(a.answer_text)+' ('+(a.is_correct?'درست':'نادرست')+', '+fa(a.points)+' امتیاز، '+fa(Math.round(a.response_ms/1000))+' ثانیه)').join('<br>');
    return '<tr><td>'+esc(names.get(s.user_id)||'شرکت‌کننده')+'</td><td>'+fa(s.score)+'</td><td>'+fa(s.correct_count)+'</td><td>'+(s.status==='completed'?'پایان‌یافته':'در حال انجام')+'</td><td>'+detail+'</td></tr>';
   }).join('')+'</tbody></table>';
  };
@@ -3824,7 +3826,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   $('ryt-admin').hidden=!st.isAdmin;
   renderTournamentHeader();
   if(st.isAdmin){tehranDefaults();await loadAdminTournaments()}
-  if(st.user&&st.current&&statusInfo(st.current)[1]==='active')await selectTournament(st.current);
+  if(st.user&&st.current)await selectTournament(st.current);
  };
  $('ryt-start').addEventListener('click',startContest);
  $('ryt-submit').addEventListener('click',submitAnswer);
