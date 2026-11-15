@@ -3903,6 +3903,19 @@ const bankTopicLabels={number_theory:'نظریه اعداد',algebra:'جبر',co
   $('ryt-bank-originality').checked=!!q.originality_checked;$('ryt-bank-solution-verified').checked=!!q.solution_verified;$('ryt-bank-figure-verified').checked=!!q.figure_verified;
   bankMsg('سؤال برای ویرایش بارگذاری شد. تأیید قبلی در صورت تغییر محتوا لغو می‌شود.');$('ryt-bank-panel').scrollIntoView({behavior:'smooth',block:'start'});
  };
+ const bankTemplateSignature=value=>String(value||'')
+  .normalize('NFKC').toLowerCase()
+  .replace(/<[^>]*>/g,' ')
+  .replace(/[۰-۹٠-٩]/g,'#')
+  .replace(/\d+(?:[.,/٫]\d+)?/g,'#')
+  .replace(/[ـًٌٍَُِّْ،؛؟!.,:;(){}\[\]<>«»"'“”‘’+×÷=<>|\\/_-]+/g,' ')
+  .replace(/\s+/g,' ').trim();
+ const bankTokenSimilarity=(a,b)=>{
+  const tokens=x=>new Set(String(x).split(' ').filter(Boolean));
+  const A=tokens(a),B=tokens(b);if(!A.size||!B.size)return 0;
+  let hit=0;for(const t of A)if(B.has(t))hit++;
+  return hit/(A.size+B.size-hit);
+ };
  const saveBankQuestion=async()=>{
   const options=['A','B','C','D'].map(k=>({value:k,label:$('ryt-bank-option-'+k).value.trim()}));
   const q={topic:$('ryt-bank-topic').value,difficulty:$('ryt-bank-difficulty').value,prompt:$('ryt-bank-prompt').value.trim(),options,correct_option:$('ryt-bank-correct').value,
@@ -3913,6 +3926,16 @@ const bankTopicLabels={number_theory:'نظریه اعداد',algebra:'جبر',co
   if(!q.prompt||q.prompt.length<12||options.some(o=>!o.label)||!q.explanation||q.explanation.length<15||!q.hint){bankMsg('صورت سؤال، چهار گزینهٔ کامل، راه‌حل تشریحی و راهنمای کوتاه الزامی است.');return}
   if(q.requires_figure&&!q.figure_svg){bankMsg('برای سؤال شکل‌دار، کد SVG الزامی است.');return}
   if(q.requires_figure){const test=document.createElement('div');if(!renderSvg(test,q.figure_svg)){bankMsg('کد SVG معتبر نیست یا شکل قابل‌نمایش نیست.');return}}
+  // جلوگیری از تکرار ساختاری: عوض‌کردن عددها، گزینه‌ها یا نام‌ها سؤال تازه محسوب نمی‌شود.
+  const signature=bankTemplateSignature(q.prompt);
+  const duplicate=bankQuestions.find(old=>old.id!==editingBankId&&bankTemplateSignature(old.prompt)===signature);
+  if(duplicate){bankMsg('این سؤال از نظر ساختار با یک سؤال موجود تکراری است. فقط با تغییر عدد یا نام، سؤال جدید محسوب نمی‌شود؛ صورت مسئله و روش حل متفاوتی طراحی کن.');return}
+  const nearDuplicate=bankQuestions.find(old=>{
+   if(old.id===editingBankId)return false;
+   const other=bankTemplateSignature(old.prompt);
+   return signature.length>24&&other.length>24&&bankTokenSimilarity(signature,other)>=0.92;
+  });
+  if(nearDuplicate){bankMsg('این سؤال از نظر عبارت‌بندی بسیار شبیه یک سؤال موجود است. برای جلوگیری از تکرار، ساختار و ایدهٔ حل را واقعاً تغییر بده.');return}
   if(editingBankId){
    const {error}=await client.from('tournament_question_bank').update({...q,is_approved:false}).eq('id',editingBankId);
    if(error){bankMsg('ذخیره نشد: '+error.message);return}
