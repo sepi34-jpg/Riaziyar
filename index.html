@@ -3831,7 +3831,33 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   resetQuestionForm();await loadAdminSelection();
  };
 
- const bankTopicLabels={number_theory:'نظریه اعداد',algebra:'جبر',combinatorics:'ترکیبیات',geometry:'هندسه',sequences:'دنباله‌ها',divisibility:'بخش‌پذیری و اعداد اول',logic:'منطق و خلاقیت'};
+ 
+$('ryt-admin').insertAdjacentHTML('beforeend','<div class="card" id="ryt-audit-panel"><h3>📋 گزارش ممیزی بانک سؤالات</h3><p class="ry-tourn-muted">گزارش آخرین ممیزی ثبت‌شده در پایگاه داده؛ موارد نیازمند بررسی انسانی از موارد اصلاح‌شده جدا شده‌اند.</p><button class="btn" type="button" id="ryt-audit-refresh">بروزرسانی گزارش</button><div id="ryt-audit-content" class="ry-tourn-list">در حال بارگذاری گزارش…</div></div>');
+const loadAuditReport=async()=>{
+ if(!st.isAdmin)return;
+ const host=$('ryt-audit-content');if(!host)return;
+ host.textContent='در حال بارگذاری گزارش…';
+ const {data:run,error}=await client.from('question_audit_runs').select('id,status,summary,created_at').order('created_at',{ascending:false}).limit(1).maybeSingle();
+ if(error){host.textContent='بارگذاری گزارش ناموفق بود: '+error.message;return}
+ if(!run){host.textContent='هنوز گزارشی ثبت نشده است.';return}
+ const {data:issues,error:issueError}=await client.from('question_audit_issues').select('id,source_table,source_question_id,severity,issue_type,description,status,action_taken').eq('run_id',run.id).order('created_at',{ascending:false}).limit(2500);
+ if(issueError){host.textContent='بارگذاری جزئیات گزارش ناموفق بود: '+issueError.message;return}
+ const list=issues||[],groups={};
+ list.forEach(x=>{groups[x.issue_type]=(groups[x.issue_type]||0)+1});
+ const names={templated_structure:'قالب‌های پرتکرار',difficulty_misclassification_review:'بازبینی سطح دشواری',non_multiple_choice:'سؤال‌های غیرچهارگزینه‌ای',short_explanation:'توضیح کوتاه',figure_not_verified:'شکل تأییدنشده',answer_position_bias:'توزیع نامتوازن گزینه صحیح'};
+ const stats=run.summary||{};
+ host.innerHTML='<div class="ry-tourn-grid">'+
+ '<div class="ry-tourn-stat"><small>بانک مرکزی</small><strong>'+fa(stats.bank_questions||0)+'</strong></div>'+
+ '<div class="ry-tourn-stat"><small>قالب پرتکرار، نیازمند بررسی</small><strong>'+fa(stats.templated_questions_flagged||0)+'</strong></div>'+
+ '<div class="ry-tourn-stat"><small>سؤال‌های تورنومنت غیرچهارگزینه‌ای</small><strong>'+fa(stats.tournament_non_mcq_questions||0)+'</strong></div>'+
+ '<div class="ry-tourn-stat"><small>موارد اصلاح ساختاری کلید</small><strong>'+fa(stats.correct_key_mapping_after_repair||0)+'</strong></div></div>'+
+ '<p class="ry-tourn-muted">زمان ثبت: '+esc(new Date(run.created_at).toLocaleString('fa-IR'))+' • وضعیت: '+(run.status==='completed'?'تکمیل‌شده':'نیازمند بررسی انسانی')+' • تعداد رکوردهای ایراد: '+fa(list.length)+'</p>'+
+ '<h4>دسته‌بندی ایرادها</h4><div class="ry-tourn-list">'+Object.entries(groups).map(([k,v])=>'<div class="ry-tourn-item"><b>'+esc(names[k]||k)+'</b><span>'+fa(v)+' مورد</span></div>').join('')+'</div>'+
+ '<h4>نمونه موارد نیازمند بررسی</h4><div class="ry-tourn-list">'+list.filter(x=>x.status!=='fixed').slice(0,30).map(x=>'<div class="ry-tourn-item"><b>'+esc(names[x.issue_type]||x.issue_type)+'</b><small>'+esc(x.source_table)+' • '+esc(x.source_question_id||'گزارش کلی')+'</small><small>'+esc(x.description)+'</small><small class="ry-tourn-muted">اقدام: '+esc(x.action_taken||'نیازمند بررسی')+'</small></div>').join('')+'</div>';
+};
+$('ryt-audit-refresh').addEventListener('click',loadAuditReport);
+
+const bankTopicLabels={number_theory:'نظریه اعداد',algebra:'جبر',combinatorics:'ترکیبیات',geometry:'هندسه',sequences:'دنباله‌ها',divisibility:'بخش‌پذیری و اعداد اول',logic:'منطق و خلاقیت'};
  const bankDifficultyLabels={hard:'سخت',very_hard:'بسیار سخت',olympiad:'المپیادی',ultra_advanced:'فوق‌پیشرفته'};
  const bankMsg=m=>{$('ryt-bank-message').textContent=m||''};
  const bankReviewed=q=>q.originality_checked&&q.solution_verified&&(!q.requires_figure||q.figure_verified);
@@ -3947,7 +3973,7 @@ document.getElementById('welcome-list')?.addEventListener('click', function(e){
   if(st.user){const {data:role}=await client.from('user_roles').select('role').eq('user_id',st.user.id).eq('role','admin').maybeSingle();st.isAdmin=!!role}
   $('ryt-admin').hidden=!st.isAdmin;
   renderTournamentHeader();
-  if(st.isAdmin){tehranDefaults();await loadAdminTournaments();await loadBank()}
+  if(st.isAdmin){tehranDefaults();await loadAdminTournaments();await loadBank();await loadAuditReport()}
   if(st.user&&st.current)await selectTournament(st.current);
  };
  $('ryt-start').addEventListener('click',startContest);
