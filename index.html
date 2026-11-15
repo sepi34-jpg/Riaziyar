@@ -3906,7 +3906,8 @@ const bankTopicLabels={number_theory:'نظریه اعداد',algebra:'جبر',co
  const bankTemplateSignature=value=>String(value||'')
   .normalize('NFKC').toLowerCase()
   .replace(/<[^>]*>/g,' ')
-  .replace(/[۰-۹٠-٩]/g,'#')
+  .replace(/[۰-۹]/g,ch=>String(ch.charCodeAt(0)-1776))
+  .replace(/[٠-٩]/g,ch=>String(ch.charCodeAt(0)-1632))
   .replace(/\d+(?:[.,/٫]\d+)?/g,'#')
   .replace(/[ـًٌٍَُِّْ،؛؟!.,:;(){}\[\]<>«»"'“”‘’+×÷=<>|\\/_-]+/g,' ')
   .replace(/\s+/g,' ').trim();
