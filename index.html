@@ -3844,7 +3844,7 @@ const loadAuditReport=async()=>{
  if(issueError){host.textContent='بارگذاری جزئیات گزارش ناموفق بود: '+issueError.message;return}
  const list=issues||[],groups={};
  list.forEach(x=>{groups[x.issue_type]=(groups[x.issue_type]||0)+1});
- const names={templated_structure:'قالب‌های پرتکرار',difficulty_misclassification_review:'بازبینی سطح دشواری',non_multiple_choice:'سؤال‌های غیرچهارگزینه‌ای',short_explanation:'توضیح کوتاه',figure_not_verified:'شکل تأییدنشده',answer_position_bias:'توزیع نامتوازن گزینه صحیح'};
+ const names={templated_structure:'قالب‌های پرتکرار',difficulty_misclassification_review:'بازبینی سطح دشواری',topic_misclassification:'بازبینی دسته‌بندی مبحث',olympiad_level_misclassification:'بازبینی برچسب المپیادی',sequence_off_by_one:'خطای جملهٔ nام دنباله',multiple_correct_options:'چند گزینهٔ درست در سؤال بخش‌پذیری',answer_explanation_mismatch:'ناهماهنگی پاسخ و توضیح',non_multiple_choice:'سؤال‌های غیرچهارگزینه‌ای',short_explanation:'توضیح کوتاه',figure_not_verified:'شکل تأییدنشده',answer_position_bias:'توزیع نامتوازن گزینه صحیح'};
  const stats=run.summary||{};
  host.innerHTML='<div class="ry-tourn-grid">'+
  '<div class="ry-tourn-stat"><small>بانک مرکزی</small><strong>'+fa(stats.bank_questions||0)+'</strong></div>'+
