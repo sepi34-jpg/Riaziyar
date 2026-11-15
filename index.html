@@ -2530,9 +2530,9 @@ document.addEventListener('click',event=>{
  }
  async function loadQuestions(){
   const el=$('ry-ad-questions');el.textContent='در حال بارگذاری…';
-  const {data,error}=await client.from('questions').select('id,chapter,topic,difficulty,question_text,is_published,created_at').order('created_at',{ascending:false}).limit(100);
+  const {data,error}=await client.from('questions').select('id,chapter,topic,difficulty,question_text,correct_answer,explanation,is_published,created_at').order('created_at',{ascending:false}).limit(1000);
   if(error)return listError(el,error);
-  el.innerHTML=(data||[]).map(q=>'<article class="ad-item"><div class="ad-row"><b>'+esc(q.chapter)+' · '+esc(q.topic||'بدون مبحث')+'</b><span class="ad-muted">'+esc(q.difficulty)+' · '+(q.is_published?'منتشرشده':'پیش‌نویس')+'</span><span style="margin-inline-start:auto"></span><button class="ad-btn" data-q-toggle="'+q.id+'" data-pub="'+q.is_published+'">'+(q.is_published?'لغو انتشار':'انتشار')+'</button><button class="ad-btn danger" data-q-delete="'+q.id+'">حذف</button></div><p>'+esc(q.question_text)+'</p></article>').join('')||'<p class="ad-muted">هنوز سؤالی ثبت نشده است.</p>';
+  el.innerHTML=(data||[]).map(q=>'<article class="ad-item"><div class="ad-row"><b>'+esc(q.chapter)+' · '+esc(q.topic||'بدون مبحث')+'</b><span class="ad-muted">'+esc(q.difficulty)+' · '+(q.is_published?'منتشرشده':'پیش‌نویس')+'</span><span style="margin-inline-start:auto"></span><button class="ad-btn" data-q-toggle="'+q.id+'" data-pub="'+q.is_published+'">'+(q.is_published?'لغو انتشار':'انتشار')+'</button><button class="ad-btn danger" data-q-delete="'+q.id+'">حذف</button></div><p>'+esc(q.question_text)+'</p><p class="ad-muted"><b>پاسخ:</b> '+esc(String(q.correct_answer??''))+'</p><p class="ad-muted"><b>راه‌حل:</b> '+esc(q.explanation||'ثبت نشده')+'</p></article>').join('')||'<p class="ad-muted">هنوز سؤالی ثبت نشده است.</p>';
  }
  async function loadExams(){
   const el=$('ry-ad-exams');el.textContent='در حال بارگذاری…';
