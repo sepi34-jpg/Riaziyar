@@ -3848,7 +3848,9 @@ const loadAuditReport=async()=>{
  const stats=run.summary||{};
  host.innerHTML='<div class="ry-tourn-grid">'+
  '<div class="ry-tourn-stat"><small>بانک مرکزی</small><strong>'+fa(stats.bank_questions||0)+'</strong></div>'+
+ '<div class="ry-tourn-stat"><small>سؤالات تولیدشده در آزمون‌های سایت</small><strong>'+fa(stats.client_generated_questions||0)+'</strong></div>'+
  '<div class="ry-tourn-stat"><small>قالب پرتکرار، نیازمند بررسی</small><strong>'+fa(stats.templated_questions_flagged||0)+'</strong></div>'+
+ '<div class="ry-tourn-stat"><small>برچسب المپیادی، نیازمند بازبینی</small><strong>'+fa(stats.client_generated_olympiad_level_review_needed||0)+'</strong></div>'+
  '<div class="ry-tourn-stat"><small>سؤال‌های تورنومنت غیرچهارگزینه‌ای</small><strong>'+fa(stats.tournament_non_mcq_questions||0)+'</strong></div>'+
  '<div class="ry-tourn-stat"><small>موارد اصلاح ساختاری کلید</small><strong>'+fa(stats.correct_key_mapping_after_repair||0)+'</strong></div></div>'+
  '<p class="ry-tourn-muted">زمان ثبت: '+esc(new Date(run.created_at).toLocaleString('fa-IR'))+' • وضعیت: '+(run.status==='completed'?'تکمیل‌شده':'نیازمند بررسی انسانی')+' • تعداد رکوردهای ایراد: '+fa(list.length)+'</p>'+
